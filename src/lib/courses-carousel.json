@@ -1,0 +1,71 @@
+[
+  {
+    "id": 1,
+    "title": "Scrum Master",
+    "certImage": "/cert-images/scrum-master.svg",
+    "image": "/imgs/9.webp",
+    "date": "Certificación",
+    "students": 40,
+    "description": "Aprende a liderar equipos ágiles utilizando el marco de trabajo Scrum, enfocado en entregar valor de manera frecuente e incremental.",
+    "originalPrice": 110,
+    "currentPrice": 60,
+    "mainTopics": [
+      "Introducción a Scrum",
+      "Roles dentro de Scrum",
+      "Artefactos y eventos",
+      "Mejores prácticas en desarrollo ágil"
+    ],
+    "targetAudience": [
+      "Desarrolladores de software",
+      "Gerentes de proyecto",
+      "Líderes de equipo",
+      "Interesados en metodologías ágiles"
+    ]
+  },
+  {
+    "id": 2,
+    "title": "Scrum Developer",
+    "image": "/imgs/10.webp",
+    "certImage": "/cert-images/scrum-developers.svg",
+    "date": "Certificación",
+    "students": 25,
+    "description": "Conviértete en un desarrollador Scrum y aprende a colaborar en equipos ágiles para entregar productos de alta calidad.",
+    "originalPrice": 110,
+    "currentPrice": 60,
+    "mainTopics": [
+      "Fundamentos de Scrum para desarrolladores",
+      "Integración continua y despliegue ágil",
+      "Técnicas de estimación y planificación",
+      "Colaboración efectiva en equipos ágiles"
+    ],
+    "targetAudience": [
+      "Desarrolladores de software",
+      "Ingenieros de QA",
+      "Scrum Masters",
+      "Equipos de desarrollo ágil"
+    ]
+  },
+  {
+    "id": 3,
+    "title": "Scrum Foundation",
+    "certImage": "/cert-images/scrum-foundation.svg",
+    "image": "/imgs/11.webp",
+    "date": "Certificación",
+    "students": 60,
+    "description": "Obtén una comprensión sólida de los fundamentos de Scrum y cómo aplicarlos en la gestión ágil de proyectos.",
+    "originalPrice": 110,
+    "currentPrice": 60,
+    "mainTopics": [
+      "Historia y origen de Scrum",
+      "Principios fundamentales",
+      "Framework Scrum: Eventos, roles y artefactos",
+      "Cómo empezar con Scrum en tu organización"
+    ],
+    "targetAudience": [
+      "Personas sin experiencia en Scrum",
+      "Profesionales que desean certificarse",
+      "Equipos nuevos en metodologías ágiles",
+      "Gerentes interesados en transformar su organización"
+    ]
+  }
+]
