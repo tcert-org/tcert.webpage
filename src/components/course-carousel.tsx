@@ -66,7 +66,7 @@ export default function CourseCarousel() {
 
       {/* Mobile Carousel */}
       <div className="relative z-10 block md:hidden  ">
-        <Carousel className="w-full" onSelect={setActiveSlide}>
+        <Carousel className="w-full">
           <CarouselContent>
             {courses.map((course) => (
               <CarouselItem key={course.id}>
