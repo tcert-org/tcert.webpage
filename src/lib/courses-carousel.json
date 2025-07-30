@@ -47,25 +47,30 @@
   },
   {
     "id": 3,
-    "title": "Scrum Foundation",
-    "certImage": "/cert-images/scrum-foundation.svg",
+    "title": "UX para Profesionales de Tecnología",
     "image": "/imgs/11.webp",
+    "certImage": "/cert-images/scrum-developers.svg",
     "date": "Certificación",
-    "students": 60,
-    "description": "Obtén una comprensión sólida de los fundamentos de Scrum y cómo aplicarlos en la gestión ágil de proyectos.",
-    "originalPrice": 110,
-    "currentPrice": 60,
+    "students": 20,
+    "description": "Curso diseñado para proporcionar una comprensión sólida de los principios y prácticas de UX aplicados en entornos tecnológicos. Ideal para desarrolladores, diseñadores, product managers y otros profesionales que desean mejorar la experiencia de usuario en productos digitales.",
+    "originalPrice": 300,
+    "currentPrice": 290,
     "mainTopics": [
-      "Historia y origen de Scrum",
-      "Principios fundamentales",
-      "Framework Scrum: Eventos, roles y artefactos",
-      "Cómo empezar con Scrum en tu organización"
+      "Introducción al UX: definición, importancia y diferencias con UI",
+      "Investigación de usuarios: métodos, creación de perfiles y mapas de empatía",
+      "Diseño centrado en el usuario: wireframes, prototipos y accesibilidad",
+      "Pruebas de usabilidad: tipos, planificación, ejecución y análisis",
+      "Integración de UX en desarrollo ágil: roles, colaboración y planificación"
     ],
     "targetAudience": [
-      "Personas sin experiencia en Scrum",
-      "Profesionales que desean certificarse",
-      "Equipos nuevos en metodologías ágiles",
-      "Gerentes interesados en transformar su organización"
+      "Desarrolladores de software que quieren mejorar la experiencia de usuario",
+      "Diseñadores UI/UX que buscan profundizar en investigación y pruebas",
+      "Product managers interesados en gestionar productos intuitivos",
+      "Ingenieros de QA enfocados en calidad y experiencia de usuario",
+      "Analistas de negocio que quieren integrar necesidades de usuarios",
+      "Profesionales de marketing digital que buscan optimizar conversiones",
+      "Equipos de innovación y desarrollo de producto",
+      "Líderes de proyectos tecnológicos que desean liderar con foco en UX"
     ]
   }
 ]
