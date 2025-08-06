@@ -22,19 +22,28 @@ const Hero: React.FC = () => {
   };
 
   return (
-    <section className="relative h-[90vh] lg:h-[120vh] max-w-[99%] mx-auto bg-gradient-to-b from-white via-sky-100 to-transparent flex flex-col justify-center overflow-hidden">
+    <section className="relative h-[90vh] lg:h-[120vh] max-w-[99%] mx-auto flex flex-col justify-center overflow-hidden">
+      {/* Fondo metalizado violeta */}
+      <div className="absolute inset-0 bg-gradient-to-b from-slate-900 via-violet-950 to-transparent opacity-90"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-violet-800/30 via-purple-900/40 to-indigo-950/50"></div>
+      <div className="absolute inset-0 bg-gradient-to-tl from-violet-600/20 via-transparent to-slate-800/30"></div>
+
+      {/* Efecto metalizado con shine */}
+      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-pulse"></div>
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(139,92,246,0.15),transparent_70%)]"></div>
+
       {/* DotSquares */}
-      <span className="hidden lg:block">
+      <span className="hidden lg:block relative z-10">
         <DotSquare top="20%" left="15%" color="#A78BFA" />
         <DotSquare top="15%" right="15%" color="#A78BFA" />
       </span>
 
-      <div className="max-w-[90%] mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <div className="max-w-[90%] mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
         <motion.h1
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7 }}
-          className="text-2xl sm:text-3xl lg:text-5xl mb-4 font-bold tracking-tight text-[#0B001A]"
+          className="text-2xl sm:text-3xl lg:text-5xl mb-4 font-bold tracking-tight text-black"
         >
           TU RUTA HACIA UNA MEJOR <br />
           <motion.span
@@ -47,14 +56,18 @@ const Hero: React.FC = () => {
           </motion.span>
         </motion.h1>
 
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }}>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.7 }}
+        >
           <Button
             size="lg"
             className="relative overflow-hidden group mt-4 xl:mb-32 mb-10"
             onClick={() => handleScroll("courses")}
           >
             <span className="relative z-10">EXPLORAR CERTIFICACIONES →</span>
-            <span className="absolute inset-0 bg-gradient-to-r from-purple-500 to-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+            <span className="absolute inset-0 bg-gradient-to-r from-purple-500 to-orange-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
           </Button>
         </motion.div>
 
