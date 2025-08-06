@@ -5,17 +5,11 @@ import SectionWithImage from "@/components/section-with-image";
 
 export default function Home() {
   return (
-    <>
-      <section
-        id="hero"
-        className="max-h-[90vh] lg:max-h-[105vh] xl:max-h-[105vh] mt-10 lg:mt-16 bg-gradient-to-t from-[#C8D9E7] via-gray-100 to-white "
-      >
+    <div className="bg-gradient-to-b from-slate-900 via-violet-950 to-slate-900">
+      <section id="hero" className="w-full">
         <Hero />
       </section>
-      <section
-        id="vision"
-        className="bg-gradient-to-tr from-slate-50 via-blue-50 to-[#C8D9E7] pt-16 scroll-mt-12 "
-      >
+      <section id="vision" className="scroll-mt-12">
         <SectionWithImage
           miniTitle="Impulsando tu crecimiento"
           title="SOBRE NOSOTROS"
@@ -27,12 +21,12 @@ export default function Home() {
           right={true}
         />
       </section>
-      <section id="courses" className="scroll-mt-12 ">
+      <section id="courses" className="scroll-mt-12">
         <CourseCarousel />
       </section>
-      <section id="contact" className="scroll-mt-12 ">
+      <section id="contact" className="scroll-mt-12">
         <ContactForm />
       </section>
-    </>
+    </div>
   );
 }

@@ -4,25 +4,31 @@
 
 body {
   font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(to bottom, #0f172a, #581c87, #0f172a);
 }
 @keyframes show {
-	from {
-		opacity: 0;
-		scale: 70%;
-	}
+  from {
+    opacity: 0;
+    scale: 70%;
+  }
 
-	to {
-		opacity: 1;
-		scale: 100%;
-	}
+  to {
+    opacity: 1;
+    scale: 100%;
+  }
 }
 
 @keyframes pulse-glow {
-  0%, 100% {
-    box-shadow: 0 0 10px rgba(147, 51, 234, 0.6), 0 0 20px rgba(147, 51, 234, 0.4);
+  0%,
+  100% {
+    box-shadow: 0 0 10px rgba(147, 51, 234, 0.6),
+      0 0 20px rgba(147, 51, 234, 0.4);
   }
   50% {
-    box-shadow: 0 0 20px rgba(147, 51, 234, 0.9), 0 0 40px rgba(147, 51, 234, 0.6);
+    box-shadow: 0 0 20px rgba(147, 51, 234, 0.9),
+      0 0 40px rgba(147, 51, 234, 0.6);
   }
 }
 
@@ -30,16 +36,15 @@ body {
   animation: pulse-glow 1.5s infinite;
 }
 
-
 .animation {
-	view-timeline-name: --section;
-	view-timeline-axis: block;
+  view-timeline-name: --section;
+  view-timeline-axis: block;
 
-	animation-timeline: --section;
-	animation-name: show;
+  animation-timeline: --section;
+  animation-name: show;
 
-	animation-range: entry 1% cover 19%;
-	animation-fill-mode: both;
+  animation-range: entry 1% cover 19%;
+  animation-fill-mode: both;
 }
 
 @layer base {

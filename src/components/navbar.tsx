@@ -5,7 +5,12 @@ import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetHeader, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { useState } from "react";
 import { motion } from "framer-motion";
@@ -45,7 +50,11 @@ export function Navbar() {
         </Link>
 
         <div className="hidden md:flex items-center gap-8">
-          {[{label:"Sobre nosotros", id:"vision"}, {label:"Certificaciones", id:"courses"}, {label:"Contáctanos", id:"contact"}].map((link, i) => (
+          {[
+            { label: "Sobre nosotros", id: "vision" },
+            { label: "Certificaciones", id: "courses" },
+            { label: "Contáctanos", id: "contact" },
+          ].map((link, i) => (
             <motion.button
               key={link.id}
               whileHover={{ scale: 1.05, color: "#670EE2" }}
@@ -60,8 +69,14 @@ export function Navbar() {
 
         <div className="hidden md:flex items-center gap-4">
           <motion.div whileHover={{ scale: 1.05 }}>
-            <Button className="text-white bg-[#670EE2] hover:bg-[#670EE2]/90" asChild>
-              <Link href="/under-construction">Iniciar sesión</Link>
+            <Button
+              className="relative overflow-hidden group text-white bg-[#670EE2] hover:bg-[#670EE2]/90"
+              asChild
+            >
+              <Link href="/under-construction">
+                <span className="relative z-10">Iniciar sesión</span>
+                <span className="absolute inset-0 bg-gradient-to-r from-purple-500 to-orange-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+              </Link>
             </Button>
           </motion.div>
         </div>
@@ -87,16 +102,36 @@ export function Navbar() {
                 </DialogTitle>
               </SheetHeader>
               <div className="flex flex-col items-center gap-8 mt-8">
-                {[{label:"Registrarse", link:"/"}, {label:"Iniciar sesión", link:"/under-construction"}].map((btn, i) => (
-                  <Button key={i} variant="ghost" className="text-white text-xl w-full" asChild>
+                {[
+                  { label: "Registrarse", link: "/" },
+                  { label: "Iniciar sesión", link: "/under-construction" },
+                ].map((btn, i) => (
+                  <Button
+                    key={i}
+                    variant="ghost"
+                    className="text-white text-xl w-full"
+                    asChild
+                  >
                     <Link href={btn.link} onClick={() => setOpen(false)}>
                       {btn.label}
                     </Link>
                   </Button>
                 ))}
                 <div className="w-full h-px bg-white/20 my-4" />
-                {[{label:"Sobre nosotros", id:"vision"}, {label:"Certificaciones", id:"courses"}, {label:"Contáctanos", id:"contact"}].map((link, i) => (
-                  <Button key={i} variant="ghost" className="text-white text-xl w-full" onClick={() => { handleScroll(link.id); setOpen(false); }}>
+                {[
+                  { label: "Sobre nosotros", id: "vision" },
+                  { label: "Certificaciones", id: "courses" },
+                  { label: "Contáctanos", id: "contact" },
+                ].map((link, i) => (
+                  <Button
+                    key={i}
+                    variant="ghost"
+                    className="text-white text-xl w-full"
+                    onClick={() => {
+                      handleScroll(link.id);
+                      setOpen(false);
+                    }}
+                  >
                     {link.label}
                   </Button>
                 ))}
