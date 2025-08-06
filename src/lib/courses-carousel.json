@@ -6,20 +6,21 @@
     "image": "/imgs/9.webp",
     "date": "Certificación",
     "students": 40,
-    "description": "Aprende a liderar equipos ágiles utilizando el marco de trabajo Scrum, enfocado en entregar valor de manera frecuente e incremental.",
+    "description": "La certificación Scrum Master te brinda las herramientas necesarias para liderar equipos de alto rendimiento en entornos ágiles. A lo largo del curso aprenderás a implementar Scrum de manera efectiva, fomentando la transparencia, la inspección continua y la adaptación rápida a cambios. Además, adquirirás habilidades para facilitar reuniones productivas, eliminar impedimentos y guiar a tu equipo hacia la entrega de valor de manera constante. Este programa combina teoría, ejemplos prácticos y casos reales para que al finalizar puedas desempeñar con seguridad y confianza el rol de Scrum Master en cualquier organización.",
     "originalPrice": 110,
     "currentPrice": 60,
     "mainTopics": [
-      "Introducción a Scrum",
-      "Roles dentro de Scrum",
-      "Artefactos y eventos",
-      "Mejores prácticas en desarrollo ágil"
+      "Fundamentos de Scrum: pilares, valores y beneficios del marco de trabajo.",
+      "Roles y responsabilidades: funciones clave del Scrum Master, Product Owner y Developers.",
+      "Artefactos y eventos: definición, objetivos y buenas prácticas para maximizar el valor.",
+      "Facilitación efectiva: cómo guiar al equipo en reuniones, retrospectivas y revisiones.",
+      "Estrategias de mejora continua: métricas, retroalimentación y adaptación del proceso."
     ],
     "targetAudience": [
-      "Desarrolladores de software",
-      "Gerentes de proyecto",
-      "Líderes de equipo",
-      "Interesados en metodologías ágiles"
+      "Profesionales que deseen liderar equipos de desarrollo con un enfoque ágil y colaborativo.",
+      "Gerentes de proyecto que quieran actualizar sus conocimientos a metodologías modernas.",
+      "Líderes de equipo interesados en mejorar la eficiencia y productividad de sus equipos.",
+      "Consultores o coaches ágiles que busquen reforzar sus competencias y certificaciones."
     ]
   },
   {
@@ -29,20 +30,21 @@
     "certImage": "/cert-images/scrum-developers.svg",
     "date": "Certificación",
     "students": 25,
-    "description": "Conviértete en un desarrollador Scrum y aprende a colaborar en equipos ágiles para entregar productos de alta calidad.",
+    "description": "La certificación Scrum Developer está diseñada para desarrolladores y miembros técnicos que desean trabajar de manera eficiente en equipos ágiles. Este curso profundiza en las mejores prácticas de desarrollo dentro de un marco Scrum, incluyendo la integración continua, la entrega incremental y la colaboración efectiva. Aprenderás a interactuar con Product Owners y Scrum Masters, estimar historias de usuario con precisión y utilizar herramientas que potencian la calidad del producto. Al finalizar, estarás preparado para integrarte de forma productiva a un equipo Scrum y contribuir de manera significativa al éxito del proyecto.",
     "originalPrice": 110,
     "currentPrice": 60,
     "mainTopics": [
-      "Fundamentos de Scrum para desarrolladores",
-      "Integración continua y despliegue ágil",
-      "Técnicas de estimación y planificación",
-      "Colaboración efectiva en equipos ágiles"
+      "Principios de Scrum aplicados al desarrollo: visión técnica y alineación con el equipo.",
+      "Integración continua: prácticas, herramientas y automatización para mejorar la calidad.",
+      "Entrega ágil de software: cómo planificar, desarrollar y entregar incrementos de valor.",
+      "Estimación y planificación: técnicas de story points, planificación de sprints y refinamiento.",
+      "Colaboración efectiva: comunicación fluida entre desarrolladores, QA y stakeholders."
     ],
     "targetAudience": [
-      "Desarrolladores de software",
-      "Ingenieros de QA",
-      "Scrum Masters",
-      "Equipos de desarrollo ágil"
+      "Desarrolladores de software que quieran dominar el trabajo en entornos ágiles.",
+      "Ingenieros de QA que busquen mejorar su colaboración en ciclos ágiles.",
+      "Scrum Masters interesados en comprender mejor la perspectiva técnica del equipo.",
+      "Equipos de desarrollo que quieran mejorar la calidad y velocidad de entrega."
     ]
   },
   {
@@ -52,25 +54,26 @@
     "certImage": "/cert-images/scrum-developers.svg",
     "date": "Certificación",
     "students": 20,
-    "description": "Curso diseñado para proporcionar una comprensión sólida de los principios y prácticas de UX aplicados en entornos tecnológicos. Ideal para desarrolladores, diseñadores, product managers y otros profesionales que desean mejorar la experiencia de usuario en productos digitales.",
+    "description": "Este programa de certificación en UX está orientado a profesionales de tecnología que deseen integrar el diseño centrado en el usuario dentro de sus proyectos. A lo largo del curso, aprenderás a comprender las necesidades reales de los usuarios, diseñar experiencias intuitivas y evaluar la usabilidad de los productos digitales. Se explorarán metodologías de investigación, técnicas de prototipado, pruebas de usabilidad y buenas prácticas de accesibilidad. Al finalizar, tendrás una visión integral que te permitirá colaborar con equipos multidisciplinarios para crear productos funcionales, atractivos y orientados a resultados.",
     "originalPrice": 300,
     "currentPrice": 290,
     "mainTopics": [
-      "Introducción al UX: definición, importancia y diferencias con UI",
-      "Investigación de usuarios: métodos, creación de perfiles y mapas de empatía",
-      "Diseño centrado en el usuario: wireframes, prototipos y accesibilidad",
-      "Pruebas de usabilidad: tipos, planificación, ejecución y análisis",
-      "Integración de UX en desarrollo ágil: roles, colaboración y planificación"
+      "Fundamentos de UX: qué es, por qué es clave y cómo se diferencia de UI.",
+      "Investigación de usuarios: entrevistas, encuestas y creación de arquetipos.",
+      "Diseño centrado en el usuario: wireframes, prototipos de baja y alta fidelidad.",
+      "Accesibilidad digital: principios para garantizar inclusión y facilidad de uso.",
+      "Pruebas de usabilidad: planificación, ejecución y análisis de resultados.",
+      "Integración de UX en entornos ágiles: colaboración, roles y planificación conjunta."
     ],
     "targetAudience": [
-      "Desarrolladores de software que quieren mejorar la experiencia de usuario",
-      "Diseñadores UI/UX que buscan profundizar en investigación y pruebas",
-      "Product managers interesados en gestionar productos intuitivos",
-      "Ingenieros de QA enfocados en calidad y experiencia de usuario",
-      "Analistas de negocio que quieren integrar necesidades de usuarios",
-      "Profesionales de marketing digital que buscan optimizar conversiones",
-      "Equipos de innovación y desarrollo de producto",
-      "Líderes de proyectos tecnológicos que desean liderar con foco en UX"
+      "Desarrolladores que quieran comprender cómo mejorar la experiencia de usuario en sus aplicaciones.",
+      "Diseñadores UI/UX que busquen reforzar sus conocimientos en investigación y validación.",
+      "Product Managers interesados en gestionar productos más intuitivos y atractivos.",
+      "Ingenieros de QA que deseen evaluar la calidad desde la perspectiva de la experiencia.",
+      "Analistas de negocio que necesiten alinear requerimientos con necesidades de usuarios.",
+      "Profesionales de marketing digital que busquen optimizar la conversión a través de UX.",
+      "Equipos de innovación que desarrollen productos centrados en el usuario.",
+      "Líderes de proyectos que deseen incorporar buenas prácticas de experiencia de usuario."
     ]
   }
 ]
