@@ -17,7 +17,7 @@ export default function AboutUs() {
           right={true}
         />
       </section>
-      <section className="bg-gradient-to-t from-slate-50 via-blue-50 to-[#C8D9E7] mb-10">
+      <section className="bg-gradient-to-t from-slate-50 via-blue-50 to-[#C8D9E7]">
         <SectionWithImage
           miniTitle="Un futuro de oportunidades"
           title="VISIÓN"

@@ -1,179 +1,149 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
-import Notiflix from "notiflix";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { countries, Country } from "../../utils/countries";
+import { motion, AnimatePresence } from "framer-motion";
+import { CheckCircle, XCircle } from "lucide-react";
 
 export default function ContactForm() {
+  const [toast, setToast] = useState<{ type: "success" | "error"; message: string } | null>(null);
+  const [termsAccepted, setTermsAccepted] = useState(false);
+
+
+  const showToast = (type: "success" | "error", message: string) => {
+    setToast({ type, message });
+    setTimeout(() => setToast(null), 3000);
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const form = e.currentTarget as HTMLFormElement;
+    const form = e.currentTarget;
     const formData = new FormData(form);
     const data = Object.fromEntries(formData);
 
     try {
       const response = await fetch("/api/send-emails", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
 
       if (response.ok) {
-        Notiflix.Notify.success("Formulario enviado exitosamente");
+        showToast("success", "Formulario enviado exitosamente");
         form.reset();
       } else {
-        Notiflix.Notify.failure(
-          "Hubo un error al enviar el formulario. Inténtalo de nuevo."
-        );
+        showToast("error", "Hubo un error al enviar el formulario");
       }
-    } catch (error) {
-      console.error("Error:", error);
-      Notiflix.Notify.failure(
-        "No se pudo enviar el formulario. Verifica tu conexión."
-      );
+    } catch {
+      showToast("error", "No se pudo enviar. Verifica tu conexión.");
     }
+  };
+
+  const fadeUp = {
+    hidden: { opacity: 0, y: 15 },
+    visible: (i: number) => ({
+      opacity: 1,
+      y: 0,
+      transition: { delay: i * 0.1, duration: 0.4 },
+    }),
   };
 
   return (
     <div className="relative min-h-screen bg-gray-50 p-4 md:p-8">
       <div className="absolute inset-0 bg-[url('/bg-form-section.webp')] bg-cover bg-center opacity-80"></div>
-      <div className="relative mx-auto max-w-[95%] xl:max-w-[75%]">
-        <div className="grid gap-8 md:grid-cols-2 md:gap-12">
-          <div className="hidden md:block"></div>
 
-          <Card className="p-6 animation">
-            <h1 className="text-xl font-bold tracking-tight text-[#27282B]">
-              FORMULARIO DE CONTACTO
-            </h1>
-            <p className=" text-gray-600 text-sm mb-6 mt-3">
-              Completa el formulario y nos pondremos en contacto contigo lo
-              antes posible
+      {/* Toast Notification */}
+      <AnimatePresence>
+        {toast && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+            className={`fixed top-6 right-6 px-4 py-3 rounded-lg shadow-lg flex items-center gap-2 text-white z-50 ${
+              toast.type === "success" ? "bg-green-500" : "bg-red-500"
+            }`}
+          >
+            {toast.type === "success" ? <CheckCircle className="w-5 h-5" /> : <XCircle className="w-5 h-5" />}
+            <span>{toast.message}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <div className="relative mx-auto max-w-[85%] xl:max-w-[55%]">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+        >
+          <Card className="p-6 ">
+            <h1 className="text-xl font-bold text-[#27282B] flex justify-center">FORMULARIO DE CONTACTO</h1>
+            <p className="text-gray-600 text-sm mb-6 mt-3 flex justify-center">
+              Completa el formulario y nos pondremos en contacto contigo lo antes posible
             </p>
             <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="space-y-4">
-                {/* Campos del formulario */}
-                <div>
-                  <Label htmlFor="name">Nombre*</Label>
-                  <Input
-                    id="name"
-                    name="name"
-                    placeholder="Ingrese su nombre completo"
-                    required
-                  />
-                </div>
+              {[
+                { id: "name", label: "Nombre*", type: "text", placeholder: "Ingrese su nombre completo" },
+                { id: "company", label: "Empresa", type: "text", placeholder: "Empresa donde trabaja" },
+                { id: "email", label: "Correo electrónico*", type: "email", placeholder: "ejemplo@gmail.com" },
+              ].map((field, i) => (
+                <motion.div key={field.id} custom={i} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+                  <Label htmlFor={field.id}>{field.label}</Label>
+                  <Input id={field.id} name={field.id} type={field.type} placeholder={field.placeholder} required={field.label.includes("*")} />
+                </motion.div>
+              ))}
 
-                <div>
-                  <Label htmlFor="company">Empresa</Label>
-                  <Input
-                    id="company"
-                    name="company"
-                    placeholder="Empresa donde trabaja"
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="email">Correo electrónico*</Label>
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    placeholder="ejemplo@gmail.com"
-                    required
-                  />
-                </div>
-
+              <motion.div custom={3} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+                <Label>Teléfono*</Label>
                 <div className="grid grid-cols-5 gap-2">
                   <div className="col-span-2">
-                    <Label htmlFor="country">Teléfono*</Label>
                     <Select defaultValue="+57" name="country">
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        {countries.map((country: Country, index: number) => (
-                          <SelectItem key={index} value={country.dial_code}>
-                            <span className="flex items-center gap-2">
-                              {country.flag} {country.dial_code}
-                            </span>
+                        {countries.map((c: Country, idx: number) => (
+                          <SelectItem key={idx} value={c.dial_code}>
+                            {c.flag} {c.dial_code}
                           </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
                   </div>
                   <div className="col-span-3">
-                    <Label htmlFor="phone">&nbsp;</Label>
-                    <Input
-                      id="phone"
-                      name="phone"
-                      placeholder="3012226235"
-                      required
-                    />
+                    <Input id="phone" name="phone" placeholder="3012226235" required />
                   </div>
                 </div>
+              </motion.div>
 
-                <div>
-                  <Label htmlFor="interest">
-                    ¿En qué certificación está interesado/a?*
-                  </Label>
-                  <Input
-                    id="interest"
-                    name="interest"
-                    placeholder="Scrum Master, PMP, ITIL, etc."
-                    required
+              <motion.div custom={4} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+                <Label htmlFor="interest">¿En qué certificación está interesado/a?*</Label>
+                <Input id="interest" name="interest" placeholder="Scrum Master, PMP, ITIL, etc." required />
+              </motion.div>
+
+              <motion.div custom={5} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+                <Label htmlFor="details">Detalles adicionales</Label>
+                <Textarea id="details" name="details" placeholder="Escriba información que creas relevante" className="min-h-[120px]" />
+              </motion.div>
+
+              <motion.div custom={6} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+                <div className="flex items-center justify-center space-x-2">
+                  <Checkbox 
+                    id="terms" 
+                    name="terms" 
+                    required 
+                    className="mt-1"
+                    onCheckedChange={(checked) => setTermsAccepted(!!checked)}
                   />
-                </div>
-
-                <div>
-                  <Label htmlFor="where">¿Dónde nos conociste?*</Label>
-                  <Select name="where">
-                    <SelectTrigger id="where">
-                      <SelectValue placeholder="Selecciona una opción" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="redes-sociales">
-                        Redes sociales
-                      </SelectItem>
-                      <SelectItem value="recomendacion">
-                        Recomendación
-                      </SelectItem>
-                      <SelectItem value="publicidad-online">
-                        Publicidad en línea
-                      </SelectItem>
-                      <SelectItem value="google">Búsqueda en Google</SelectItem>
-                      <SelectItem value="otro">Otro</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div>
-                  <Label htmlFor="details">Detalles adicionales</Label>
-                  <Textarea
-                    id="details"
-                    name="details"
-                    placeholder="Escriba información que creas relevante"
-                    className="min-h-[120px]"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <div className="flex items-start space-x-2">
-                  <Checkbox id="terms" name="terms" required className="mt-1" />
                   <Label htmlFor="terms" className="text-sm leading-tight">
                     Al enviar este formulario, acepto los{" "}
                     <Link href="#" className="text-purple-600 hover:underline">
@@ -185,17 +155,24 @@ export default function ContactForm() {
                     </Link>
                   </Label>
                 </div>
+              </motion.div>
 
+              <motion.div custom={7} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
                 <Button
                   type="submit"
-                  className="w-full bg-purple-600 hover:bg-purple-700"
+                  className={`flex w-80 mx-auto transition-all duration-300 ${
+                    termsAccepted
+                      ? "bg-purple-600 hover:bg-purple-700 hover:scale-105 animate-pulse-glow"
+                      : "bg-purple-400 cursor-not-allowed"
+                  }`}
+                  disabled={!termsAccepted}
                 >
                   Enviar
                 </Button>
-              </div>
+              </motion.div>
             </form>
           </Card>
-        </div>
+        </motion.div>
       </div>
     </div>
   );

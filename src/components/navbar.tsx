@@ -5,14 +5,10 @@ import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import { useState } from "react";
+import { Sheet, SheetContent, SheetHeader, SheetTrigger } from "@/components/ui/sheet";
 import { DialogTitle } from "@radix-ui/react-dialog";
+import { useState } from "react";
+import { motion } from "framer-motion";
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
@@ -31,50 +27,45 @@ export function Navbar() {
   };
 
   return (
-    <header className="fixed top-2 left-0 right-0 max-w-[98%] mx-auto z-50 backdrop-blur-lg bg-[#670EE2]/5 rounded-lg px-10">
+    <motion.header
+      initial={{ y: -50, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.6 }}
+      className="fixed top-2 left-0 right-0 max-w-[98%] mx-auto z-50 backdrop-blur-lg bg-white/30 border border-white/20 rounded-xl shadow-lg px-10"
+    >
       <nav className="flex items-center justify-between h-16">
         <Link href="/" className="flex items-center">
           <Image
             src="/logo/complete/sm-full-color.png"
-            alt="T-Cert Logo"
-            width={120}
+            alt="Logo"
+            width={100}
             height={40}
-            className="h-10 w-auto"
+            className="transition duration-500 hover:drop-shadow-[0_0_10px_rgba(103,14,226,0.8)]"
           />
         </Link>
 
-        {/* Desktop Navigation */}
         <div className="hidden md:flex items-center gap-8">
-          <button
-            onClick={() => handleScroll("vision")}
-            className="text-[#331263] font-extralight hover:text-[#670EE2]"
-          >
-            Sobre nosotros
-          </button>
-          <button
-            onClick={() => handleScroll("courses")}
-            className="text-[#331263] font-extralight hover:text-[#670EE2]"
-          >
-            Certificaciones
-          </button>
-          <button
-            onClick={() => handleScroll("contact")}
-            className="text-[#331263] font-extralight hover:text-[#670EE2]"
-          >
-            Contáctanos
-          </button>
+          {[{label:"Sobre nosotros", id:"vision"}, {label:"Certificaciones", id:"courses"}, {label:"Contáctanos", id:"contact"}].map((link, i) => (
+            <motion.button
+              key={link.id}
+              whileHover={{ scale: 1.05, color: "#670EE2" }}
+              transition={{ type: "spring", stiffness: 300 }}
+              onClick={() => handleScroll(link.id)}
+              className="text-[#331263] font-extralight"
+            >
+              {link.label}
+            </motion.button>
+          ))}
         </div>
 
         <div className="hidden md:flex items-center gap-4">
-          <Button
-            className="text-white bg-[#670EE2] hover:bg-[#670EE2]/90"
-            asChild
-          >
-            <Link href="/under-construction">Iniciar sesión</Link>
-          </Button>
+          <motion.div whileHover={{ scale: 1.05 }}>
+            <Button className="text-white bg-[#670EE2] hover:bg-[#670EE2]/90" asChild>
+              <Link href="/under-construction">Iniciar sesión</Link>
+            </Button>
+          </motion.div>
         </div>
 
-        {/* Mobile Navigation */}
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
             <Button variant="ghost" size="icon" className="md:hidden">
@@ -96,60 +87,24 @@ export function Navbar() {
                 </DialogTitle>
               </SheetHeader>
               <div className="flex flex-col items-center gap-8 mt-8">
-                <Button
-                  variant="ghost"
-                  className="text-white text-xl w-full"
-                  asChild
-                >
-                  <Link href="/" onClick={() => setOpen(false)}>
-                    Registrarse
-                  </Link>
-                </Button>
-                <Button
-                  variant="ghost"
-                  className="text-white text-xl w-full"
-                  asChild
-                >
-                  <Link href="/under-construction" onClick={() => setOpen(false)}>
-                    Iniciar sesión
-                  </Link>
-                </Button>
+                {[{label:"Registrarse", link:"/"}, {label:"Iniciar sesión", link:"/under-construction"}].map((btn, i) => (
+                  <Button key={i} variant="ghost" className="text-white text-xl w-full" asChild>
+                    <Link href={btn.link} onClick={() => setOpen(false)}>
+                      {btn.label}
+                    </Link>
+                  </Button>
+                ))}
                 <div className="w-full h-px bg-white/20 my-4" />
-                <Button
-                  variant="ghost"
-                  className="text-white text-xl w-full"
-                  onClick={() => {
-                    handleScroll("vision");
-                    setOpen(false);
-                  }}
-                >
-                  Sobre nosotros
-                </Button>
-                <Button
-                  variant="ghost"
-                  className="text-white text-xl w-full"
-                  onClick={() => {
-                    handleScroll("courses");
-                    setOpen(false);
-                  }}
-                >
-                  Certificaciones
-                </Button>
-                <Button
-                  variant="ghost"
-                  className="text-white text-xl w-full"
-                  onClick={() => {
-                    handleScroll("contact");
-                    setOpen(false);
-                  }}
-                >
-                  Contáctanos
-                </Button>
+                {[{label:"Sobre nosotros", id:"vision"}, {label:"Certificaciones", id:"courses"}, {label:"Contáctanos", id:"contact"}].map((link, i) => (
+                  <Button key={i} variant="ghost" className="text-white text-xl w-full" onClick={() => { handleScroll(link.id); setOpen(false); }}>
+                    {link.label}
+                  </Button>
+                ))}
               </div>
             </div>
           </SheetContent>
         </Sheet>
       </nav>
-    </header>
+    </motion.header>
   );
 }

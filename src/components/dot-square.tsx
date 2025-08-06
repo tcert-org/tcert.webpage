@@ -1,4 +1,6 @@
+"use client";
 import React from "react";
+import { motion } from "framer-motion";
 
 interface DotSquareProps {
   top?: string;
@@ -8,6 +10,7 @@ interface DotSquareProps {
   width?: string;
   height?: string;
   opacity?: number;
+  color?: string;
 }
 
 const DotSquare: React.FC<DotSquareProps> = ({
@@ -18,6 +21,7 @@ const DotSquare: React.FC<DotSquareProps> = ({
   width = "88px",
   height = "80px",
   opacity = 0.7,
+  color = "#9CA3AF", // gris por defecto
 }) => {
   const rows = 6;
   const cols = 8;
@@ -41,14 +45,21 @@ const DotSquare: React.FC<DotSquareProps> = ({
       }}
     >
       {Array.from({ length: totalDots }).map((_, index) => (
-        <div
+        <motion.div
           key={index}
-          className="bg-gray-400 rounded-full"
+          className="rounded-full"
           style={{
             width: "4px",
             height: "4px",
+            backgroundColor: color,
           }}
-        ></div>
+          animate={{ opacity: [0.3, 1, 0.3] }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            delay: index * 0.03,
+          }}
+        />
       ))}
     </div>
   );
