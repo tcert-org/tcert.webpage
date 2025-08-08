@@ -36,7 +36,7 @@ export function Navbar() {
       initial={{ y: -50, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6 }}
-      className="fixed top-2 left-0 right-0 max-w-[98%] mx-auto z-50 backdrop-blur-lg bg-white/30 border border-white/20 rounded-xl shadow-lg px-10"
+      className="fixed top-0 left-0 right-0 w-full z-50 bg-transparent px-10"
     >
       <nav className="flex items-center justify-between h-16">
         <Link href="/" className="flex items-center">
@@ -51,20 +51,32 @@ export function Navbar() {
 
         <div className="hidden md:flex items-center gap-8">
           {[
-            { label: "Sobre nosotros", id: "vision" },
-            { label: "Certificaciones", id: "courses" },
-            { label: "Contáctanos", id: "contact" },
-          ].map((link, i) => (
+            { label: "Sobre nosotros", id: "vision", type: "scroll" },
+            { label: "Certificaciones", id: "courses", type: "scroll" },
+            { label: "Contáctanos", id: "contact", type: "scroll" },
+          ].map((link) => (
             <motion.button
               key={link.id}
-              whileHover={{ scale: 1.05, color: "#670EE2" }}
+              whileHover={{ scale: 1.05 }}
               transition={{ type: "spring", stiffness: 300 }}
               onClick={() => handleScroll(link.id)}
-              className="text-[#331263] font-extralight"
+              className="text-white font-semibold hover:text-purple-400 transition-colors duration-200"
             >
               {link.label}
             </motion.button>
           ))}
+
+          {/* Botón especial para Validar certificado */}
+          <motion.div whileHover={{ scale: 1.05 }}>
+            <Link href="/autenticator">
+              <motion.button
+                transition={{ type: "spring", stiffness: 300 }}
+                className="text-white font-semibold hover:text-purple-400 transition-colors duration-200"
+              >
+                Validar certificado
+              </motion.button>
+            </Link>
+          </motion.div>
         </div>
 
         <div className="hidden md:flex items-center gap-4">
@@ -83,7 +95,11 @@ export function Navbar() {
 
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="md:hidden">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="md:hidden text-white"
+            >
               <Menu className="h-6 w-6" />
               <span className="sr-only">Toggle menu</span>
             </Button>
@@ -109,11 +125,12 @@ export function Navbar() {
                   <Button
                     key={i}
                     variant="ghost"
-                    className="text-white text-xl w-full"
+                    className="relative overflow-hidden group text-white text-xl w-full hover:bg-transparent font-semibold"
                     asChild
                   >
                     <Link href={btn.link} onClick={() => setOpen(false)}>
-                      {btn.label}
+                      <span className="relative z-10">{btn.label}</span>
+                      <span className="absolute inset-0 bg-gradient-to-r from-purple-500 to-orange-500 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
                     </Link>
                   </Button>
                 ))}
@@ -126,15 +143,28 @@ export function Navbar() {
                   <Button
                     key={i}
                     variant="ghost"
-                    className="text-white text-xl w-full"
+                    className="relative overflow-hidden group text-white text-xl w-full hover:bg-transparent font-semibold"
                     onClick={() => {
                       handleScroll(link.id);
                       setOpen(false);
                     }}
                   >
-                    {link.label}
+                    <span className="relative z-10">{link.label}</span>
+                    <span className="absolute inset-0 bg-gradient-to-r from-purple-500 to-orange-500 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
                   </Button>
                 ))}
+
+                {/* Botón especial para Validar certificado en móvil */}
+                <Button
+                  variant="ghost"
+                  className="relative overflow-hidden group text-white text-xl w-full hover:bg-transparent font-semibold"
+                  asChild
+                >
+                  <Link href="/autenticator" onClick={() => setOpen(false)}>
+                    <span className="relative z-10">Validar certificado</span>
+                    <span className="absolute inset-0 bg-gradient-to-r from-purple-500 to-orange-500 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
+                  </Link>
+                </Button>
               </div>
             </div>
           </SheetContent>

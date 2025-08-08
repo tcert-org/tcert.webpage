@@ -20,217 +20,157 @@ const Hero: React.FC = () => {
   };
 
   return (
-    <section className="relative h-screen w-full flex flex-col justify-center overflow-hidden">
-      {/* Fondo futurista épico */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black via-indigo-950 to-black"></div>
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-950/40 via-blue-950/30 to-black/90"></div>
+    <section className="relative h-screen w-full flex items-center overflow-hidden bg-black">
+      {/* Fondo oscuro */}
+      <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-800"></div>
 
-      {/* Sistema de red neural de fondo */}
-      <div className="absolute inset-0 opacity-20">
-        <svg className="w-full h-full" viewBox="0 0 1920 1080">
-          <defs>
-            <radialGradient id="neuralGlow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.8" />
-              <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0.2" />
-            </radialGradient>
-          </defs>
+      <div className="w-full h-full flex">
+        {/* Lado izquierdo - Contenido */}
+        <div className="w-1/2 px-8 lg:px-16 flex flex-col justify-center relative z-10">
+          {/* Gradiente de transición hacia la derecha */}
+          <div className="absolute top-0 right-0 w-32 h-full bg-gradient-to-r from-transparent to-black/20 pointer-events-none"></div>
 
-          {/* Nodos de red neural */}
-          {[...Array(12)].map((_, i) => {
-            const x = 200 + (i % 4) * 400;
-            const y = 200 + Math.floor(i / 4) * 300;
-            return (
-              <g key={`neural-${i}`}>
-                <circle cx={x} cy={y} r="4" fill="url(#neuralGlow)" />
-                {/* Conexiones */}
-                {i < 8 && (
-                  <line
-                    x1={x}
-                    y1={y}
-                    x2={200 + ((i + 4) % 4) * 400}
-                    y2={200 + Math.floor((i + 4) / 4) * 300}
-                    stroke="#3b82f6"
-                    strokeWidth="1"
-                    strokeOpacity="0.3"
-                  />
-                )}
-                {i % 4 !== 3 && (
-                  <line
-                    x1={x}
-                    y1={y}
-                    x2={x + 400}
-                    y2={y}
-                    stroke="#8b5cf6"
-                    strokeWidth="1"
-                    strokeOpacity="0.2"
-                  />
-                )}
-              </g>
-            );
-          })}
-        </svg>
-      </div>
-
-      {/* Partículas de datos flotantes */}
-      <div className="absolute inset-0 pointer-events-none">
-        {[...Array(30)].map((_, i) => (
-          <motion.div
-            key={`data-${i}`}
-            className="absolute text-xs font-mono text-blue-400/30"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-            }}
-            animate={{
-              y: [-50, 50, -50],
-              opacity: [0.1, 0.6, 0.1],
-              rotate: [0, 360],
-            }}
-            transition={{
-              duration: 8 + Math.random() * 4,
-              repeat: Infinity,
-              delay: Math.random() * 3,
-              ease: "linear",
-            }}
-          >
-            {["01", "11", "10", "00"][Math.floor(Math.random() * 4)]}
-          </motion.div>
-        ))}
-      </div>
-
-      {/* Líneas de código flotantes */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {[...Array(6)].map((_, i) => (
-          <motion.div
-            key={`code-${i}`}
-            className="absolute font-mono text-sm text-emerald-400/20 whitespace-nowrap"
-            style={{
-              top: `${15 + i * 15}%`,
-              right: "-100%",
-            }}
-            animate={{
-              x: [1920, -400],
-            }}
-            transition={{
-              duration: 15 + i * 2,
-              repeat: Infinity,
-              delay: i * 2,
-              ease: "linear",
-            }}
-          >
-            {
-              [
-                "function certify() {",
-                "const skills = await learn();",
-                "return success.guaranteed;",
-                "if (motivated) level.up();",
-                "export default Excellence;",
-                'console.log("Achievement unlocked!");',
-              ][i]
-            }
-          </motion.div>
-        ))}
-      </div>
-
-      <div className="w-full px-4 sm:px-6 lg:px-8 text-center relative z-10 pt-32 lg:pt-36">
-        {/* Marco simple */}
-        <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-cyan-500/10 backdrop-blur-sm border border-slate-700/30" />
-
-        {/* Título principal limpio */}
-        <motion.h1
-          initial={{ opacity: 0, y: 40, scale: 0.9 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 1, type: "spring", stiffness: 100 }}
-          className="text-3xl sm:text-4xl lg:text-6xl xl:text-7xl mb-4 font-bold tracking-tight relative z-20"
-        >
-          <span
-            className="block text-white"
-            style={{
-              filter: "drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3))",
-            }}
-          >
-            TU RUTA HACIA UNA MEJOR
-          </span>
-          <br />
-          <motion.span
-            initial={{ opacity: 0, x: -20 }}
+          {/* Título principal alineado a la izquierda */}
+          <motion.h1
+            initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.6, duration: 0.8, type: "spring" }}
-            className="font-light block mt-2 text-slate-300"
-            style={{
-              filter: "drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.2))",
-            }}
+            transition={{ duration: 1, type: "spring", stiffness: 80 }}
+            className="text-4xl lg:text-6xl xl:text-7xl mb-6 font-bold tracking-tight text-left"
           >
-            VERSIÓN DE TI MISMO
-            {/* Cursor de terminal */}
+            <span className="block text-white leading-tight">
+              TU RUTA HACIA
+            </span>
+            <span className="block text-white leading-tight">UNA MEJOR</span>
             <motion.span
-              className="inline-block w-2 h-8 bg-blue-400 ml-2"
-              animate={{ opacity: [1, 0, 1] }}
-              transition={{ duration: 1.2, repeat: Infinity }}
-            />
-          </motion.span>
-        </motion.h1>
-
-        {/* Elementos de interfaz futurista */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1, duration: 0.8 }}
-          className="flex justify-center gap-4 mb-4"
-        >
-          {/* Indicadores de progreso */}
-          {[...Array(4)].map((_, i) => (
-            <motion.div
-              key={`indicator-${i}`}
-              className="flex flex-col items-center"
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ delay: 1.2 + i * 0.1, type: "spring" }}
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.6, duration: 0.8 }}
+              className="block text-gray-300 font-light mt-2"
             >
-              <div className="w-2 h-8 bg-gradient-to-t from-blue-600 to-cyan-400 rounded-full mb-1">
-                <motion.div
-                  className="w-full bg-white rounded-full"
-                  animate={{ height: ["0%", "100%", "0%"] }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    delay: i * 0.3,
-                  }}
-                />
-              </div>
-              <span className="text-xs text-blue-300 font-mono">
-                {["SCAN", "PROC", "CERT", "COMP"][i]}
-              </span>
+              VERSIÓN DE TI MISMO
+              <motion.span
+                className="inline-block w-1 h-8 bg-purple-400 ml-2"
+                animate={{ opacity: [1, 0, 1] }}
+                transition={{ duration: 1.2, repeat: Infinity }}
+              />
+            </motion.span>
+          </motion.h1>
+
+          {/* Subtítulo */}
+          <motion.p
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 1, duration: 0.8 }}
+            className="text-gray-400 text-lg lg:text-xl mb-8 max-w-md text-left leading-relaxed"
+          >
+            Desarrolla tus habilidades con certificaciones reconocidas
+            mundialmente y transforma tu carrera profesional.
+          </motion.p>
+
+          {/* Botón */}
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 1.4 }}
+            className="flex justify-start"
+          >
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button
+                size="lg"
+                className="relative overflow-hidden group bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-semibold text-lg px-8 py-4 rounded-lg shadow-lg transition-all duration-300 hover:shadow-purple-500/25"
+                onClick={() => handleScroll("courses")}
+              >
+                <span className="relative z-10">Explorar Certificaciones</span>
+                <span className="absolute inset-0 bg-gradient-to-r from-purple-500 to-orange-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+              </Button>
             </motion.div>
-          ))}
-        </motion.div>
+          </motion.div>
+        </div>
 
-        {/* Botón mejorado */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.4 }}
-          className="relative z-20"
-        >
-          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-            <Button
-              size="lg"
-              className="relative overflow-hidden bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold text-lg px-10 py-4 rounded-lg shadow-lg border border-blue-500/30 transition-all duration-300 hover:shadow-2xl hover:shadow-blue-500/25"
-              onClick={() => handleScroll("courses")}
-            >
+        {/* Lado derecho - Animación con gradiente */}
+        <div className="w-1/2 relative overflow-hidden">
+          {/* Gradiente de transición desde la izquierda */}
+          <div className="absolute top-0 left-0 w-32 h-full bg-gradient-to-r from-black/20 to-transparent pointer-events-none z-10"></div>
+
+          {/* Gradiente animado principal */}
+          <motion.div
+            className="absolute inset-0 opacity-80"
+            animate={{
+              background: [
+                "linear-gradient(45deg, #000000 0%, #4c1d95 50%, #000000 100%)",
+                "linear-gradient(135deg, #000000 0%, #7c3aed 50%, #000000 100%)",
+                "linear-gradient(225deg, #000000 0%, #a855f7 50%, #000000 100%)",
+                "linear-gradient(315deg, #000000 0%, #4c1d95 50%, #000000 100%)",
+              ],
+            }}
+            transition={{
+              duration: 8,
+              repeat: Infinity,
+              ease: "linear",
+            }}
+          />
+
+          {/* Efectos de luz adicionales */}
+          <motion.div
+            className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full opacity-20"
+            style={{
+              background:
+                "radial-gradient(circle, #8b5cf6 0%, transparent 70%)",
+            }}
+            animate={{
+              scale: [1, 1.2, 1],
+              opacity: [0.2, 0.4, 0.2],
+            }}
+            transition={{
+              duration: 4,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+
+          <motion.div
+            className="absolute bottom-1/4 right-1/4 w-64 h-64 rounded-full opacity-15"
+            style={{
+              background:
+                "radial-gradient(circle, #a855f7 0%, transparent 70%)",
+            }}
+            animate={{
+              scale: [1.2, 1, 1.2],
+              opacity: [0.15, 0.3, 0.15],
+            }}
+            transition={{
+              duration: 6,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 2,
+            }}
+          />
+
+          {/* Partículas flotantes */}
+          <div className="absolute inset-0">
+            {[...Array(15)].map((_, i) => (
               <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
-                animate={{ x: [-100, 300] }}
+                key={`particle-${i}`}
+                className="absolute w-1 h-1 bg-purple-400 rounded-full opacity-60"
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  top: `${Math.random() * 100}%`,
+                }}
+                animate={{
+                  y: [-20, 20, -20],
+                  x: [-10, 10, -10],
+                  opacity: [0.6, 0.2, 0.6],
+                }}
                 transition={{
-                  duration: 3,
+                  duration: 3 + Math.random() * 2,
                   repeat: Infinity,
-                  repeatDelay: 2,
+                  delay: Math.random() * 2,
+                  ease: "easeInOut",
                 }}
               />
-              <span className="relative z-10">Explorar Certificaciones</span>
-            </Button>
-          </motion.div>
-        </motion.div>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );
