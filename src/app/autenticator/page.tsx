@@ -77,7 +77,7 @@ export default function AuthenticatorPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center p-4">
       <div className="w-full max-w-2xl">
         {/* Header */}
         <motion.div
@@ -87,7 +87,7 @@ export default function AuthenticatorPage() {
           className="text-center mb-8"
         >
           <div className="flex justify-center mb-4">
-            <Shield className="h-16 w-16 text-purple-400" />
+            <Shield className="h-16 w-16 text-orange-400" />
           </div>
           <h1 className="text-4xl font-bold text-white mb-2">
             Validar Certificado
@@ -128,13 +128,16 @@ export default function AuthenticatorPage() {
                   <Button
                     type="submit"
                     disabled={isLoading || !voucherCode.trim()}
-                    className="bg-purple-600 hover:bg-purple-700 text-white px-6"
+                    className="relative overflow-hidden group bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-semibold px-6 shadow-lg transition-all duration-300 hover:shadow-purple-500/25"
                   >
-                    {isLoading ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                    ) : (
-                      <Search className="h-4 w-4" />
-                    )}
+                    <span className="relative z-10">
+                      {isLoading ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <Search className="h-4 w-4" />
+                      )}
+                    </span>
+                    <span className="absolute inset-0 bg-gradient-to-r from-purple-500 to-orange-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
                   </Button>
                 </div>
               </form>
