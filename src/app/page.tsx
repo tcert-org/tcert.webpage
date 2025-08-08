@@ -5,7 +5,7 @@ import SectionWithImage from "@/components/section-with-image";
 
 export default function Home() {
   return (
-    <div className="bg-gradient-to-b from-slate-900 via-violet-950 to-slate-900">
+    <div className="bg-gradient-to-b from-black via-gray-900 to-black">
       <section id="hero" className="w-full">
         <Hero />
       </section>

@@ -12,13 +12,24 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { DialogTitle } from "@radix-ui/react-dialog";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      setIsScrolled(scrollPosition > 300);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const handleScroll = (sectionId: string) => {
     if (pathname !== "/") {
@@ -36,7 +47,11 @@ export function Navbar() {
       initial={{ y: -50, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6 }}
-      className="fixed top-0 left-0 right-0 w-full z-50 bg-transparent px-10"
+      className={`fixed top-0 left-0 right-0 w-full z-50 px-10 transition-all duration-300 ${
+        isScrolled
+          ? "bg-black/95 backdrop-blur-md border-b border-white/10 shadow-lg"
+          : "bg-transparent"
+      }`}
     >
       <nav className="flex items-center justify-between h-16">
         <Link href="/" className="flex items-center">

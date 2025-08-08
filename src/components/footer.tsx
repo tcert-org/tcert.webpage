@@ -7,32 +7,12 @@ import { motion } from "framer-motion";
 
 export default function Footer() {
   return (
-    <footer className="relative w-full bg-gradient-to-b from-black via-gray-900 to-black pt-12 pb-8 px-4 md:px-8 overflow-hidden">
-      <motion.div
-        className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-purple-500 via-purple-400 to-purple-500"
-        initial={{ x: "-100%" }}
-        animate={{ x: "100%" }}
-        transition={{ repeat: Infinity, duration: 3, ease: "linear" }}
-      />
+    <footer className="relative w-full bg-black pt-12 pb-8 px-4 md:px-8 overflow-hidden">
+      {/* Gradiente sutil */}
+      <div className="absolute inset-0 bg-gradient-to-t from-purple-950/10 to-transparent"></div>
 
-      <motion.div
-        className="absolute inset-0 pointer-events-none"
-        initial={{ backgroundPosition: "0% 0%", scale: 1 }}
-        animate={{
-          backgroundPosition: ["0% 0%", "100% 0%", "0% 0%"],
-          scale: [1, 1.02, 1],
-        }}
-        transition={{
-          duration: 8,
-          repeat: Infinity,
-          ease: "linear",
-        }}
-        style={{
-          background:
-            "radial-gradient(circle at 20% 30%, rgba(147,51,234,0.15), transparent 40%), radial-gradient(circle at 80% 70%, rgba(139,92,246,0.1), transparent 40%)",
-          backgroundSize: "200% 200%",
-        }}
-      />
+      {/* Efecto neón en el borde superior */}
+      <div className="absolute top-0 left-0 right-0 h-0.5 bg-purple-500 shadow-[0_0_20px_rgba(139,92,246,0.8),0_0_40px_rgba(139,92,246,0.4)]"></div>
 
       <div className="container mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-10 relative z-10">
         <div className="flex justify-center md:justify-center">
@@ -49,15 +29,14 @@ export default function Footer() {
           {["Acerca de", "Certificaciones", "Contáctanos"].map((item, idx) => (
             <motion.div
               key={idx}
-              whileHover={{ scale: 1.05, color: "#a855f7" }}
+              whileHover={{ scale: 1.05 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
               <Link
                 href="/under-construction"
-                className="relative text-gray-300 hover:text-purple-400 transition-colors text-lg font-bold"
+                className="text-gray-300 hover:text-purple-400 transition-colors text-lg font-bold"
               >
                 {item}
-                <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-purple-400 transition-all duration-300 group-hover:w-full" />
               </Link>
             </motion.div>
           ))}
@@ -92,6 +71,9 @@ export default function Footer() {
           </div>
         </div>
       </div>
+
+      {/* Línea decorativa inferior con efecto neón */}
+      <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-500 via-orange-500 to-purple-500 shadow-[0_0_15px_rgba(139,92,246,0.6),0_0_30px_rgba(237,98,60,0.4)]"></div>
     </footer>
   );
 }
