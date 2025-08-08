@@ -8,7 +8,6 @@ import { motion } from "framer-motion";
 export default function Footer() {
   return (
     <footer className="relative w-full bg-gradient-to-b from-black via-gray-900 to-black pt-12 pb-8 px-4 md:px-8 overflow-hidden">
-
       <motion.div
         className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-purple-500 via-purple-400 to-purple-500"
         initial={{ x: "-100%" }}
@@ -36,7 +35,6 @@ export default function Footer() {
       />
 
       <div className="container mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-10 relative z-10">
-
         <div className="flex justify-center md:justify-center">
           <Image
             src="/logo/complete/md-full-color.png"
@@ -66,10 +64,16 @@ export default function Footer() {
         </nav>
 
         <div className="flex flex-col items-center gap-4">
-          <p className="text-gray-400 text-base font-bold">Síguenos en nuestras redes</p>
+          <p className="text-gray-400 text-base font-bold">
+            Síguenos en nuestras redes
+          </p>
           <div className="flex gap-6">
             {[
-              { icon: Instagram, color: "#E4405F", url: "https://instagram.com" },
+              {
+                icon: Instagram,
+                color: "#E4405F",
+                url: "https://instagram.com",
+              },
               { icon: Facebook, color: "#1877F2", url: "https://facebook.com" },
               { icon: Linkedin, color: "#0A66C2", url: "https://linkedin.com" },
             ].map(({ icon: Icon, color, url }, idx) => (
