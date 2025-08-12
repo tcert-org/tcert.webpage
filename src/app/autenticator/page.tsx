@@ -23,13 +23,20 @@ interface ApiResponse {
     student: {
       id: number;
       fullname: string;
-      email: string;
-      document_type: string;
       document_number: string;
       voucher_id: number;
     };
-    diploma: unknown;
-    certification: unknown;
+    diploma: {
+      id: number;
+      student_id: number;
+      certification_id: number;
+      completion_date: string;
+      expiration_date: string;
+    };
+    certification: {
+      id: number;
+      name: string;
+    };
   };
   message?: string;
   error?: string;
@@ -210,11 +217,6 @@ export default function AuthenticatorPage() {
                 <div className="p-6">
                   {apiResponse?.statusCode === 200 && apiResponse.data ? (
                     <div className="space-y-6">
-                      {/* Mensaje de éxito */}
-                      <div className="bg-green-900/20 border border-green-500/50 rounded-lg p-4">
-                        <p className="text-green-400">{apiResponse.message}</p>
-                      </div>
-
                       {/* Información del Voucher */}
                       <div className="bg-gray-700/50 rounded-lg p-4">
                         <h3 className="text-lg font-semibold text-white mb-3 flex items-center gap-2">
@@ -247,7 +249,7 @@ export default function AuthenticatorPage() {
                           </div>
                           <div>
                             <span className="text-gray-400">
-                              NI (Número de Identificación):
+                              Documento de Identidad:
                             </span>
                             <p className="text-white">
                               {apiResponse.data.student.document_number}
@@ -256,30 +258,75 @@ export default function AuthenticatorPage() {
                         </div>
                       </div>
 
-                      {/* Información del Diploma y Certificación */}
+                      {/* Información de la Certificación */}
                       <div className="bg-gray-700/50 rounded-lg p-4">
                         <h3 className="text-lg font-semibold text-white mb-3">
-                          Estado del Diploma y Certificación
+                          Información de la Certificación
+                        </h3>
+                        <div className="grid grid-cols-1 gap-3 text-sm">
+                          <div>
+                            <span className="text-gray-400">
+                              Nombre de la Certificación:
+                            </span>
+                            <p className="text-white font-semibold text-lg">
+                              {apiResponse.data.certification.name}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Información del Diploma */}
+                      <div className="bg-gray-700/50 rounded-lg p-4">
+                        <h3 className="text-lg font-semibold text-white mb-3">
+                          Estado del Diploma
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
                           <div>
-                            <span className="text-gray-400">Diploma:</span>
-                            <p className="text-gray-300">
-                              {apiResponse.data.diploma
-                                ? JSON.stringify(apiResponse.data.diploma)
-                                : "No disponible"}
+                            <span className="text-gray-400">
+                              Fecha de Finalización:
+                            </span>
+                            <p className="text-green-400">
+                              {new Date(
+                                apiResponse.data.diploma.completion_date
+                              ).toLocaleDateString("es-ES", {
+                                year: "numeric",
+                                month: "long",
+                                day: "numeric",
+                              })}
                             </p>
                           </div>
                           <div>
                             <span className="text-gray-400">
-                              Certificación:
+                              Fecha de Expiración:
                             </span>
-                            <p className="text-gray-300">
-                              {apiResponse.data.certification
-                                ? JSON.stringify(apiResponse.data.certification)
-                                : "No disponible"}
+                            <p className="text-orange-400">
+                              {new Date(
+                                apiResponse.data.diploma.expiration_date
+                              ).toLocaleDateString("es-ES", {
+                                year: "numeric",
+                                month: "long",
+                                day: "numeric",
+                              })}
                             </p>
                           </div>
+                        </div>
+
+                        {/* Estado de validez */}
+                        <div className="mt-4 p-3 rounded-lg bg-green-900/30 border border-green-500/50">
+                          <div className="flex items-center gap-2">
+                            <CheckCircle className="h-5 w-5 text-green-400" />
+                            <span className="text-green-400 font-semibold">
+                              {new Date(
+                                apiResponse.data.diploma.expiration_date
+                              ) > new Date()
+                                ? "Certificado Vigente"
+                                : "Certificado Expirado"}
+                            </span>
+                          </div>
+                          <p className="text-green-300 text-sm mt-1">
+                            Este certificado es válido y ha sido verificado
+                            correctamente.
+                          </p>
                         </div>
                       </div>
                     </div>
