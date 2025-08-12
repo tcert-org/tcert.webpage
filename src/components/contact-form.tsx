@@ -65,16 +65,12 @@ export default function ContactForm() {
   };
 
   return (
-    <div className="relative min-h-screen p-4 md:p-8 overflow-hidden">
-      {/* Fondo metalizado violeta */}
-      <div className="absolute inset-0 bg-gradient-to-b from-slate-900 via-violet-950 to-transparent opacity-90"></div>
-      <div className="absolute inset-0 bg-gradient-to-br from-violet-800/30 via-purple-900/40 to-indigo-950/50"></div>
-      <div className="absolute inset-0 bg-gradient-to-tl from-violet-600/20 via-transparent to-slate-800/30"></div>
-
-      {/* Efecto metalizado con shine */}
-      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-pulse"></div>
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(139,92,246,0.15),transparent_70%)]"></div>
-
+    <div className="relative min-h-screen p-3 md:p-6 overflow-hidden flex items-center">
+      {/* Fondo integrado que continúa desde la página principal */}
+      <div className="absolute inset-0 bg-gradient-to-b from-gray-900 via-black to-gray-900"></div>
+      {/* Efectos sutiles púrpura */}
+      <div className="absolute inset-0 bg-gradient-to-br from-purple-900/10 via-transparent to-purple-800/10"></div>
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(139,92,246,0.08),transparent_70%)]"></div>
       {/* Toast Notification */}
       <AnimatePresence>
         {toast && (
@@ -95,67 +91,95 @@ export default function ContactForm() {
             <span>{toast.message}</span>
           </motion.div>
         )}
-      </AnimatePresence>
-
-      <div className="relative mx-auto max-w-[85%] xl:max-w-[55%]">
+      </AnimatePresence>{" "}
+      <div className="relative mx-auto max-w-[75%] xl:max-w-[45%] w-full">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
         >
-          <Card className="p-6 relative bg-white/95 border-violet-400/50 overflow-hidden shadow-xl">
-            {/* Efectos sutiles violetas */}
-            <div className="absolute inset-0 bg-gradient-to-br from-violet-50/30 via-transparent to-purple-50/20"></div>
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(139,92,246,0.05),transparent_50%)]"></div>
+          <Card className="p-6 md:p-8 relative bg-transparent border-2 border-white/20 backdrop-blur-md overflow-hidden shadow-2xl rounded-2xl">
+            {/* Efectos sutiles */}
+            <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-white/5"></div>
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-400 via-orange-400 to-purple-400"></div>
 
             <div className="relative z-10">
-              <h1 className="text-xl font-bold text-gray-800 flex justify-center">
-                FORMULARIO DE CONTACTO
-              </h1>
-              <p className="text-gray-600 text-sm mb-6 mt-3 flex justify-center">
-                Completa el formulario y nos pondremos en contacto contigo lo
-                antes posible
-              </p>
-              <form onSubmit={handleSubmit} className="space-y-6">
-                {[
-                  {
-                    id: "name",
-                    label: "Nombre*",
-                    type: "text",
-                    placeholder: "Ingrese su nombre completo",
-                  },
-                  {
-                    id: "company",
-                    label: "Empresa",
-                    type: "text",
-                    placeholder: "Empresa donde trabaja",
-                  },
-                  {
-                    id: "email",
-                    label: "Correo electrónico*",
-                    type: "email",
-                    placeholder: "ejemplo@gmail.com",
-                  },
-                ].map((field, i) => (
+              <div className="text-center mb-6">
+                <h1 className="text-2xl md:text-3xl font-bold text-white mb-3">
+                  FORMULARIO DE CONTACTO
+                </h1>
+                <p className="text-white/80 text-base md:text-lg max-w-lg mx-auto leading-relaxed">
+                  Completa el formulario y nos pondremos en contacto contigo lo
+                  antes posible
+                </p>
+              </div>
+              <form onSubmit={handleSubmit} className="space-y-5">
+                {/* Nombre */}
+                <motion.div
+                  custom={0}
+                  variants={fadeUp}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true }}
+                  className="space-y-2"
+                >
+                  <Label htmlFor="name" className="text-white font-medium">
+                    Nombre*
+                  </Label>
+                  <Input
+                    id="name"
+                    name="name"
+                    type="text"
+                    placeholder="Ingrese su nombre completo"
+                    required
+                    className="bg-white/10 border-white/30 text-white placeholder-white/60 focus:border-purple-400 focus:ring-purple-400/30 backdrop-blur-sm h-10 rounded-xl"
+                  />
+                </motion.div>
+
+                {/* Empresa y Email en la misma fila */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <motion.div
-                    key={field.id}
-                    custom={i}
+                    custom={1}
                     variants={fadeUp}
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ once: true }}
+                    className="space-y-2"
                   >
-                    <Label htmlFor={field.id}>{field.label}</Label>
+                    <Label htmlFor="company" className="text-white font-medium">
+                      Empresa
+                    </Label>
                     <Input
-                      id={field.id}
-                      name={field.id}
-                      type={field.type}
-                      placeholder={field.placeholder}
-                      required={field.label.includes("*")}
+                      id="company"
+                      name="company"
+                      type="text"
+                      placeholder="Empresa donde trabaja"
+                      className="bg-white/10 border-white/30 text-white placeholder-white/60 focus:border-purple-400 focus:ring-purple-400/30 backdrop-blur-sm h-10 rounded-xl"
                     />
                   </motion.div>
-                ))}
+
+                  <motion.div
+                    custom={2}
+                    variants={fadeUp}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true }}
+                    className="space-y-2"
+                  >
+                    <Label htmlFor="email" className="text-white font-medium">
+                      Correo electrónico*
+                    </Label>
+                    <Input
+                      id="email"
+                      name="email"
+                      type="email"
+                      placeholder="ejemplo@gmail.com"
+                      required
+                      className="bg-white/10 border-white/30 text-white placeholder-white/60 focus:border-purple-400 focus:ring-purple-400/30 backdrop-blur-sm h-10 rounded-xl"
+                    />
+                  </motion.div>
+                </div>
 
                 <motion.div
                   custom={3}
@@ -163,17 +187,22 @@ export default function ContactForm() {
                   initial="hidden"
                   whileInView="visible"
                   viewport={{ once: true }}
+                  className="space-y-2"
                 >
-                  <Label>Teléfono*</Label>
-                  <div className="grid grid-cols-5 gap-2">
-                    <div className="col-span-2">
-                      <Select defaultValue="+57" name="country">
-                        <SelectTrigger>
+                  <Label className="text-white font-medium">Teléfono*</Label>
+                  <div className="grid grid-cols-4 gap-3">
+                    <div className="col-span-1">
+                      <Select defaultValue="+1" name="country">
+                        <SelectTrigger className="bg-white/10 border-white/30 text-white focus:border-purple-400 backdrop-blur-sm h-10 rounded-xl">
                           <SelectValue />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="bg-gray-900/95 border-white/20 backdrop-blur-md">
                           {countries.map((c: Country, idx: number) => (
-                            <SelectItem key={idx} value={c.dial_code}>
+                            <SelectItem
+                              key={idx}
+                              value={c.dial_code}
+                              className="text-white hover:bg-white/10 focus:bg-white/10"
+                            >
                               {c.flag} {c.dial_code}
                             </SelectItem>
                           ))}
@@ -186,6 +215,7 @@ export default function ContactForm() {
                         name="phone"
                         placeholder="3012226235"
                         required
+                        className="bg-white/10 border-white/30 text-white placeholder-white/60 focus:border-purple-400 focus:ring-purple-400/30 backdrop-blur-sm h-10 rounded-xl"
                       />
                     </div>
                   </div>
@@ -197,8 +227,9 @@ export default function ContactForm() {
                   initial="hidden"
                   whileInView="visible"
                   viewport={{ once: true }}
+                  className="space-y-2"
                 >
-                  <Label htmlFor="interest">
+                  <Label htmlFor="interest" className="text-white font-medium">
                     ¿En qué certificación está interesado/a?*
                   </Label>
                   <Input
@@ -206,6 +237,7 @@ export default function ContactForm() {
                     name="interest"
                     placeholder="Scrum Master, PMP, ITIL, etc."
                     required
+                    className="bg-white/10 border-white/30 text-white placeholder-white/60 focus:border-purple-400 focus:ring-purple-400/30 backdrop-blur-sm h-10 rounded-xl"
                   />
                 </motion.div>
 
@@ -215,13 +247,16 @@ export default function ContactForm() {
                   initial="hidden"
                   whileInView="visible"
                   viewport={{ once: true }}
+                  className="space-y-2"
                 >
-                  <Label htmlFor="details">Detalles adicionales</Label>
+                  <Label htmlFor="details" className="text-white font-medium">
+                    Detalles adicionales
+                  </Label>
                   <Textarea
                     id="details"
                     name="details"
                     placeholder="Escriba información que creas relevante"
-                    className="min-h-[120px]"
+                    className="min-h-[100px] bg-white/10 border-white/30 text-white placeholder-white/60 focus:border-purple-400 focus:ring-purple-400/30 backdrop-blur-sm rounded-xl resize-none"
                   />
                 </motion.div>
 
@@ -231,30 +266,31 @@ export default function ContactForm() {
                   initial="hidden"
                   whileInView="visible"
                   viewport={{ once: true }}
+                  className="pt-2"
                 >
-                  <div className="flex items-center justify-center space-x-2">
+                  <div className="flex items-start space-x-3">
                     <Checkbox
                       id="terms"
                       name="terms"
                       required
-                      className="mt-1"
+                      className="mt-1 border-white/40 data-[state=checked]:bg-purple-500 data-[state=checked]:border-purple-500 data-[state=checked]:text-white"
                       onCheckedChange={(checked) => setTermsAccepted(!!checked)}
                     />
                     <Label
                       htmlFor="terms"
-                      className="text-sm leading-tight text-gray-700"
+                      className="text-sm leading-relaxed text-white/90"
                     >
                       Al enviar este formulario, acepto los{" "}
                       <Link
                         href="#"
-                        className="text-violet-600 hover:text-violet-800 hover:underline"
+                        className="text-orange-400 hover:text-orange-300 hover:underline font-medium transition-colors"
                       >
                         Términos y condiciones
                       </Link>{" "}
                       y la{" "}
                       <Link
                         href="#"
-                        className="text-violet-600 hover:text-violet-800 hover:underline"
+                        className="text-orange-400 hover:text-orange-300 hover:underline font-medium transition-colors"
                       >
                         Política de privacidad
                       </Link>
@@ -268,17 +304,18 @@ export default function ContactForm() {
                   initial="hidden"
                   whileInView="visible"
                   viewport={{ once: true }}
+                  className="pt-3"
                 >
                   <Button
                     type="submit"
-                    className={`flex w-80 mx-auto transition-all duration-300 ${
+                    className={`w-full max-w-md mx-auto h-12 font-semibold rounded-xl transition-all duration-300 ${
                       termsAccepted
-                        ? "bg-violet-600 hover:bg-violet-700 hover:scale-105 text-white"
-                        : "bg-violet-400 cursor-not-allowed text-white"
+                        ? "bg-gradient-to-r from-purple-500 to-orange-500 hover:from-purple-600 hover:to-orange-600 hover:scale-105 text-white shadow-lg hover:shadow-purple-500/30"
+                        : "bg-white/20 cursor-not-allowed text-white/50 border border-white/30"
                     }`}
                     disabled={!termsAccepted}
                   >
-                    Enviar
+                    Enviar Formulario
                   </Button>
                 </motion.div>
               </form>

@@ -7,69 +7,52 @@ import { motion } from "framer-motion";
 
 export default function Footer() {
   return (
-    <footer className="relative w-full bg-gradient-to-b from-[#ECEFF3] to-[#DCE0E5] pt-10 pb-6 px-4 md:px-8 overflow-hidden">
+    <footer className="relative w-full bg-black pt-12 pb-8 px-4 md:px-8 overflow-hidden">
+      {/* Gradiente sutil */}
+      <div className="absolute inset-0 bg-gradient-to-t from-purple-950/10 to-transparent"></div>
 
-      <motion.div
-        className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-purple-500 via-pink-400 to-purple-500"
-        initial={{ x: "-100%" }}
-        animate={{ x: "100%" }}
-        transition={{ repeat: Infinity, duration: 3, ease: "linear" }}
-      />
+      {/* Efecto neón en el borde superior */}
+      <div className="absolute top-0 left-0 right-0 h-0.5 bg-purple-500 shadow-[0_0_20px_rgba(139,92,246,0.8),0_0_40px_rgba(139,92,246,0.4)]"></div>
 
-      <motion.div
-        className="absolute inset-0 pointer-events-none"
-        initial={{ backgroundPosition: "0% 0%", scale: 1 }}
-        animate={{
-          backgroundPosition: ["0% 0%", "100% 0%", "0% 0%"],
-          scale: [1, 1.05, 1],
-        }}
-        transition={{
-          duration: 6,
-          repeat: Infinity,
-          ease: "linear",
-        }}
-        style={{
-          background:
-            "radial-gradient(circle at 20% 30%, rgba(103,14,226,0.25), transparent 40%), radial-gradient(circle at 80% 70%, rgba(255,105,180,0.2), transparent 40%)",
-          backgroundSize: "200% 200%",
-        }}
-      />
-
-      <div className="container mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-8 relative z-10">
-
+      <div className="container mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-10 relative z-10">
         <div className="flex justify-center md:justify-center">
           <Image
-            src="/logo/complete/sm-full-color.png"
-            alt="Cert Logo"
-            width={140}
-            height={40}
-            className="h-12 w-auto"
+            src="/logo/complete/md-full-color.png"
+            alt="T-Cert Logo"
+            width={180}
+            height={50}
+            className="h-16 w-auto"
           />
         </div>
 
-        <nav className="flex flex-col items-center gap-3 text-center">
+        <nav className="flex flex-col items-center gap-4 text-center">
           {["Acerca de", "Certificaciones", "Contáctanos"].map((item, idx) => (
             <motion.div
               key={idx}
-              whileHover={{ scale: 1.05, color: "#670EE2" }}
+              whileHover={{ scale: 1.05 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
               <Link
                 href="/under-construction"
-                className="relative text-gray-600 hover:text-[#670EE2] transition-colors"
+                className="text-gray-300 hover:text-purple-400 transition-colors text-lg font-bold"
               >
                 {item}
-                <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-[#670EE2] transition-all duration-300 group-hover:w-full" />
               </Link>
             </motion.div>
           ))}
         </nav>
 
         <div className="flex flex-col items-center gap-4">
-          <p className="text-gray-600 text-sm">Síguenos en nuestras redes</p>
-          <div className="flex gap-4">
+          <p className="text-gray-400 text-base font-bold">
+            Síguenos en nuestras redes
+          </p>
+          <div className="flex gap-6">
             {[
-              { icon: Instagram, color: "#E4405F", url: "https://instagram.com" },
+              {
+                icon: Instagram,
+                color: "#E4405F",
+                url: "https://instagram.com",
+              },
               { icon: Facebook, color: "#1877F2", url: "https://facebook.com" },
               { icon: Linkedin, color: "#0A66C2", url: "https://linkedin.com" },
             ].map(({ icon: Icon, color, url }, idx) => (
@@ -77,17 +60,20 @@ export default function Footer() {
                 key={idx}
                 href={url}
                 target="_blank"
-                className="text-gray-600 transition-colors"
+                className="text-gray-400 hover:text-white transition-colors"
                 aria-label="Síguenos en redes"
-                whileHover={{ scale: 1.2, color }}
+                whileHover={{ scale: 1.3, color }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
-                <Icon className="h-5 w-5" />
+                <Icon className="h-7 w-7 stroke-2" />
               </motion.a>
             ))}
           </div>
         </div>
       </div>
+
+      {/* Línea decorativa inferior con efecto neón */}
+      <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-500 via-orange-500 to-purple-500 shadow-[0_0_15px_rgba(139,92,246,0.6),0_0_30px_rgba(237,98,60,0.4)]"></div>
     </footer>
   );
 }
