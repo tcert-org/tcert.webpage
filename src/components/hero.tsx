@@ -27,8 +27,8 @@ const Hero: React.FC = () => {
       <div className="w-full h-full flex">
         {/* Lado izquierdo - Contenido */}
         <div className="w-1/2 px-8 lg:px-16 flex flex-col justify-center relative z-10">
-          {/* Gradiente de transición hacia la derecha */}
-          <div className="absolute top-0 right-0 w-32 h-full bg-gradient-to-r from-transparent to-black/20 pointer-events-none"></div>
+          {/* Gradiente suave de integración - más ancho y sutil */}
+          <div className="absolute top-0 right-0 w-32 h-full bg-gradient-to-r from-transparent via-purple-900/5 to-purple-800/15 pointer-events-none"></div>
 
           {/* Título principal alineado a la izquierda */}
           <motion.h1
@@ -89,8 +89,8 @@ const Hero: React.FC = () => {
 
         {/* Lado derecho - Animación con gradiente */}
         <div className="w-1/2 relative overflow-hidden">
-          {/* Gradiente de transición desde la izquierda */}
-          <div className="absolute top-0 left-0 w-32 h-full bg-gradient-to-r from-black/20 to-transparent pointer-events-none z-10"></div>
+          {/* Gradiente suave de transición desde la izquierda - más integrado */}
+          <div className="absolute top-0 left-0 w-32 h-full bg-gradient-to-r from-purple-800/15 via-purple-900/5 to-transparent pointer-events-none z-10"></div>
 
           {/* Gradiente animado principal */}
           <motion.div
