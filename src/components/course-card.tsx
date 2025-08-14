@@ -47,12 +47,14 @@ export function CourseCard({ course }: { course: Course }) {
               </div>
             </div>
 
-            {/* Badge de fecha */}
-            <div className="absolute bottom-4 left-4">
-              <span className="px-2 py-1 text-xs bg-purple-600/80 backdrop-blur-sm text-white rounded-full font-medium">
-                {course.date}
-              </span>
-            </div>
+            {/* Badge de fecha - solo mostrar si hay fecha */}
+            {course.date && (
+              <div className="absolute bottom-4 left-4">
+                <span className="px-2 py-1 text-xs bg-purple-600/80 backdrop-blur-sm text-white rounded-full font-medium">
+                  {course.date}
+                </span>
+              </div>
+            )}
           </div>
         </CardHeader>
 
