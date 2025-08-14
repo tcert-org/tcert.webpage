@@ -32,7 +32,7 @@ export async function GET() {
           "Content-Type": "application/json",
         },
         // Sin cache para obtener siempre datos actualizados
-        cache: 'no-store'
+        cache: "no-store",
       }
     );
 
