@@ -13,7 +13,6 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
 } from "@/components/ui/select";
 import { countries, Country } from "../../utils/countries";
 import { motion, AnimatePresence } from "framer-motion";
@@ -25,6 +24,7 @@ export default function ContactForm() {
     message: string;
   } | null>(null);
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const [selectedCountry, setSelectedCountry] = useState("+1");
 
   const showToast = (type: "success" | "error", message: string) => {
     setToast({ type, message });
@@ -190,30 +190,43 @@ export default function ContactForm() {
                   className="space-y-2"
                 >
                   <Label className="text-white font-medium">Teléfono*</Label>
-                  <div className="grid grid-cols-4 gap-3">
+                  <div className="grid grid-cols-5 gap-3">
                     <div className="col-span-1">
-                      <Select defaultValue="+1" name="country">
+                      <Select 
+                        value={selectedCountry} 
+                        onValueChange={setSelectedCountry}
+                        name="country"
+                      >
                         <SelectTrigger className="bg-white/10 border-white/30 text-white focus:border-purple-400 backdrop-blur-sm h-10 rounded-xl">
-                          <SelectValue />
+                          <div className="flex items-center gap-2">
+                            <span className="text-lg">
+                              {countries.find(c => c.dial_code === selectedCountry)?.flag || "🌍"}
+                            </span>
+                            <span>{selectedCountry}</span>
+                          </div>
                         </SelectTrigger>
-                        <SelectContent className="bg-gray-900/95 border-white/20 backdrop-blur-md">
+                        <SelectContent className="bg-gray-900/95 border-white/20 backdrop-blur-md max-h-60 overflow-y-auto">
                           {countries.map((c: Country, idx: number) => (
                             <SelectItem
                               key={idx}
                               value={c.dial_code}
-                              className="text-white hover:bg-white/10 focus:bg-white/10"
+                              className="text-white hover:bg-white/10 focus:bg-white/10 cursor-pointer"
                             >
-                              {c.flag} {c.dial_code}
+                              <div className="flex items-center gap-2">
+                                <span className="text-lg">{c.flag}</span>
+                                <span className="font-medium">{c.dial_code}</span>
+                                <span className="text-xs text-gray-400 truncate">{c.name}</span>
+                              </div>
                             </SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
                     </div>
-                    <div className="col-span-3">
+                    <div className="col-span-4">
                       <Input
                         id="phone"
                         name="phone"
-                        placeholder="3012226235"
+                        placeholder="(555) 123-4567"
                         required
                         className="bg-white/10 border-white/30 text-white placeholder-white/60 focus:border-purple-400 focus:ring-purple-400/30 backdrop-blur-sm h-10 rounded-xl"
                       />
@@ -223,26 +236,6 @@ export default function ContactForm() {
 
                 <motion.div
                   custom={4}
-                  variants={fadeUp}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true }}
-                  className="space-y-2"
-                >
-                  <Label htmlFor="interest" className="text-white font-medium">
-                    ¿En qué certificación está interesado/a?*
-                  </Label>
-                  <Input
-                    id="interest"
-                    name="interest"
-                    placeholder="Scrum Master, PMP, ITIL, etc."
-                    required
-                    className="bg-white/10 border-white/30 text-white placeholder-white/60 focus:border-purple-400 focus:ring-purple-400/30 backdrop-blur-sm h-10 rounded-xl"
-                  />
-                </motion.div>
-
-                <motion.div
-                  custom={5}
                   variants={fadeUp}
                   initial="hidden"
                   whileInView="visible"
@@ -261,14 +254,14 @@ export default function ContactForm() {
                 </motion.div>
 
                 <motion.div
-                  custom={6}
+                  custom={5}
                   variants={fadeUp}
                   initial="hidden"
                   whileInView="visible"
                   viewport={{ once: true }}
                   className="pt-2"
                 >
-                  <div className="flex items-start space-x-3">
+                  <div className="flex items-start justify-center space-x-3">
                     <Checkbox
                       id="terms"
                       name="terms"
@@ -278,7 +271,7 @@ export default function ContactForm() {
                     />
                     <Label
                       htmlFor="terms"
-                      className="text-sm leading-relaxed text-white/90"
+                      className="text-sm leading-relaxed text-white/90 text-center"
                     >
                       Al enviar este formulario, acepto los{" "}
                       <Link
@@ -299,16 +292,16 @@ export default function ContactForm() {
                 </motion.div>
 
                 <motion.div
-                  custom={7}
+                  custom={6}
                   variants={fadeUp}
                   initial="hidden"
                   whileInView="visible"
                   viewport={{ once: true }}
-                  className="pt-3"
+                  className="pt-3 flex justify-center"
                 >
                   <Button
                     type="submit"
-                    className={`w-full max-w-md mx-auto h-12 font-semibold rounded-xl transition-all duration-300 ${
+                    className={`max-w-md h-12 font-semibold rounded-xl transition-all duration-300 ${
                       termsAccepted
                         ? "bg-gradient-to-r from-purple-500 to-orange-500 hover:from-purple-600 hover:to-orange-600 hover:scale-105 text-white shadow-lg hover:shadow-purple-500/30"
                         : "bg-white/20 cursor-not-allowed text-white/50 border border-white/30"
