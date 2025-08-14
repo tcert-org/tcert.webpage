@@ -2,8 +2,6 @@
 
 import { useParams } from "next/navigation";
 import Image from "next/image";
-import Link from "next/link";
-import { ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
@@ -191,10 +189,7 @@ export default function CourseDetail() {
               {/* Descripción */}
               {course.description && (
                 <div>
-                  <h2 className="text-xl font-semibold mb-2 
-                                 bg-[linear-gradient(to_right,_#8b5cf6_0%,_#d946ef_20%,_#d946ef_50%,_#fb923c_85%)] 
-                                 bg-clip-text text-transparent 
-                                 bg-[length:200%_200%] animate-gradient">
+                  <h2 className="text-xl font-semibold mb-2 text-white">
                     Descripción
                   </h2>
                   <p className="text-white/80 leading-relaxed text-justify">
@@ -206,10 +201,7 @@ export default function CourseDetail() {
               {/* Temas principales (solo si existen) */}
               {course.mainTopics && course.mainTopics.length > 0 && (
                 <div>
-                  <h2 className="text-xl font-semibold mb-2 
-                                 bg-[linear-gradient(to_right,_#8b5cf6_0%,_#d946ef_20%,_#d946ef_50%,_#fb923c_85%)] 
-                                 bg-clip-text text-transparent 
-                                 bg-[length:200%_200%] animate-gradient">
+                  <h2 className="text-xl font-semibold mb-2 text-white">
                     Temas principales
                   </h2>
                   <ul className="space-y-2 text-justify">
@@ -226,10 +218,7 @@ export default function CourseDetail() {
               {/* Público objetivo (solo si existe) */}
               {course.targetAudience && course.targetAudience.length > 0 && (
                 <div>
-                  <h2 className="text-xl font-semibold mb-2 
-                                 bg-[linear-gradient(to_right,_#8b5cf6_0%,_#d946ef_20%,_#d946ef_50%,_#b91c1c_85%)]  
-                                 bg-clip-text text-transparent 
-                                 bg-[length:200%_200%] animate-gradient">
+                  <h2 className="text-xl font-semibold mb-2 text-white">
                     ¿Para quién es esta certificación?
                   </h2>
                   <ul className="space-y-2 text-justify">
