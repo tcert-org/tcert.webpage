@@ -72,8 +72,9 @@ export function TestimonialsCarousel({ title = "¿Qué dicen nuestros estudiante
           }));
 
         setTestimonials(testimonialsFormatted);
-        } catch (e: any) {
-        setError(e.message || "Error al cargar testimonios");
+        } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "Error al cargar testimonios";
+        setError(errorMessage);
         setTestimonials([]);
         } finally {
         setLoading(false);

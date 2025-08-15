@@ -93,7 +93,7 @@ export default function SectionWithImage({
       <div
         className={`absolute inset-0 ${
           right ? "bg-gradient-to-l" : "bg-gradient-to-r"
-        } from-transparent via-transparent to-purple-900/10`}
+        } from-black via-gray-900 to-black`}
       ></div>
 
       <div className="max-w-7xl mx-auto relative z-10">

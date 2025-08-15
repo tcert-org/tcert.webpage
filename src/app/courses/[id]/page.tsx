@@ -48,15 +48,6 @@ type CourseDetailData = {
   targetAudience?: string[];
 };
 
-// Datos para los testimonios
-type Testimonial = {
-  id: number;
-  name: string;
-  role: string;
-  content: string;
-  rating: number; // 1-5
-};
-
 import { TestimonialsCarousel } from "@/components/testimonials-carousel";
 
 
@@ -180,7 +171,7 @@ export default function CourseDetail() {
 
   return (
     <motion.div
-      className="min-h-screen py-16 bg-gradient-to-tr from-violet-900/30 via-purple-500/60 to-indigo-800/90 pt-32"
+      className="min-h-screen py-16 bg-gradient-to-br from-black via-gray-900 to-blac pt-32"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
@@ -211,7 +202,6 @@ export default function CourseDetail() {
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.4, delay: 0.4 }}
                   >
-                    <span className="mr-2">📝</span>
                     Descripción
                   </motion.h2>
                   <motion.p 
@@ -239,7 +229,6 @@ export default function CourseDetail() {
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.4, delay: 0.7 }}
                   >
-                    <span className="mr-2">📚</span>
                     Temas principales
                   </motion.h2>
                   <motion.ul className="space-y-3 text-justify pl-4 border-l-2 border-purple-500/30">
@@ -273,7 +262,6 @@ export default function CourseDetail() {
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.4, delay: 1.0 }}
                   >
-                    <span className="mr-2">👥</span>
                     ¿Para quién es esta certificación?
                   </motion.h2>
                   <motion.ul className="space-y-3 text-justify pl-4 border-l-2 border-purple-500/30">

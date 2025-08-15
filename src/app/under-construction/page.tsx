@@ -1,12 +1,15 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export default function UnderConstruction() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-[#f3e8ff] via-[#e0e7ff] to-[#f0fdfa] px-4">
       <div className="animate-bounce mb-6">
-        <img
+        <Image
           src="/logo/complete/sm-full-color.png"
           alt="T-Cert Logo"
+          width={112} // w-28 = 7rem = 112px
+          height={112}
           className="w-28 h-auto mx-auto drop-shadow-xl"
         />
       </div>
