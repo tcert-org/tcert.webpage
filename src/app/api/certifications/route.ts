@@ -25,7 +25,7 @@ export async function GET() {
   try {
     // Realizar la petición a la API externa
     const response = await fetch(
-      "https://tcert-platform.vercel.app/api/certification-params",
+      "https://app.t-cert.us/api/certification-params",
       {
         method: "GET",
         headers: {

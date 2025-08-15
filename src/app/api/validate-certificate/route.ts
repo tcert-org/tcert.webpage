@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
 
   try {
     const response = await fetch(
-      `https://tcert-platform.vercel.app/api/diploma/by-voucher-code?voucher_code=${encodeURIComponent(
+      `https://app.t-cert.us/api/diploma/by-voucher-code?voucher_code=${encodeURIComponent(
         voucherCode
       )}`,
       {
