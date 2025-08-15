@@ -6,7 +6,8 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 
-// ===== Tipos (mismos del carrusel) =====
+
+// ===== Tipos =====
 type Certification = {
   id: number;
   name: string;
@@ -37,8 +38,8 @@ type CourseDetailData = {
   id: number;
   title: string;
   description?: string;
-  image?: string;           // logo calculado
-  certImage?: string;       // compat con tu JSX
+  image?: string;
+  certImage?: string;
   date?: string;
   students?: number;
   originalPrice?: number;
@@ -46,6 +47,22 @@ type CourseDetailData = {
   mainTopics?: string[];
   targetAudience?: string[];
 };
+
+// Datos para los testimonios
+type Testimonial = {
+  id: number;
+  name: string;
+  role: string;
+  content: string;
+  rating: number; // 1-5
+};
+
+import { TestimonialsCarousel } from "@/components/testimonials-carousel";
+
+// Mock data para testimonios
+const mockTestimonials: Testimonial[] = [
+  // ... (puedes mantener tu array mockTestimonials sin cambios)
+];
 
 // ===== Conversión igual que en el carrusel =====
 const convertCertificationToCourse = (
@@ -63,7 +80,7 @@ const convertCertificationToCourse = (
   const originalPrice = basePriceUSD;
   const currentPrice = Math.round(basePriceUSD * (1 - discountPercentNum / 100));
 
-  const studentCount = ((cert.id * 73) % 400) + 100; // 100-500
+  const studentCount = ((cert.id * 73) % 400) + 100; // entre 100 y 500
 
   let logoPath = "/cert-images/scrum-foundation.svg";
   if (cert.logo_url) {
@@ -73,6 +90,7 @@ const convertCertificationToCourse = (
       logoPath = cert.logo_url;
     }
   }
+
   const lower = cert.name.toLowerCase();
   if (logoPath === "/cert-images/scrum-foundation.svg") {
     if (lower.includes("scrum master")) logoPath = "/cert-images/scrum-master.svg";
@@ -84,7 +102,7 @@ const convertCertificationToCourse = (
     title: cert.name,
     description: cert.description,
     image: logoPath,
-    certImage: logoPath, // compat con tu JSX
+    certImage: logoPath,
     date: "Certificación",
     students: studentCount,
     originalPrice,
@@ -99,7 +117,9 @@ export default function CourseDetail() {
   const [course, setCourse] = useState<CourseDetailData | null>(null);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState<string | null>(null);
+  const [currentSlide, setCurrentSlide] = useState(0);
 
+  // Cargar datos desde la API al montar o cuando cambie el ID
   useEffect(() => {
     const run = async () => {
       try {
@@ -113,10 +133,10 @@ export default function CourseDetail() {
         if (!numericId || Number.isNaN(numericId)) {
           setErr("ID inválido");
           setCourse(null);
+          setLoading(false);
           return;
         }
 
-        // Intentar API
         const res = await fetch("/api/certifications", { cache: "no-store" });
         if (!res.ok) {
           throw new Error(`Error ${res.status}: ${res.statusText}`);
@@ -129,14 +149,15 @@ export default function CourseDetail() {
 
         const found = apiData.data.certifications.find((c) => c.id === numericId);
         if (!found) {
-          throw new Error("Curso no encontrado");
+          throw new Error("Certificación no encontrada");
         }
 
         const courseData = convertCertificationToCourse(found, apiData.data.params || []);
         setCourse(courseData);
+
       } catch (e: any) {
         console.error("Fallo al cargar desde API:", e?.message || e);
-        setErr(e?.message || "Error al cargar el curso");
+        setErr(e?.message || "Error al cargar la certificación");
         setCourse(null);
       } finally {
         setLoading(false);
@@ -146,20 +167,46 @@ export default function CourseDetail() {
     run();
   }, [params?.id]);
 
+  // Carousel logic
+  const [isPaused, setIsPaused] = useState(false);
+  const testimonialsPerSlide = 3;
+  const totalSlides = Math.ceil(mockTestimonials.length / testimonialsPerSlide);
+
+  useEffect(() => {
+    if (isPaused) return;
+
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev === totalSlides - 1 ? 0 : prev + 1));
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [totalSlides, isPaused]);
+
+  const handlePrev = () => {
+    setIsPaused(true);
+    setCurrentSlide((prev) => (prev === 0 ? totalSlides - 1 : prev - 1));
+  };
+
+  const handleNext = () => {
+    setIsPaused(true);
+    setCurrentSlide((prev) => (prev === totalSlides - 1 ? 0 : prev + 1));
+  };
+
+  const currentTestimonials = mockTestimonials.slice(
+    currentSlide * testimonialsPerSlide,
+    (currentSlide + 1) * testimonialsPerSlide
+  );
+
+  // Mostrar estados de carga o error
   if (loading) {
-    return (
-      <p className="text-center text-gray-500 mt-10">
-        Cargando...
-      </p>
-    );
+    return <p className="text-white text-center pt-32">Cargando certificación...</p>;
+  }
+
+  if (err) {
+    return <p className="text-red-500 text-center pt-32">Error: {err}</p>;
   }
 
   if (!course) {
-    return (
-      <p className="text-center text-gray-400 mt-10">
-        {err || "Curso no encontrado"}
-      </p>
-    );
+    return <p className="text-white text-center pt-32">Certificación no encontrada</p>;
   }
 
   return (
@@ -170,66 +217,111 @@ export default function CourseDetail() {
       transition={{ duration: 0.6, ease: "easeOut" }}
     >
       <div className="max-w-6xl mx-auto px-4 md:px-6">
-
         <div className="grid md:grid-cols-3 gap-8">
           {/* Main Content */}
           <div className="md:col-span-2">
-            <h1
-              className="text-3xl lg:text-5xl font-bold mb-6 text-white"
-            >
-              {course.title}
-            </h1>
+            <h1 className="text-3xl lg:text-5xl font-bold mb-6 text-white">{course.title}</h1>
 
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.2 }}
-              className="bg-white/5 backdrop-blur-sm rounded-xl p-6 space-y-6 shadow-lg border border-white/10"
+              className="bg-white/5 backdrop-blur-sm rounded-xl p-6 space-y-8 shadow-lg border border-white/10"
             >
               {/* Descripción */}
               {course.description && (
-                <div>
-                  <h2 className="text-xl font-semibold mb-2 text-white">
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, delay: 0.3 }}
+                  className="transform hover:scale-[1.01] transition-transform"
+                >
+                  <motion.h2 
+                    className="text-xl font-semibold mb-3 text-white flex items-center"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.4, delay: 0.4 }}
+                  >
+                    <span className="mr-2">📝</span>
                     Descripción
-                  </h2>
-                  <p className="text-white/80 leading-relaxed text-justify">
+                  </motion.h2>
+                  <motion.p 
+                    className="text-white/80 leading-relaxed text-justify pl-4 border-l-2 border-purple-500/30"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.5 }}
+                  >
                     {course.description}
-                  </p>
-                </div>
+                  </motion.p>
+                </motion.div>
               )}
 
-              {/* Temas principales (solo si existen) */}
+              {/* Temas principales */}
               {course.mainTopics && course.mainTopics.length > 0 && (
-                <div>
-                  <h2 className="text-xl font-semibold mb-2 text-white">
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, delay: 0.6 }}
+                  className="transform hover:scale-[1.01] transition-transform"
+                >
+                  <motion.h2 
+                    className="text-xl font-semibold mb-3 text-white flex items-center"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.4, delay: 0.7 }}
+                  >
+                    <span className="mr-2">📚</span>
                     Temas principales
-                  </h2>
-                  <ul className="space-y-2 text-justify">
+                  </motion.h2>
+                  <motion.ul className="space-y-3 text-justify pl-4 border-l-2 border-purple-500/30">
                     {course.mainTopics.map((t, i) => (
-                      <li key={i} className="flex items-center space-x-2">
+                      <motion.li 
+                        key={i} 
+                        className="flex items-center space-x-2 transform hover:translate-x-1 transition-transform"
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.4, delay: 0.8 + i * 0.1 }}
+                      >
                         <span className="text-orange-400 mt-1">✔</span>
                         <span className="text-white/80">{t}</span>
-                      </li>
+                      </motion.li>
                     ))}
-                  </ul>
-                </div>
+                  </motion.ul>
+                </motion.div>
               )}
 
-              {/* Público objetivo (solo si existe) */}
+              {/* Público objetivo */}
               {course.targetAudience && course.targetAudience.length > 0 && (
-                <div>
-                  <h2 className="text-xl font-semibold mb-2 text-white">
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, delay: 0.9 }}
+                  className="transform hover:scale-[1.01] transition-transform"
+                >
+                  <motion.h2 
+                    className="text-xl font-semibold mb-3 text-white flex items-center"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.4, delay: 1.0 }}
+                  >
+                    <span className="mr-2">👥</span>
                     ¿Para quién es esta certificación?
-                  </h2>
-                  <ul className="space-y-2 text-justify">
+                  </motion.h2>
+                  <motion.ul className="space-y-3 text-justify pl-4 border-l-2 border-purple-500/30">
                     {course.targetAudience.map((a, i) => (
-                      <li key={i} className="flex items-center space-x-2">
+                      <motion.li 
+                        key={i} 
+                        className="flex items-center space-x-2 transform hover:translate-x-1 transition-transform"
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.4, delay: 1.1 + i * 0.1 }}
+                      >
                         <span className="text-orange-400 mt-1">📑</span>
                         <span className="text-white/80">{a}</span>
-                      </li>
+                      </motion.li>
                     ))}
-                  </ul>
-                </div>
+                  </motion.ul>
+                </motion.div>
               )}
             </motion.div>
           </div>
@@ -249,11 +341,7 @@ export default function CourseDetail() {
                 transition={{ duration: 0.4, delay: 0.4 }}
               >
                 <Image
-                  src={
-                    course.certImage ||
-                    course.image ||
-                    "/cert-images/scrum-foundation.svg"
-                  }
+                  src={course.certImage || course.image || "/cert-images/scrum-foundation.svg"}
                   alt={course.title}
                   width={200}
                   height={200}
@@ -261,13 +349,10 @@ export default function CourseDetail() {
                 />
               </motion.div>
 
-              {(course.originalPrice !== undefined ||
-                course.currentPrice !== undefined) && (
+              {(course.originalPrice !== undefined || course.currentPrice !== undefined) && (
                 <div className="text-center mb-6">
                   {course.originalPrice !== undefined && (
-                    <span className="text-gray-400 line-through text-lg">
-                      ${course.originalPrice}
-                    </span>
+                    <span className="text-gray-400 line-through text-lg">${course.originalPrice}</span>
                   )}
                   {course.currentPrice !== undefined && (
                     <motion.span
@@ -288,6 +373,9 @@ export default function CourseDetail() {
             </motion.div>
           </div>
         </div>
+
+        {/* Testimonials Carousel */}
+        <TestimonialsCarousel className="mt-12" />
       </div>
     </motion.div>
   );

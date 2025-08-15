@@ -2,6 +2,7 @@ import ContactForm from "@/components/contact-form";
 import CourseCarousel from "@/components/course-carousel";
 import Hero from "@/components/hero";
 import SectionWithImage from "@/components/section-with-image";
+import { TestimonialsCarousel } from "@/components/testimonials-carousel";
 
 export default function Home() {
   return (
@@ -23,6 +24,9 @@ export default function Home() {
       </section>
       <section id="courses" className="scroll-mt-12">
         <CourseCarousel />
+      </section>
+      <section className="py-16 max-w-6xl mx-auto px-4 md:px-6 scroll-mt-12">
+        <TestimonialsCarousel />
       </section>
       <section id="contact" className="scroll-mt-12">
         <ContactForm />
