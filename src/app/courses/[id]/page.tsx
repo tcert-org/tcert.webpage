@@ -59,10 +59,7 @@ type Testimonial = {
 
 import { TestimonialsCarousel } from "@/components/testimonials-carousel";
 
-// Mock data para testimonios
-const mockTestimonials: Testimonial[] = [
-  // ... (puedes mantener tu array mockTestimonials sin cambios)
-];
+
 
 // ===== Conversión igual que en el carrusel =====
 const convertCertificationToCourse = (
@@ -117,8 +114,6 @@ export default function CourseDetail() {
   const [course, setCourse] = useState<CourseDetailData | null>(null);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState<string | null>(null);
-  const [currentSlide, setCurrentSlide] = useState(0);
-
   // Cargar datos desde la API al montar o cuando cambie el ID
   useEffect(() => {
     const run = async () => {
@@ -155,9 +150,10 @@ export default function CourseDetail() {
         const courseData = convertCertificationToCourse(found, apiData.data.params || []);
         setCourse(courseData);
 
-      } catch (e: any) {
-        console.error("Fallo al cargar desde API:", e?.message || e);
-        setErr(e?.message || "Error al cargar la certificación");
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Error al cargar la certificación';
+        console.error("Fallo al cargar desde API:", errorMessage);
+        setErr(errorMessage);
         setCourse(null);
       } finally {
         setLoading(false);
@@ -167,34 +163,7 @@ export default function CourseDetail() {
     run();
   }, [params?.id]);
 
-  // Carousel logic
-  const [isPaused, setIsPaused] = useState(false);
-  const testimonialsPerSlide = 3;
-  const totalSlides = Math.ceil(mockTestimonials.length / testimonialsPerSlide);
 
-  useEffect(() => {
-    if (isPaused) return;
-
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev === totalSlides - 1 ? 0 : prev + 1));
-    }, 5000);
-    return () => clearInterval(interval);
-  }, [totalSlides, isPaused]);
-
-  const handlePrev = () => {
-    setIsPaused(true);
-    setCurrentSlide((prev) => (prev === 0 ? totalSlides - 1 : prev - 1));
-  };
-
-  const handleNext = () => {
-    setIsPaused(true);
-    setCurrentSlide((prev) => (prev === totalSlides - 1 ? 0 : prev + 1));
-  };
-
-  const currentTestimonials = mockTestimonials.slice(
-    currentSlide * testimonialsPerSlide,
-    (currentSlide + 1) * testimonialsPerSlide
-  );
 
   // Mostrar estados de carga o error
   if (loading) {

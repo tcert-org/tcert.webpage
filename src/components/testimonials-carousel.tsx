@@ -3,23 +3,22 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-// Tipo para los testimonios que recibes de la API
-type ApiTestimonial = {
+// Tipos para la respuesta de la API y el renderizado
+interface ApiResponse {
   id: number;
   name: string;
   comment: string;
-  rating: number; // 1-5
+  rating: number;
   profession: string;
-};
+}
 
-// Tipo que usas para renderizar (rol = profession, content = comment)
-type Testimonial = {
+interface Testimonial {
   id: number;
   name: string;
   role: string;
   content: string;
-  rating: number; // 1-5
-};
+  rating: number;
+}
 
 interface TestimonialsCarouselProps {
   title?: string;
@@ -47,15 +46,30 @@ export function TestimonialsCarousel({ title = "¿Qué dicen nuestros estudiante
         const response = await res.json();
 
         // response es un objeto con { success, data, count, ... }
-        const rawTestimonialsArray = Array.isArray(response.data) ? response.data : [];
+        const rawTestimonialsArray: unknown[] = Array.isArray(response.data) ? response.data : [];
 
-        const testimonialsFormatted: Testimonial[] = rawTestimonialsArray.map(t => ({
-            id: t.id,
-            name: t.name,
-            role: t.profession,
-            content: t.comment,
-            rating: t.rating,
-        }));
+        const testimonialsFormatted: Testimonial[] = rawTestimonialsArray
+          .filter((item: unknown): item is ApiResponse => 
+            item !== null &&
+            typeof item === 'object' &&
+            'id' in item &&
+            'name' in item &&
+            'comment' in item &&
+            'profession' in item &&
+            'rating' in item &&
+            typeof (item as ApiResponse).id === 'number' &&
+            typeof (item as ApiResponse).name === 'string' &&
+            typeof (item as ApiResponse).comment === 'string' &&
+            typeof (item as ApiResponse).profession === 'string' &&
+            typeof (item as ApiResponse).rating === 'number'
+          )
+          .map((item: ApiResponse) => ({
+            id: item.id,
+            name: item.name,
+            role: item.profession,
+            content: item.comment,
+            rating: Math.min(5, Math.max(1, item.rating)),
+          }));
 
         setTestimonials(testimonialsFormatted);
         } catch (e: any) {
