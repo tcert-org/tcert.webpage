@@ -25,14 +25,14 @@ export async function GET() {
   try {
     // Realizar la petición a la API externa
     const response = await fetch(
-      "https://tcert-platform.vercel.app/api/certification-params",
+      "https://app.t-cert.us/api/certification-params",
       {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
         },
         // Sin cache para obtener siempre datos actualizados
-        cache: 'no-store'
+        cache: "no-store",
       }
     );
 
