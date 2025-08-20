@@ -21,6 +21,7 @@ const PartnersSection: React.FC = () => {
   const xRef = useRef(0); // posición actual en px
   const halfWidthRef = useRef(0); // ancho de la mitad (una lista)
   const rafRef = useRef<number | null>(null);
+  const decelRafRef = useRef<number | null>(null);
 
   // velocidad constante base (px/s) - ajustada dinámicamente según ancho
   const DEFAULT_SPEED = 200;
@@ -188,52 +189,41 @@ const PartnersSection: React.FC = () => {
     const decelerationStep = 5; // px/s por frame para reducir
     const minSpeed = 10; // velocidad mínima para detener
 
+    // Usamos un RAF separado para la desaceleración para no interferir con el loop principal
     const slowDown = () => {
       if (speedRef.current > minSpeed) {
         speedRef.current = Math.max(speedRef.current - decelerationStep, minSpeed);
-        rafRef.current = requestAnimationFrame(slowDown);
+        decelRafRef.current = requestAnimationFrame(slowDown);
       } else {
         // Cuando llegamos a velocidad mínima, dejamos la animación corriendo a minSpeed
         deceleratingRef.current = false;
+        if (decelRafRef.current) {
+          cancelAnimationFrame(decelRafRef.current);
+          decelRafRef.current = null;
+        }
       }
     };
 
-    slowDown();
+    if (decelRafRef.current) cancelAnimationFrame(decelRafRef.current);
+    decelRafRef.current = requestAnimationFrame(slowDown);
   };
 
   // Función para acelerar la animación a velocidad original
   const acelerarAnimacion = () => {
-    if (rafRef.current) return; // ya animando
+    // Cancelar cualquier RAF de desaceleración en curso y restaurar la velocidad objetivo
+    if (decelRafRef.current) {
+      cancelAnimationFrame(decelRafRef.current);
+      decelRafRef.current = null;
+    }
 
     deceleratingRef.current = false;
-    // restaurar velocidad según tamaño de pantalla
     try {
       const w = window.innerWidth || 1024;
       speedRef.current = w <= 768 ? MOBILE_SPEED : DEFAULT_SPEED;
     } catch {
       speedRef.current = DEFAULT_SPEED;
     }
-    let last = performance.now();
-
-    const step = (t: number) => {
-      const dt = (t - last) / 1000;
-      last = t;
-
-      xRef.current -= speedRef.current * dt;
-
-      const half = halfWidthRef.current || 0;
-      if (half > 0 && xRef.current <= -half) {
-        xRef.current += half;
-      }
-
-      if (trackRef.current) {
-        trackRef.current.style.transform = `translate3d(${xRef.current}px,0,0)`;
-      }
-
-      rafRef.current = requestAnimationFrame(step);
-    };
-
-    rafRef.current = requestAnimationFrame(step);
+    // No reiniciamos el loop principal: ya está corriendo y usa speedRef.current
   };
 
   return (

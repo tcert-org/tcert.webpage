@@ -236,7 +236,7 @@ export default function CourseCarousel() {
   // No renderizar nada hasta que el componente esté montado (evita hidratación)
   if (!mounted) {
     return (
-      <div className="relative w-full max-w-[100%] mx-auto px-4 sm:px-6 md:px-10 py-12 overflow-hidden">
+      <div className="relative w-full mx-auto px-4 sm:px-6 md:px-10 py-12 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-gray-900 via-black to-gray-900"></div>
         <div className="absolute inset-0 bg-gradient-to-br from-purple-900/10 via-transparent to-purple-800/10"></div>
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(139,92,246,0.08),transparent_70%)]"></div>
@@ -260,7 +260,7 @@ export default function CourseCarousel() {
   }
 
   return (
-  <div className="relative w-full max-w-[100%] mx-auto px-4 sm:px-6 md:px-10 py-12 overflow-hidden">
+  <div className="relative w-full mx-auto px-4 sm:px-6 md:px-10 py-12 overflow-hidden">
       {/* Fondo integrado que continúa desde la página principal */}
       <div className="absolute inset-0 bg-gradient-to-b from-gray-900 via-black to-gray-900"></div>
 
@@ -315,8 +315,9 @@ export default function CourseCarousel() {
       {/* Contenido principal - solo se muestra si no hay loading ni error */}
       {!loading && !error && courses.length > 0 && (
         <>
+          <div className="mx-auto max-w-5xl relative">
           {/* Versión móvil */}
-          <div className="relative z-10 block md:hidden">
+            <div className="relative z-10 block md:hidden">
             <div className="relative">
               <Carousel
                 className="w-full"
@@ -349,9 +350,6 @@ export default function CourseCarousel() {
                   </AnimatePresence>
                 </CarouselContent>
 
-                {/* Flechas de navegación para móvil */}
-                <CarouselPrevious className="-left-6 bg-purple-600/80 border-purple-500 hover:bg-purple-500 text-white" />
-                <CarouselNext className="-right-6 bg-purple-600/80 border-purple-500 hover:bg-purple-500 text-white" />
               </Carousel>
             </div>
 
@@ -431,7 +429,7 @@ export default function CourseCarousel() {
                 )}
               </CarouselContent>
 
-              {/* Flechas de navegación para desktop */}
+              {/* Flechas de navegación para desktop (fuera del área de las tarjetas) */}
               <CarouselPrevious className="-left-16 bg-purple-600/80 border-purple-500 hover:bg-purple-500 text-white w-12 h-12" />
               <CarouselNext className="-right-16 bg-purple-600/80 border-purple-500 hover:bg-purple-500 text-white w-12 h-12" />
 
@@ -460,6 +458,7 @@ export default function CourseCarousel() {
               </div>
             </Carousel>
           </div>
+        </div>
         </>
       )}
 
