@@ -161,13 +161,7 @@ export function Navbar() {
             <div className="h-full bg-gradient-to-b from-purple-600 to-red-400 text-white p-6">
               <SheetHeader className="flex justify-end">
                 <DialogTitle className="flex items-center">
-                  <Image
-                    src="/logo/text/white.png"
-                    alt="T-Cert Logo"
-                    width={80}
-                    height={20}
-                    className="h-5 w-auto"
-                  />
+                  {/* Logo removed from mobile hamburger menu as requested */}
                 </DialogTitle>
               </SheetHeader>
               <div className="flex flex-col items-center gap-8 mt-8">
@@ -175,7 +169,7 @@ export function Navbar() {
                 <Button
                   variant="ghost"
                   className="relative overflow-hidden group text-white text-xl w-full hover:bg-transparent font-semibold"
-                  onClick={() => handleScroll("vision")}
+                  onClick={() => { handleScroll("vision"); setOpen(false); }}
                 >
                   <span className="relative z-10">Nuestra Visión</span>
                   <span className="absolute inset-0 bg-gradient-to-r from-purple-500 to-orange-500 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
@@ -183,7 +177,7 @@ export function Navbar() {
                 <Button
                   variant="ghost"
                   className="relative overflow-hidden group text-white text-xl w-full hover:bg-transparent font-semibold"
-                  onClick={() => handleScroll("courses")}
+                  onClick={() => { handleScroll("courses"); setOpen(false); }}
                 >
                   <span className="relative z-10">Nuestros Cursos</span>
                   <span className="absolute inset-0 bg-gradient-to-r from-purple-500 to-orange-500 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
@@ -191,7 +185,7 @@ export function Navbar() {
                 <Button
                   variant="ghost"
                   className="relative overflow-hidden group text-white text-xl w-full hover:bg-transparent font-semibold"
-                  onClick={() => handleScroll("contact")}
+                  onClick={() => { handleScroll("contact"); setOpen(false); }}
                 >
                   <span className="relative z-10">Contáctanos</span>
                   <span className="absolute inset-0 bg-gradient-to-r from-purple-500 to-orange-500 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>

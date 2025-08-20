@@ -167,7 +167,7 @@ export default function SectionWithImage({
                   visible: { opacity: 1, y: 0 },
                 }}
               >
-                <p className="text-lg text-gray-300 leading-relaxed max-w-2xl">
+                <p className="text-lg mb-4 text-gray-300 leading-relaxed max-w-2xl">
                   {subtitle}
                 </p>
               </motion.div>
@@ -183,7 +183,7 @@ export default function SectionWithImage({
                   <Button
                     variant="outline"
                     size="lg"
-                    className="bg-transparent border-2 border-purple-500 text-purple-400 hover:bg-purple-500 hover:text-white transition-all duration-300"
+                    className="bg-transparent border-2 mb-12 border-purple-500 text-purple-400 hover:bg-purple-500 hover:text-white transition-all duration-300"
                     onClick={() => router.push("/about-us")}
                   >
                     {buttonText}

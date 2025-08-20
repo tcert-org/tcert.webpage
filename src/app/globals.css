@@ -116,3 +116,8 @@ body {
 .cursor-trail-dot {
   transition: transform 80ms linear, opacity 120ms linear;
 }
+
+/* Prevent horizontal page scrolling */
+html, body {
+  overflow-x: hidden;
+}

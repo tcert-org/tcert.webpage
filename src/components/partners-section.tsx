@@ -22,13 +22,15 @@ const PartnersSection: React.FC = () => {
   const halfWidthRef = useRef(0); // ancho de la mitad (una lista)
   const rafRef = useRef<number | null>(null);
 
-  // velocidad constante base (px/s)
-  const SPEED = 200;
-  // velocidad actual que se podrá desacelerar (px/s)
-  const speedRef = useRef(SPEED);
+  // velocidad constante base (px/s) - ajustada dinámicamente según ancho
+  const DEFAULT_SPEED = 200;
+  const MOBILE_SPEED = 70; // más lento en móviles
+  const speedRef = useRef(DEFAULT_SPEED);
+  // velocidad actual (mutable)
 
   // Flag para saber si estamos en hover desacelerando la animacion
   const deceleratingRef = useRef(false);
+  const [isFinePointer, setIsFinePointer] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchPartners = async () => {
@@ -64,7 +66,31 @@ const PartnersSection: React.FC = () => {
   };
 
   useEffect(() => {
+    // Ajustar velocidad inicial según ancho de pantalla
+    const setInitialSpeed = () => {
+      try {
+        const w = window.innerWidth || 1024;
+        speedRef.current = w <= 768 ? MOBILE_SPEED : DEFAULT_SPEED;
+      } catch {
+        speedRef.current = DEFAULT_SPEED;
+      }
+    };
+
+  setInitialSpeed();
+    const onResize = () => setInitialSpeed();
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  useEffect(() => {
     if (!trackRef.current || items.length === 0) return;
+
+    // Detect pointer capability
+    try {
+      setIsFinePointer(!(window.matchMedia && window.matchMedia("(pointer: coarse)").matches));
+    } catch {
+      setIsFinePointer(true);
+    }
 
     const firstHalfAnchors = Array.from(trackRef.current.querySelectorAll("a")).slice(
       0,
@@ -152,8 +178,10 @@ const PartnersSection: React.FC = () => {
     };
   }, [ready]);
 
-  // Función para desacelerar suavemente la animación
+  // Función para desacelerar suavemente la animación (solo para pointers secundarios)
   const desacelerarAnimacion = () => {
+    // no desacelerar en dispositivos táctiles/pointer:coarse
+    if (window.matchMedia && window.matchMedia("(pointer: coarse)").matches) return;
     if (deceleratingRef.current) return; // previene múltiples llamadas simultáneas
     deceleratingRef.current = true;
 
@@ -165,11 +193,7 @@ const PartnersSection: React.FC = () => {
         speedRef.current = Math.max(speedRef.current - decelerationStep, minSpeed);
         rafRef.current = requestAnimationFrame(slowDown);
       } else {
-        // Cuando llegamos a velocidad mínima, podemos cancelar el animation frame principal
-        if (rafRef.current) {
-          cancelAnimationFrame(rafRef.current);
-          rafRef.current = null;
-        }
+        // Cuando llegamos a velocidad mínima, dejamos la animación corriendo a minSpeed
         deceleratingRef.current = false;
       }
     };
@@ -182,7 +206,13 @@ const PartnersSection: React.FC = () => {
     if (rafRef.current) return; // ya animando
 
     deceleratingRef.current = false;
-    speedRef.current = SPEED;
+    // restaurar velocidad según tamaño de pantalla
+    try {
+      const w = window.innerWidth || 1024;
+      speedRef.current = w <= 768 ? MOBILE_SPEED : DEFAULT_SPEED;
+    } catch {
+      speedRef.current = DEFAULT_SPEED;
+    }
     let last = performance.now();
 
     const step = (t: number) => {
@@ -207,7 +237,7 @@ const PartnersSection: React.FC = () => {
   };
 
   return (
-    <section className="relative pt-20 pb-20 overflow-hidden">
+    <section className="relative pt-20 pb-20 overflow-hidden overflow-x-hidden">
       {/* Título */}
       <div className="mx-auto max-w-6xl px-4 md:px-6">
         <h2 className="text-white text-2xl text-center md:text-3xl font-semibold tracking-tight mb-20">
@@ -233,12 +263,12 @@ const PartnersSection: React.FC = () => {
             width: "max-content",
             transform: "translate3d(0,0,0)",
           }}
-          onMouseEnter={() => {
-            desacelerarAnimacion();
-          }}
-          onMouseLeave={() => {
-            acelerarAnimacion();
-          }}
+          {...(isFinePointer
+            ? {
+                onPointerEnter: () => desacelerarAnimacion(),
+                onPointerLeave: () => acelerarAnimacion(),
+              }
+            : {})}
         >
           {duplicated.map((partner, i) => (
             <a

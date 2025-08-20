@@ -155,7 +155,7 @@ const Hero: React.FC = () => {
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Button
                 size="lg"
-                className="relative overflow-hidden group bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-semibold text-lg px-8 py-4 rounded-lg shadow-xl transition-all duration-300 hover:shadow-purple-500/25"
+                className="relative overflow-hidden group bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-semibold text-lg px-8 py-4 mb-10 rounded-lg shadow-xl transition-all duration-300 hover:shadow-purple-500/25"
                 onClick={() => handleScroll("courses")}
               >
                 <span className="relative z-10">Explorar Certificaciones</span>
