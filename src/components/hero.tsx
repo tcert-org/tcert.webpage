@@ -20,7 +20,7 @@ const Hero: React.FC = () => {
   };
 
   return (
-    <section className="relative h-screen w-full flex items-center overflow-hidden bg-black">
+    <section className="relative w-full flex items-center overflow-hidden bg-black min-h-[70vh] md:min-h-screen">
       {/* Fondo base */}
       <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-800"></div>
 
@@ -104,14 +104,14 @@ const Hero: React.FC = () => {
       </div>
 
       {/* Contenido flotante */}
-      <div className="relative z-20 w-full h-full flex items-center">
-        <div className="w-full max-w-2xl px-8 lg:px-16 mx-auto lg:mx-0 lg:ml-16">
+      <div className="relative z-20 w-full flex items-center">
+        <div className="w-full max-w-2xl px-6 md:px-8 lg:px-16 mx-auto md:mx-0 md:ml-16">
           {/* Título principal */}
           <motion.h1
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 1, type: "spring", stiffness: 80 }}
-            className="text-4xl lg:text-6xl xl:text-7xl mb-6 font-bold tracking-tight text-left"
+            className="text-3xl sm:text-4xl lg:text-6xl xl:text-7xl mb-6 font-bold tracking-tight text-left"
           >
             <span className="block text-white leading-tight drop-shadow-lg">
               TU RUTA HACIA
@@ -139,7 +139,7 @@ const Hero: React.FC = () => {
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 1, duration: 0.8 }}
-            className="text-gray-300 text-lg lg:text-xl mb-8 max-w-md text-left leading-relaxed drop-shadow-md"
+            className="text-gray-300 text-base sm:text-lg lg:text-xl mb-8 max-w-md text-left leading-relaxed drop-shadow-md"
           >
             Desarrolla tus habilidades con certificaciones reconocidas
             mundialmente y transforma tu carrera profesional.

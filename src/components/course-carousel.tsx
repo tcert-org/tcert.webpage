@@ -236,7 +236,7 @@ export default function CourseCarousel() {
   // No renderizar nada hasta que el componente esté montado (evita hidratación)
   if (!mounted) {
     return (
-      <div className="relative w-full max-w-[100%] mx-auto px-[10%] xl:px-[20%] py-12 overflow-hidden">
+      <div className="relative w-full max-w-[100%] mx-auto px-4 sm:px-6 md:px-10 py-12 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-gray-900 via-black to-gray-900"></div>
         <div className="absolute inset-0 bg-gradient-to-br from-purple-900/10 via-transparent to-purple-800/10"></div>
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(139,92,246,0.08),transparent_70%)]"></div>
@@ -260,7 +260,7 @@ export default function CourseCarousel() {
   }
 
   return (
-    <div className="relative w-full max-w-[100%] mx-auto px-[10%] xl:px-[20%] py-12 overflow-hidden">
+  <div className="relative w-full max-w-[100%] mx-auto px-4 sm:px-6 md:px-10 py-12 overflow-hidden">
       {/* Fondo integrado que continúa desde la página principal */}
       <div className="absolute inset-0 bg-gradient-to-b from-gray-900 via-black to-gray-900"></div>
 
@@ -393,7 +393,7 @@ export default function CourseCarousel() {
                   { length: Math.ceil(courses.length / 3) },
                   (_, groupIndex) => (
                     <CarouselItem key={groupIndex} className="pl-2 md:pl-4">
-                      <div className="grid grid-cols-3 gap-6">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                         {courses
                           .slice(groupIndex * 3, (groupIndex + 1) * 3)
                           .map((course, index) => (

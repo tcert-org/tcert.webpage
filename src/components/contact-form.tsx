@@ -92,7 +92,7 @@ export default function ContactForm() {
           </motion.div>
         )}
       </AnimatePresence>{" "}
-      <div className="relative mx-auto max-w-[75%] xl:max-w-[45%] w-full">
+  <div className="relative mx-auto w-full max-w-full sm:max-w-3xl lg:max-w-4xl px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

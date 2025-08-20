@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 
 interface Partner {
   id: number;
@@ -40,8 +41,12 @@ const PartnersSection: React.FC = () => {
         } else {
           setError("No partners available");
         }
-      } catch (err: any) {
-        setError(err?.message || "Fetch error");
+      } catch (err: unknown) {
+          if (err instanceof Error) {
+            setError(err.message);
+          } else {
+          setError("Fetch error");
+        }
       }
     };
     fetchPartners();
@@ -244,15 +249,27 @@ const PartnersSection: React.FC = () => {
               className="flex-shrink-0"
               aria-label={partner.company_name}
             >
-              <img
-                src={partner.logo_url || ""}
-                alt={partner.company_name}
-                style={{ height: "10rem" }}
-                className="block w-auto filter grayscale hover:grayscale-0 transition duration-300"
-                sizes="(max-width: 640px) 120px, (max-width: 1024px) 160px, 180px"
-                loading="lazy"
-                decoding="async"
-              />
+              {partner.logo_url && partner.logo_url.startsWith("/") ? (
+                <div className="relative h-40 w-40 sm:w-44">
+                  <Image
+                    src={partner.logo_url}
+                    alt={partner.company_name}
+                    fill
+                    className="object-contain block filter grayscale hover:grayscale-0 transition duration-300"
+                    loading="lazy"
+                  />
+                </div>
+              ) : (
+                <img
+                  src={partner.logo_url || ""}
+                  alt={partner.company_name}
+                  style={{ height: "10rem" }}
+                  className="block w-auto filter grayscale hover:grayscale-0 transition duration-300"
+                  sizes="(max-width: 640px) 120px, (max-width: 1024px) 160px, 180px"
+                  loading="lazy"
+                  decoding="async"
+                />
+              )}
             </a>
           ))}
         </div>

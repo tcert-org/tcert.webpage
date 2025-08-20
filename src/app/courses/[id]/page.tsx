@@ -177,7 +177,7 @@ export default function CourseDetail() {
       transition={{ duration: 0.6, ease: "easeOut" }}
     >
       <div className="max-w-6xl mx-auto px-4 md:px-6">
-        <div className="grid md:grid-cols-3 gap-8">
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Main Content */}
           <div className="md:col-span-2">
             <h1 className="text-3xl lg:text-5xl font-bold mb-6 text-white">{course.title}</h1>
@@ -284,9 +284,9 @@ export default function CourseDetail() {
           </div>
 
           {/* Sidebar */}
-          <div>
+          <div className="order-2 md:order-none md:col-span-1">
             <motion.div
-              className="bg-gradient-to-b from-slate-900 via-violet-950 to-transparent rounded-xl shadow-lg p-6 sticky top-24"
+              className="bg-gradient-to-b from-slate-900 via-violet-950 to-transparent rounded-xl shadow-lg p-6 md:sticky md:top-24"
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.4, delay: 0.3 }}

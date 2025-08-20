@@ -49,17 +49,17 @@ export function Navbar() {
   };
 
   return (
-    <motion.header
+  <motion.header
       initial={{ y: -50, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6 }}
-      className={`fixed top-0 left-0 right-0 w-full z-50 px-10 transition-all duration-300 ${
+  className={`fixed top-0 left-0 right-0 w-full z-50 px-4 md:px-10 transition-all duration-300 ${
         isScrolled
           ? "bg-black/95 backdrop-blur-md border-b border-white/10 shadow-lg"
           : "bg-transparent"
       }`}
     >
-      <nav className="flex items-center justify-between h-16">
+  <nav className="flex items-center justify-between h-14 md:h-16">
         <Link href="/" className="flex items-center">
           <Image
             src="/logo/complete/sm-full-color.png"
@@ -70,7 +70,7 @@ export function Navbar() {
           />
         </Link>
 
-        <div className="hidden md:flex items-center gap-8">
+  <div className="hidden md:flex items-center gap-6 lg:gap-8">
           {/* Menú desplegable de Inicio */}
           <DropdownMenu>
             <DropdownMenuTrigger className="group text-white font-semibold transition-all duration-300 flex items-center gap-1 relative py-2">
@@ -177,7 +177,7 @@ export function Navbar() {
           </Link>
         </div>
 
-        <div className="hidden md:flex items-center gap-4">
+  <div className="hidden md:flex items-center gap-3 lg:gap-4">
           <motion.div whileHover={{ scale: 1.05 }}>
             <Button
               className="relative overflow-hidden group text-white bg-[#670EE2] hover:bg-[#670EE2]/90"

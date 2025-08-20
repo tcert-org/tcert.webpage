@@ -55,7 +55,7 @@ export function CourseCard({ course }: { course: Course }) {
         <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-purple-400/50 to-transparent"></div>
 
         <CardHeader className="p-0 relative z-10">
-          <div className="relative w-full h-56 overflow-hidden">
+          <div className="relative w-full h-44 sm:h-56 overflow-hidden">
             <Image
               src={course.image}
               alt={`Imagen del curso ${course.title}`}
@@ -89,11 +89,11 @@ export function CourseCard({ course }: { course: Course }) {
         </CardHeader>
 
         <CardContent className="p-6 relative z-10 flex-1">
-          <h3 className="text-xl font-bold mb-3 text-white leading-tight line-clamp-2">
+          <h3 className="text-lg sm:text-xl font-bold mb-3 text-white leading-tight line-clamp-2">
             {course.title}
           </h3>
 
-          <p className="text-gray-300 text-sm leading-relaxed mb-4 line-clamp-3">
+          <p className="text-gray-300 text-sm sm:text-sm leading-relaxed mb-4 line-clamp-3">
             {course.description}
           </p>
 

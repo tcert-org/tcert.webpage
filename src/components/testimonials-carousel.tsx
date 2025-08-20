@@ -236,7 +236,7 @@ export function TestimonialsCarousel({
         {/* Botones de navegación */}
         <button
           onClick={handlePrev}
-          className="absolute -left-16 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white p-3 rounded-full shadow-md transition-colors"
+          className="absolute left-2 md:-left-16 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white p-3 rounded-full shadow-md transition-colors"
           aria-label="Testimonios anteriores"
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -246,7 +246,7 @@ export function TestimonialsCarousel({
 
         <button
           onClick={handleNext}
-          className="absolute -right-16 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white p-3 rounded-full shadow-md transition-colors"
+          className="absolute right-2 md:-right-16 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white p-3 rounded-full shadow-md transition-colors"
           aria-label="Testimonios siguientes"
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

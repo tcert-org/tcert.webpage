@@ -49,7 +49,7 @@ export default function SectionWithImage({
       className="relative w-full max-w-md xl:max-w-2xl mx-auto"
     >
       <div className="relative overflow-hidden rounded-lg">
-        <div className="relative w-full h-[400px] bg-gray-900">
+        <div className="relative w-full h-56 sm:h-72 md:h-96 lg:h-[400px] bg-gray-900">
           {images.map((src, index) => (
             <Image
               key={index}
@@ -69,10 +69,10 @@ export default function SectionWithImage({
         </div>
 
         {/* Botón simple para cambiar imagen */}
-        {images.length > 1 && (
+          {images.length > 1 && (
           <motion.button
             onClick={nextImage}
-            className="absolute bottom-4 right-4 bg-black/60 hover:bg-black/80 p-2 rounded-full backdrop-blur-sm transition-all duration-200"
+            className="absolute bottom-4 right-4 sm:right-6 bg-black/60 hover:bg-black/80 p-2 rounded-full backdrop-blur-sm transition-all duration-200"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
             aria-label="Next image"
