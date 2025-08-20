@@ -111,3 +111,8 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+/* Cursor trail tweaks */
+.cursor-trail-dot {
+  transition: transform 80ms linear, opacity 120ms linear;
+}

@@ -4,6 +4,7 @@ import { Inter } from "next/font/google"; // Importar Inter
 import "./globals.css";
 import Footer from "@/components/footer";
 import ClientNavbar from "@/components/client-navbar";
+import CursorTrail from "@/components/cursor-trail";
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
@@ -37,6 +38,7 @@ export default function RootLayout({
         className={`${inter.variable} antialiased flex flex-col min-h-screen bg-gradient-to-b from-slate-900 via-violet-950 to-slate-900 m-0 p-0`}
       >
         <ClientNavbar />
+  <CursorTrail />
         <main className="flex-grow">{children}</main>
         <Footer />
       </body>
