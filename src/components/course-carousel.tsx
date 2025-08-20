@@ -124,13 +124,16 @@ export default function CourseCarousel() {
       params.find((p) => p.name.includes("Porcentaje de Descuento"))?.value ||
       "20";
 
-    const basePriceUSD = parseInt(basePrice);
-    const discountPercentNum = parseInt(discountPercent);
-    
+    const basePriceUSD = Number.parseFloat(basePrice);
+    const discountPercentNum = Number.parseFloat(discountPercent);
+
     // El precio base de la API es el precio original
-    // Calculamos el precio con descuento
-    const originalPrice = basePriceUSD;
-    const currentPrice = basePriceUSD * (1 - discountPercentNum / 100);
+    const originalPrice = Math.max(0, Math.round(basePriceUSD));
+
+    // Calculamos el precio con descuento, evitando negativos y redondeando
+    const rawDiscounted =
+      basePriceUSD * (1 - (isNaN(discountPercentNum) ? 0 : discountPercentNum) / 100);
+    const currentPrice = Math.max(0, Math.round(rawDiscounted));
 
     // Generar un número de estudiantes determinístico basado en el ID
     const studentCount = ((cert.id * 73) % 400) + 100; // Entre 100-500
@@ -138,13 +141,11 @@ export default function CourseCarousel() {
     // Manejar la URL del logo - asegurar que esté en la carpeta public
     let logoPath = "/cert-images/scrum-foundation.svg"; // fallback
     if (cert.logo_url) {
-      // Si es solo el nombre del archivo, agregamos la ruta de la carpeta public
       if (!cert.logo_url.startsWith("http") && !cert.logo_url.startsWith("/")) {
         logoPath = `/cert-images/${cert.logo_url}`;
       } else if (cert.logo_url.startsWith("/")) {
         logoPath = cert.logo_url;
       } else {
-        // Si es una URL externa, usar fallback por ahora
         logoPath = "/cert-images/scrum-foundation.svg";
       }
     }
@@ -163,11 +164,11 @@ export default function CourseCarousel() {
       id: cert.id,
       title: cert.name,
       image: logoPath,
-      date: "", // Sin fecha
+      date: "",
       students: studentCount,
       description: cert.description,
-      originalPrice: originalPrice,
-      currentPrice: currentPrice,
+      originalPrice,
+      currentPrice,
     };
   };
 
@@ -322,7 +323,7 @@ export default function CourseCarousel() {
                 setApi={setCarouselApi}
                 opts={{
                   loop: true,
-                  duration: 30, // Transición más suave (por defecto es 10)
+                  duration: 30, // Transición más suave
                 }}
               >
                 <CarouselContent>
@@ -383,7 +384,7 @@ export default function CourseCarousel() {
               setApi={setDesktopCarouselApi}
               opts={{
                 loop: true,
-                duration: 30, // Transición más suave (por defecto es 10)
+                duration: 30, // Transición más suave
               }}
             >
               <CarouselContent className="-ml-2 md:-ml-4">

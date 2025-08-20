@@ -12,7 +12,37 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 
+function formatCurrency(value: number) {
+  if (value <= 0) return "Gratis";
+  return value.toLocaleString("es-CO", {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: 0,
+  });
+}
+
 export function CourseCard({ course }: { course: Course }) {
+  const { originalPrice, currentPrice } = course;
+
+  // Evitar falsos positivos por redondeos
+  const EPS = 0.0001;
+  const isFree = currentPrice <= EPS;
+
+  // Hay descuento real solo si el precio con descuento es menor al original (>0)
+  const hasDiscount =
+    originalPrice > 0 && currentPrice > 0 && currentPrice < originalPrice - EPS;
+
+  const discountPercent = hasDiscount
+    ? Math.round((1 - currentPrice / originalPrice) * 100)
+    : 0;
+
+  // Precio principal que se muestra en naranja
+  const mainPrice = isFree
+    ? 0
+    : hasDiscount
+    ? currentPrice
+    : originalPrice;
+
   return (
     <motion.div
       whileHover={{ y: -2, scale: 1.005 }}
@@ -34,10 +64,10 @@ export function CourseCard({ course }: { course: Course }) {
               placeholder="blur"
               blurDataURL="/tocaPonerUnPlaceholder.svg"
             />
-            {/* Overlay gradiente más elegante */}
+            {/* Overlay gradiente */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
 
-            {/* Badge de estudiantes superpuesto */}
+            {/* Badge de estudiantes */}
             <div className="absolute top-4 right-4">
               <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/40 backdrop-blur-sm border border-white/20">
                 <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
@@ -47,7 +77,7 @@ export function CourseCard({ course }: { course: Course }) {
               </div>
             </div>
 
-            {/* Badge de fecha - solo mostrar si hay fecha */}
+            {/* Badge de fecha (opcional) */}
             {course.date && (
               <div className="absolute bottom-4 left-4">
                 <span className="px-2 py-1 text-xs bg-purple-600/80 backdrop-blur-sm text-white rounded-full font-medium">
@@ -87,26 +117,26 @@ export function CourseCard({ course }: { course: Course }) {
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
                 <span className="text-2xl font-bold text-orange-400">
-                  ${course.currentPrice.toLocaleString()}
+                  {formatCurrency(mainPrice)}
                 </span>
-                <span className="text-gray-500 line-through text-sm">
-                  ${course.originalPrice.toLocaleString()}
-                </span>
+
+                {/* Mostrar precio tachado SOLO si hay descuento real */}
+                {hasDiscount && (
+                  <span className="text-gray-500 line-through text-sm">
+                    {formatCurrency(originalPrice)}
+                  </span>
+                )}
               </div>
 
-              {/* Descuento badge */}
-              <div className="px-2 py-1 bg-red-500 text-white text-xs font-bold rounded-full">
-                -
-                {Math.round(
-                  ((course.originalPrice - course.currentPrice) /
-                    course.originalPrice) *
-                    100
-                )}
-                %
-              </div>
+              {/* Badge de descuento SOLO si hay descuento real */}
+              {hasDiscount && (
+                <div className="px-2 py-1 bg-red-500 text-white text-xs font-bold rounded-full">
+                  -{discountPercent}%
+                </div>
+              )}
             </div>
 
-            {/* Botón con hover de inicio de sesión */}
+            {/* Botón */}
             <Link href={`/courses/${course.id}`} className="block">
               <Button className="relative overflow-hidden group w-full bg-gradient-to-r from-slate-700 to-slate-800 hover:from-slate-600 hover:to-slate-700 text-white font-semibold py-2.5 rounded-lg transition-all duration-300 border border-slate-600/50 hover:border-purple-500/50">
                 <span className="relative z-10">Ver Curso Completo</span>
