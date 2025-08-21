@@ -126,7 +126,7 @@ export default function CourseCarousel() {
 
     const basePriceUSD = parseInt(basePrice);
     const discountPercentNum = parseInt(discountPercent);
-    
+
     // El precio base de la API es el precio original
     // Calculamos el precio con descuento
     const originalPrice = basePriceUSD;
@@ -135,28 +135,14 @@ export default function CourseCarousel() {
     // Generar un número de estudiantes determinístico basado en el ID
     const studentCount = ((cert.id * 73) % 400) + 100; // Entre 100-500
 
-    // Manejar la URL del logo - asegurar que esté en la carpeta public
-    let logoPath = "/cert-images/scrum-foundation.svg"; // fallback
-    if (cert.logo_url) {
-      // Si es solo el nombre del archivo, agregamos la ruta de la carpeta public
-      if (!cert.logo_url.startsWith("http") && !cert.logo_url.startsWith("/")) {
-        logoPath = `/cert-images/${cert.logo_url}`;
-      } else if (cert.logo_url.startsWith("/")) {
-        logoPath = cert.logo_url;
-      } else {
-        // Si es una URL externa, usar fallback por ahora
-        logoPath = "/cert-images/scrum-foundation.svg";
-      }
-    }
-
-    // Fallback específico por tipo de certificación si el logo no existe
-    const lowerName = cert.name.toLowerCase();
-    if (logoPath === "/cert-images/scrum-foundation.svg") {
-      if (lowerName.includes("scrum master")) {
-        logoPath = "/cert-images/scrum-master.svg";
-      } else if (lowerName.includes("scrum developer")) {
-        logoPath = "/cert-images/scrum-developers.svg";
-      }
+    // Construir la URL del logo desde el blob storage
+    let logoPath =
+      "https://e48bssyezdxaxnzg.public.blob.vercel-storage.com/logos_insignias/";
+    if (cert.logo_url && cert.logo_url.trim() !== "") {
+      logoPath += cert.logo_url;
+    } else {
+      // Fallback si no hay logo_url
+      logoPath += "default.svg";
     }
 
     return {
