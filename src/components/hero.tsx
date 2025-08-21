@@ -3,6 +3,37 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { usePathname, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+
+// Particles rendered only on client after mount to avoid SSR/client mismatch
+const HeroParticles: React.FC = () => {
+  const [particles, setParticles] = useState<Array<{left:string; top:string; dur:number; delay:number}>>([]);
+  useEffect(() => {
+    const arr = Array.from({length:25}).map(() => ({
+      left: `${Math.random()*100}%`,
+      top: `${Math.random()*100}%`,
+      dur: 4 + Math.random()*3,
+      delay: Math.random()*3
+    }));
+    setParticles(arr);
+  }, []);
+
+  if (particles.length === 0) return null;
+
+  return (
+    <div className="absolute inset-0">
+      {particles.map((p, i) => (
+        <motion.div
+          key={`particle-${i}`}
+          className="absolute w-1 h-1 bg-purple-400 rounded-full opacity-40"
+          style={{ left: p.left, top: p.top }}
+          animate={{ y: [-30, 30, -30], x: [-20,20,-20], opacity: [0.4,0.8,0.4] }}
+          transition={{ duration: p.dur, repeat: Infinity, delay: p.delay, ease: 'easeInOut' }}
+        />
+      ))}
+    </div>
+  );
+};
 
 const Hero: React.FC = () => {
   const pathname = usePathname();
@@ -20,7 +51,7 @@ const Hero: React.FC = () => {
   };
 
   return (
-    <section className="relative h-screen w-full flex items-center overflow-hidden bg-black">
+    <section className="relative w-full flex items-center overflow-hidden bg-black min-h-[70vh] md:min-h-screen">
       {/* Fondo base */}
       <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-800"></div>
 
@@ -78,40 +109,18 @@ const Hero: React.FC = () => {
         }}
       />
 
-      {/* Partículas flotantes por todo el espacio */}
-      <div className="absolute inset-0">
-        {[...Array(25)].map((_, i) => (
-          <motion.div
-            key={`particle-${i}`}
-            className="absolute w-1 h-1 bg-purple-400 rounded-full opacity-40"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-            }}
-            animate={{
-              y: [-30, 30, -30],
-              x: [-20, 20, -20],
-              opacity: [0.4, 0.8, 0.4],
-            }}
-            transition={{
-              duration: 4 + Math.random() * 3,
-              repeat: Infinity,
-              delay: Math.random() * 3,
-              ease: "easeInOut",
-            }}
-          />
-        ))}
-      </div>
+  {/* Partículas flotantes por todo el espacio (solo en cliente) */}
+  <HeroParticles />
 
       {/* Contenido flotante */}
-      <div className="relative z-20 w-full h-full flex items-center">
-        <div className="w-full max-w-2xl px-8 lg:px-16 mx-auto lg:mx-0 lg:ml-16">
+      <div className="relative z-20 w-full flex items-center">
+        <div className="w-full max-w-2xl px-6 md:px-8 lg:px-16 mx-auto md:mx-0 md:ml-16">
           {/* Título principal */}
           <motion.h1
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 1, type: "spring", stiffness: 80 }}
-            className="text-4xl lg:text-6xl xl:text-7xl mb-6 font-bold tracking-tight text-left"
+            className="text-3xl sm:text-4xl lg:text-6xl xl:text-7xl mb-6 font-bold tracking-tight text-left"
           >
             <span className="block text-white leading-tight drop-shadow-lg">
               TU RUTA HACIA
@@ -139,7 +148,7 @@ const Hero: React.FC = () => {
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 1, duration: 0.8 }}
-            className="text-gray-300 text-lg lg:text-xl mb-8 max-w-md text-left leading-relaxed drop-shadow-md"
+            className="text-gray-300 text-base sm:text-lg lg:text-xl mb-8 max-w-md text-left leading-relaxed drop-shadow-md"
           >
             Desarrolla tus habilidades con certificaciones reconocidas
             mundialmente y transforma tu carrera profesional.
@@ -155,7 +164,7 @@ const Hero: React.FC = () => {
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Button
                 size="lg"
-                className="relative overflow-hidden group bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-semibold text-lg px-8 py-4 rounded-lg shadow-xl transition-all duration-300 hover:shadow-purple-500/25"
+                className="relative overflow-hidden group bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-semibold text-lg px-8 py-4 mb-10 rounded-lg shadow-xl transition-all duration-300 hover:shadow-purple-500/25"
                 onClick={() => handleScroll("courses")}
               >
                 <span className="relative z-10">Explorar Certificaciones</span>

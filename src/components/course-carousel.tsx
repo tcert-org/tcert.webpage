@@ -124,36 +124,51 @@ export default function CourseCarousel() {
       params.find((p) => p.name.includes("Porcentaje de Descuento"))?.value ||
       "20";
 
-    const basePriceUSD = parseInt(basePrice);
-    const discountPercentNum = parseInt(discountPercent);
+    const basePriceUSD = Number.parseFloat(basePrice);
+    const discountPercentNum = Number.parseFloat(discountPercent);
 
     // El precio base de la API es el precio original
-    // Calculamos el precio con descuento
-    const originalPrice = basePriceUSD;
-    const currentPrice = basePriceUSD * (1 - discountPercentNum / 100);
+    const originalPrice = Math.max(0, Math.round(basePriceUSD));
+
+    // Calculamos el precio con descuento, evitando negativos y redondeando
+    const rawDiscounted =
+      basePriceUSD * (1 - (isNaN(discountPercentNum) ? 0 : discountPercentNum) / 100);
+    const currentPrice = Math.max(0, Math.round(rawDiscounted));
 
     // Generar un número de estudiantes determinístico basado en el ID
     const studentCount = ((cert.id * 73) % 400) + 100; // Entre 100-500
 
-    // Construir la URL del logo desde el blob storage
-    let logoPath =
-      "https://e48bssyezdxaxnzg.public.blob.vercel-storage.com/logos_insignias/";
-    if (cert.logo_url && cert.logo_url.trim() !== "") {
-      logoPath += cert.logo_url;
-    } else {
-      // Fallback si no hay logo_url
-      logoPath += "default.svg";
+    // Manejar la URL del logo - asegurar que esté en la carpeta public
+    let logoPath = "/cert-images/scrum-foundation.svg"; // fallback
+    if (cert.logo_url) {
+      if (!cert.logo_url.startsWith("http") && !cert.logo_url.startsWith("/")) {
+        logoPath = `/cert-images/${cert.logo_url}`;
+      } else if (cert.logo_url.startsWith("/")) {
+        logoPath = cert.logo_url;
+      } else {
+        logoPath = "/cert-images/scrum-foundation.svg";
+      }
+    }
+
+    // Fallback específico por tipo de certificación si el logo no existe
+    const lowerName = cert.name.toLowerCase();
+    if (logoPath === "/cert-images/scrum-foundation.svg") {
+      if (lowerName.includes("scrum master")) {
+        logoPath = "/cert-images/scrum-master.svg";
+      } else if (lowerName.includes("scrum developer")) {
+        logoPath = "/cert-images/scrum-developers.svg";
+      }
     }
 
     return {
       id: cert.id,
       title: cert.name,
       image: logoPath,
-      date: "", // Sin fecha
+      date: "",
       students: studentCount,
       description: cert.description,
-      originalPrice: originalPrice,
-      currentPrice: currentPrice,
+      originalPrice,
+      currentPrice,
     };
   };
 
@@ -221,7 +236,7 @@ export default function CourseCarousel() {
   // No renderizar nada hasta que el componente esté montado (evita hidratación)
   if (!mounted) {
     return (
-      <div className="relative w-full max-w-[100%] mx-auto px-[10%] xl:px-[20%] py-12 overflow-hidden">
+      <div className="relative w-full mx-auto px-4 sm:px-6 md:px-10 py-12 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-gray-900 via-black to-gray-900"></div>
         <div className="absolute inset-0 bg-gradient-to-br from-purple-900/10 via-transparent to-purple-800/10"></div>
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(139,92,246,0.08),transparent_70%)]"></div>
@@ -245,16 +260,9 @@ export default function CourseCarousel() {
   }
 
   return (
-    <div className="relative w-full max-w-[100%] mx-auto px-[10%] xl:px-[20%] py-12 overflow-hidden">
-      {/* Fondo integrado que continúa desde la página principal */}
-      <div className="absolute inset-0 bg-gradient-to-b from-gray-900 via-black to-gray-900"></div>
-
-      {/* Efectos sutiles púrpura */}
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-900/10 via-transparent to-purple-800/10"></div>
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(139,92,246,0.08),transparent_70%)]"></div>
-
+  <div className="relative w-full mx-auto px-4 sm:px-6 md:px-10 py- overflow-hidden">
       {/* Título principal */}
-      <div className="relative z-10 text-center mb-8">
+      <div className="relative z-10 text-center mb-16">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -300,15 +308,16 @@ export default function CourseCarousel() {
       {/* Contenido principal - solo se muestra si no hay loading ni error */}
       {!loading && !error && courses.length > 0 && (
         <>
+          <div className="mx-auto max-w-5xl relative">
           {/* Versión móvil */}
-          <div className="relative z-10 block md:hidden">
+            <div className="relative z-10 block md:hidden">
             <div className="relative">
               <Carousel
                 className="w-full"
                 setApi={setCarouselApi}
                 opts={{
                   loop: true,
-                  duration: 30, // Transición más suave (por defecto es 10)
+                  duration: 30, // Transición más suave
                 }}
               >
                 <CarouselContent>
@@ -334,9 +343,6 @@ export default function CourseCarousel() {
                   </AnimatePresence>
                 </CarouselContent>
 
-                {/* Flechas de navegación para móvil */}
-                <CarouselPrevious className="-left-6 bg-purple-600/80 border-purple-500 hover:bg-purple-500 text-white" />
-                <CarouselNext className="-right-6 bg-purple-600/80 border-purple-500 hover:bg-purple-500 text-white" />
               </Carousel>
             </div>
 
@@ -369,7 +375,7 @@ export default function CourseCarousel() {
               setApi={setDesktopCarouselApi}
               opts={{
                 loop: true,
-                duration: 30, // Transición más suave (por defecto es 10)
+                duration: 30, // Transición más suave
               }}
             >
               <CarouselContent className="-ml-2 md:-ml-4">
@@ -378,7 +384,7 @@ export default function CourseCarousel() {
                   { length: Math.ceil(courses.length / 3) },
                   (_, groupIndex) => (
                     <CarouselItem key={groupIndex} className="pl-2 md:pl-4">
-                      <div className="grid grid-cols-3 gap-6">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                         {courses
                           .slice(groupIndex * 3, (groupIndex + 1) * 3)
                           .map((course, index) => (
@@ -416,7 +422,7 @@ export default function CourseCarousel() {
                 )}
               </CarouselContent>
 
-              {/* Flechas de navegación para desktop */}
+              {/* Flechas de navegación para desktop (fuera del área de las tarjetas) */}
               <CarouselPrevious className="-left-16 bg-purple-600/80 border-purple-500 hover:bg-purple-500 text-white w-12 h-12" />
               <CarouselNext className="-right-16 bg-purple-600/80 border-purple-500 hover:bg-purple-500 text-white w-12 h-12" />
 
@@ -445,6 +451,7 @@ export default function CourseCarousel() {
               </div>
             </Carousel>
           </div>
+        </div>
         </>
       )}
 
@@ -459,15 +466,6 @@ export default function CourseCarousel() {
           </div>
         </div>
       )}
-
-      {/* Efectos de luz ambiental sutiles */}
-      <div
-        className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-96 h-32 rounded-full blur-xl opacity-30"
-        style={{
-          background:
-            "radial-gradient(ellipse at center, rgba(139, 92, 246, 0.2) 0%, rgba(237, 98, 60, 0.1) 50%, transparent 100%)",
-        }}
-      ></div>
     </div>
   );
 }

@@ -4,7 +4,7 @@ export default function AboutUs() {
   return (
     <div className="mt-28">
       
-      <section className="bg-gradient-to-b from-white via-blue-50 to-[#C8D9E7]">
+      <section>
         <SectionWithImage
           miniTitle="Compromiso con la excelencia"
           title="MISIÓN"
@@ -15,7 +15,7 @@ export default function AboutUs() {
           right={true}
         />
       </section>
-      <section className="bg-gradient-to-t from-slate-50 via-blue-50 to-[#C8D9E7]">
+      <section>
         <SectionWithImage
           miniTitle="Un futuro de oportunidades"
           title="VISIÓN"

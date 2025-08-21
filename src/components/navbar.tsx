@@ -49,17 +49,17 @@ export function Navbar() {
   };
 
   return (
-    <motion.header
+  <motion.header
       initial={{ y: -50, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6 }}
-      className={`fixed top-0 left-0 right-0 w-full z-50 px-10 transition-all duration-300 ${
+  className={`fixed top-0 left-0 right-0 w-full z-50 px-4 md:px-10 transition-all duration-300 ${
         isScrolled
           ? "bg-black/95 backdrop-blur-md border-b border-white/10 shadow-lg"
           : "bg-transparent"
       }`}
     >
-      <nav className="flex items-center justify-between h-16">
+  <nav className="flex items-center justify-between h-14 md:h-16">
         <Link href="/" className="flex items-center">
           <Image
             src="/logo/complete/sm-full-color.png"
@@ -70,7 +70,7 @@ export function Navbar() {
           />
         </Link>
 
-        <div className="hidden md:flex items-center gap-8">
+  <div className="hidden md:flex items-center gap-6 lg:gap-8">
           {/* Menú desplegable de Inicio */}
           <DropdownMenu>
             <DropdownMenuTrigger className="group text-white font-semibold transition-all duration-300 flex items-center gap-1 relative py-2">
@@ -111,51 +111,6 @@ export function Navbar() {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {/* Menú desplegable de Certificaciones */}
-          {/* <DropdownMenu>
-            <DropdownMenuTrigger className="group text-white font-semibold transition-all duration-300 flex items-center gap-1 relative py-2">
-              <span className="relative z-10 group-hover:text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-orange-500">
-                Certificaciones
-              </span>
-              <ChevronDown className="h-4 w-4 group-hover:text-purple-400 transition-transform duration-300 group-data-[state=open]:rotate-180" />
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-orange-500 transition-all duration-300 group-hover:w-full"></span>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent 
-              className="bg-gradient-to-b from-zinc-900/95 to-black/95 backdrop-blur-md border-0 shadow-[0_0_1rem_0_rgba(103,14,226,0.3)] p-2 rounded-xl min-w-[280px]"
-              sideOffset={20}
-            >
-              <motion.div className="grid gap-1">
-                {[
-                  { id: 1, label: "Scrum Foundation", desc: "Fundamentos de Scrum" },
-                  { id: 2, label: "Professional Scrum Master", desc: "Liderazgo ágil avanzado" },
-                  { id: 3, label: "Professional Scrum Developer", desc: "Desarrollo ágil profesional" },
-                  { id: 4, label: "Agile Leadership", desc: "Gestión y liderazgo ágil" }
-                ].map((cert, index) => (
-                  <Link key={cert.id} href={`/courses/${cert.id}`}>
-                    <DropdownMenuItem
-                      className="group rounded-lg p-3 cursor-pointer data-[highlighted]:bg-white/10 transition-all duration-200"
-                    >
-                      <motion.div
-                        initial={{ x: -10, opacity: 0 }}
-                        animate={{ x: 0, opacity: 1 }}
-                        transition={{ delay: index * 0.1 }}
-                        className="flex flex-col gap-1"
-                      >
-                        <span className="font-medium text-white/90 group-hover:text-white relative">
-                          {cert.label}
-                          <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-orange-500 transition-all duration-300 group-hover:w-full"></span>
-                        </span>
-                        <span className="text-sm text-white/60 group-hover:text-white/80 pl-1 transition-colors">
-                          {cert.desc}
-                        </span>
-                      </motion.div>
-                    </DropdownMenuItem>
-                  </Link>
-                ))}
-              </motion.div>
-            </DropdownMenuContent>
-          </DropdownMenu> */}
-
           {/* Link a About Us */}
           <Link href="/about-us">
             <motion.div className="group text-white font-semibold transition-all duration-300 relative py-2">
@@ -177,7 +132,7 @@ export function Navbar() {
           </Link>
         </div>
 
-        <div className="hidden md:flex items-center gap-4">
+  <div className="hidden md:flex items-center gap-3 lg:gap-4">
           <motion.div whileHover={{ scale: 1.05 }}>
             <Button
               className="relative overflow-hidden group text-white bg-[#670EE2] hover:bg-[#670EE2]/90"
@@ -206,13 +161,7 @@ export function Navbar() {
             <div className="h-full bg-gradient-to-b from-purple-600 to-red-400 text-white p-6">
               <SheetHeader className="flex justify-end">
                 <DialogTitle className="flex items-center">
-                  <Image
-                    src="/logo/text/white.png"
-                    alt="T-Cert Logo"
-                    width={80}
-                    height={20}
-                    className="h-5 w-auto"
-                  />
+                  {/* Logo removed from mobile hamburger menu as requested */}
                 </DialogTitle>
               </SheetHeader>
               <div className="flex flex-col items-center gap-8 mt-8">
@@ -220,7 +169,7 @@ export function Navbar() {
                 <Button
                   variant="ghost"
                   className="relative overflow-hidden group text-white text-xl w-full hover:bg-transparent font-semibold"
-                  onClick={() => handleScroll("vision")}
+                  onClick={() => { handleScroll("vision"); setOpen(false); }}
                 >
                   <span className="relative z-10">Nuestra Visión</span>
                   <span className="absolute inset-0 bg-gradient-to-r from-purple-500 to-orange-500 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
@@ -228,7 +177,7 @@ export function Navbar() {
                 <Button
                   variant="ghost"
                   className="relative overflow-hidden group text-white text-xl w-full hover:bg-transparent font-semibold"
-                  onClick={() => handleScroll("courses")}
+                  onClick={() => { handleScroll("courses"); setOpen(false); }}
                 >
                   <span className="relative z-10">Nuestros Cursos</span>
                   <span className="absolute inset-0 bg-gradient-to-r from-purple-500 to-orange-500 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
@@ -236,51 +185,11 @@ export function Navbar() {
                 <Button
                   variant="ghost"
                   className="relative overflow-hidden group text-white text-xl w-full hover:bg-transparent font-semibold"
-                  onClick={() => handleScroll("contact")}
+                  onClick={() => { handleScroll("contact"); setOpen(false); }}
                 >
                   <span className="relative z-10">Contáctanos</span>
                   <span className="absolute inset-0 bg-gradient-to-r from-purple-500 to-orange-500 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
                 </Button>
-
-                <div className="w-full h-px bg-white/20 my-4" />
-
-                {/* Certificaciones */}
-                <Link href="/courses/1" onClick={() => setOpen(false)}>
-                  <Button
-                    variant="ghost"
-                    className="relative overflow-hidden group text-white text-xl w-full hover:bg-transparent font-semibold"
-                  >
-                    <span className="relative z-10">Scrum Foundation</span>
-                    <span className="absolute inset-0 bg-gradient-to-r from-purple-500 to-orange-500 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
-                  </Button>
-                </Link>
-                <Link href="/courses/2" onClick={() => setOpen(false)}>
-                  <Button
-                    variant="ghost"
-                    className="relative overflow-hidden group text-white text-xl w-full hover:bg-transparent font-semibold"
-                  >
-                    <span className="relative z-10">Professional Scrum Master</span>
-                    <span className="absolute inset-0 bg-gradient-to-r from-purple-500 to-orange-500 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
-                  </Button>
-                </Link>
-                <Link href="/courses/3" onClick={() => setOpen(false)}>
-                  <Button
-                    variant="ghost"
-                    className="relative overflow-hidden group text-white text-xl w-full hover:bg-transparent font-semibold"
-                  >
-                    <span className="relative z-10">Professional Scrum Developer</span>
-                    <span className="absolute inset-0 bg-gradient-to-r from-purple-500 to-orange-500 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
-                  </Button>
-                </Link>
-                <Link href="/courses/4" onClick={() => setOpen(false)}>
-                  <Button
-                    variant="ghost"
-                    className="relative overflow-hidden group text-white text-xl w-full hover:bg-transparent font-semibold"
-                  >
-                    <span className="relative z-10">Agile Leadership</span>
-                    <span className="absolute inset-0 bg-gradient-to-r from-purple-500 to-orange-500 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
-                  </Button>
-                </Link>
 
                 <div className="w-full h-px bg-white/20 my-4" />
 

@@ -2,11 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
+html, body {
   font-family: Arial, Helvetica, sans-serif;
   margin: 0;
   padding: 0;
-  background: linear-gradient(to bottom, #0f172a, #581c87, #0f172a);
+  height: 100%;
+  background: linear-gradient(to bottom right, #000000, #161e2a, #000000);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
 }
 @keyframes show {
   from {
@@ -110,4 +114,14 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Cursor trail tweaks */
+.cursor-trail-dot {
+  transition: transform 80ms linear, opacity 120ms linear;
+}
+
+/* Prevent horizontal page scrolling */
+html, body {
+  overflow-x: hidden;
 }
