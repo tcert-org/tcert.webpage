@@ -86,16 +86,6 @@ export default function SectionWithImage({
 
   return (
     <section className="relative w-full py-16 lg:py-24 px-4">
-      {/* Fondo simple negro */}
-      <div className="absolute inset-0 bg-black"></div>
-
-      {/* Gradiente sutil en el lado opuesto al contenido */}
-      <div
-        className={`absolute inset-0 ${
-          right ? "bg-gradient-to-l" : "bg-gradient-to-r"
-        } from-black via-gray-900 to-black`}
-      ></div>
-
       <div className="max-w-7xl mx-auto relative z-10">
         <motion.div
           className="lg:grid lg:grid-cols-2 lg:gap-16 lg:items-center"

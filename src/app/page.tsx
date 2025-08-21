@@ -7,7 +7,7 @@ import { TestimonialsCarousel } from "@/components/testimonials-carousel";
 
 export default function Home() {
   return (
-    <div className="bg-gradient-to-b from-black via-gray-900 to-black">
+    <div>
       <section id="hero" className="w-full">
         <Hero />
       </section>
@@ -29,7 +29,7 @@ export default function Home() {
       <section id="courses" className="scroll-mt-12">
         <CourseCarousel />
       </section>
-      <section className="py-16 max-w-6xl mx-auto px-4 md:px-6 scroll-mt-12 ">
+      <section className="py-16 max-w-6xl mx-auto px-4 md:px-6 scroll-mt-12">
         <TestimonialsCarousel />
       </section>
       <section id="contact" className="scroll-mt-12">

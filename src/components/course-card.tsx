@@ -49,7 +49,7 @@ export function CourseCard({ course }: { course: Course }) {
       transition={{ type: "spring", stiffness: 400, damping: 30 }}
       className="h-full"
     >
-      <Card className="h-full overflow-hidden relative bg-gradient-to-br from-slate-900 via-slate-800 to-gray-900 border border-slate-700/50 hover:border-purple-500/40 transition-all duration-300 shadow-xl hover:shadow-2xl hover:shadow-purple-500/10">
+      <Card className="h-full overflow-hidden relative bg-gradient-to-br from-slate-900 via-slate-800 to-gray-900 border border-slate-700/50 hover:border-purple-500/40 transition-all duration-300 shadow-xl hover:shadow-2xl hover:shadow-purple-500/10" data-content="true">
         {/* Efectos de luz suaves */}
         <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/5 via-transparent to-orange-500/5"></div>
         <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-purple-400/50 to-transparent"></div>

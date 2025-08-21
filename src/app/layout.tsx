@@ -35,7 +35,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full">
       <body
-        className={`${inter.variable} antialiased flex flex-col min-h-screen bg-gradient-to-b from-slate-900 via-violet-950 to-slate-900 m-0 p-0`}
+        className={`${inter.variable} antialiased flex flex-col min-h-screen m-0 p-0`}
       >
         <ClientNavbar />
   <CursorTrail />

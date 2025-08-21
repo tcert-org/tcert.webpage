@@ -66,11 +66,6 @@ export default function ContactForm() {
 
   return (
     <div className="relative min-h-screen p-3 md:p-6 overflow-hidden flex items-center">
-      {/* Fondo integrado que continúa desde la página principal */}
-      <div className="absolute inset-0 bg-gradient-to-b from-gray-900 via-black to-gray-900"></div>
-      {/* Efectos sutiles púrpura */}
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-900/10 via-transparent to-purple-800/10"></div>
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(139,92,246,0.08),transparent_70%)]"></div>
       {/* Toast Notification */}
       <AnimatePresence>
         {toast && (

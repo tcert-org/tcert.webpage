@@ -171,7 +171,7 @@ export default function CourseDetail() {
 
   return (
     <motion.div
-      className="min-h-screen py-16 bg-gradient-to-br from-black via-gray-900 to-blac pt-32"
+      className="min-h-screen py-16 pt-32"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
