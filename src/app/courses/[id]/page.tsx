@@ -82,7 +82,7 @@ const convertCertificationToCourse = (
     return BLOB_BASE + "default.svg";
   };
 
-  let logoPath = buildLogoPath();
+  const logoPath = buildLogoPath();
 
   return {
     id: cert.id,
