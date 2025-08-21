@@ -280,15 +280,47 @@ const PartnersSection: React.FC = () => {
                   />
                 </div>
               ) : (
-                <img
-                  src={partner.logo_url || ""}
-                  alt={partner.company_name}
-                  style={{ height: "10rem" }}
-                  className="block w-auto filter grayscale hover:grayscale-0 transition duration-300"
-                  sizes="(max-width: 640px) 120px, (max-width: 1024px) 160px, 180px"
-                  loading="lazy"
-                  decoding="async"
-                />
+                <div style={{ height: "10rem", width: "auto" }} className="flex items-center">
+                  {(() => {
+                    try {
+                      const url = partner.logo_url ? new URL(partner.logo_url) : null;
+                      const allowedHosts = [
+                        "s3-alpha-sig.figma.com",
+                        "hebbkx1anhila5yf.public.blob.vercel-storage.com",
+                        "e48bssyezdxaxnzg.public.blob.vercel-storage.com",
+                      ];
+                      if (url && allowedHosts.includes(url.hostname)) {
+                        return (
+                          <Image
+                            src={partner.logo_url || ""}
+                            alt={partner.company_name}
+                            width={180}
+                            height={160}
+                            className="object-contain block filter grayscale hover:grayscale-0 transition duration-300"
+                            sizes="(max-width: 640px) 120px, (max-width: 1024px) 160px, 180px"
+                            loading="lazy"
+                            decoding="async"
+                          />
+                        );
+                      }
+                    } catch {
+                      /* fall through to img fallback */
+                    }
+
+                    // fallback: use native img to avoid next/image hostname restrictions
+                    return (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={partner.logo_url || ""}
+                        alt={partner.company_name}
+                        width={180}
+                        height={160}
+                        className="object-contain block filter grayscale hover:grayscale-0 transition duration-300"
+                        loading="lazy"
+                      />
+                    );
+                  })()}
+                </div>
               )}
             </a>
           ))}

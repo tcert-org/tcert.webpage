@@ -47,8 +47,9 @@ export default function SectionWithImage({
       transition={{ duration: 1, type: "spring", stiffness: 80 }}
       viewport={{ once: true }}
       className="relative w-full max-w-md xl:max-w-2xl mx-auto"
+      data-content="true"
     >
-      <div className="relative overflow-hidden rounded-lg">
+      <div className="relative overflow-hidden rounded-lg image-container" data-image="true">
         <div className="relative w-full h-56 sm:h-72 md:h-96 lg:h-[400px] bg-gray-900">
           {images.map((src, index) => (
             <Image
@@ -61,6 +62,7 @@ export default function SectionWithImage({
                 index === currentImageIndex ? "opacity-100" : "opacity-0"
               }`}
               priority={index === 0}
+              data-content="true"
             />
           ))}
 

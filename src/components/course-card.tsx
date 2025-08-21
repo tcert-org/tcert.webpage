@@ -54,8 +54,8 @@ export function CourseCard({ course }: { course: Course }) {
         <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/5 via-transparent to-orange-500/5"></div>
         <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-purple-400/50 to-transparent"></div>
 
-        <CardHeader className="p-0 relative z-10">
-          <div className="relative w-full h-44 sm:h-56 overflow-hidden">
+        <CardHeader className="p-0 relative z-10" data-content="true">
+          <div className="relative w-full h-44 sm:h-56 overflow-hidden image-container" data-image="true">
             <Image
               src={course.image}
               alt={`Imagen del curso ${course.title}`}
@@ -63,6 +63,7 @@ export function CourseCard({ course }: { course: Course }) {
               className="object-cover transition-transform duration-500 hover:scale-110"
               placeholder="blur"
               blurDataURL="/tocaPonerUnPlaceholder.svg"
+              data-content="true"
             />
             {/* Overlay gradiente */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />

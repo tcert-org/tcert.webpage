@@ -3,6 +3,37 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { usePathname, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+
+// Particles rendered only on client after mount to avoid SSR/client mismatch
+const HeroParticles: React.FC = () => {
+  const [particles, setParticles] = useState<Array<{left:string; top:string; dur:number; delay:number}>>([]);
+  useEffect(() => {
+    const arr = Array.from({length:25}).map(() => ({
+      left: `${Math.random()*100}%`,
+      top: `${Math.random()*100}%`,
+      dur: 4 + Math.random()*3,
+      delay: Math.random()*3
+    }));
+    setParticles(arr);
+  }, []);
+
+  if (particles.length === 0) return null;
+
+  return (
+    <div className="absolute inset-0">
+      {particles.map((p, i) => (
+        <motion.div
+          key={`particle-${i}`}
+          className="absolute w-1 h-1 bg-purple-400 rounded-full opacity-40"
+          style={{ left: p.left, top: p.top }}
+          animate={{ y: [-30, 30, -30], x: [-20,20,-20], opacity: [0.4,0.8,0.4] }}
+          transition={{ duration: p.dur, repeat: Infinity, delay: p.delay, ease: 'easeInOut' }}
+        />
+      ))}
+    </div>
+  );
+};
 
 const Hero: React.FC = () => {
   const pathname = usePathname();
@@ -78,30 +109,8 @@ const Hero: React.FC = () => {
         }}
       />
 
-      {/* Partículas flotantes por todo el espacio */}
-      <div className="absolute inset-0">
-        {[...Array(25)].map((_, i) => (
-          <motion.div
-            key={`particle-${i}`}
-            className="absolute w-1 h-1 bg-purple-400 rounded-full opacity-40"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-            }}
-            animate={{
-              y: [-30, 30, -30],
-              x: [-20, 20, -20],
-              opacity: [0.4, 0.8, 0.4],
-            }}
-            transition={{
-              duration: 4 + Math.random() * 3,
-              repeat: Infinity,
-              delay: Math.random() * 3,
-              ease: "easeInOut",
-            }}
-          />
-        ))}
-      </div>
+  {/* Partículas flotantes por todo el espacio (solo en cliente) */}
+  <HeroParticles />
 
       {/* Contenido flotante */}
       <div className="relative z-20 w-full flex items-center">

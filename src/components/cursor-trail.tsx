@@ -55,7 +55,7 @@ export default function CursorTrail() {
           if (element.matches(selector)) {
             return true;
           }
-        } catch (e) {
+        } catch {
           // Invalid selector, continue
         }
       }
@@ -150,7 +150,7 @@ export default function CursorTrail() {
       {Array.from({ length: 8 }).map((_, i) => (
         <span
           key={i}
-          className="absolute w-8 h-8 rounded-full bg-gradient-to-r from-purple-500 via-purple-400 to-orange-400 blur-lg mix-blend-screen cursor-trail-dot"
+          className="absolute w-8 h-8 rounded-full bg-gradient-to-r from-purple-500 via-purple-500 to-purple-500 blur-lg mix-blend-screen cursor-trail-dot"
           style={{
             left: 0,
             top: 0,
