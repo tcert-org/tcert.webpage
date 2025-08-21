@@ -39,7 +39,7 @@ export default function RootLayout({
       >
         <ClientNavbar />
   <CursorTrail />
-        <main className="flex-grow">{children}</main>
+  <main className="flex-grow pb-20">{children}</main>
         <Footer />
       </body>
     </html>

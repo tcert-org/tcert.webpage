@@ -260,9 +260,9 @@ export default function CourseCarousel() {
   }
 
   return (
-  <div className="relative w-full mx-auto px-4 sm:px-6 md:px-10 py-12 overflow-hidden">
+  <div className="relative w-full mx-auto px-4 sm:px-6 md:px-10 py- overflow-hidden">
       {/* Título principal */}
-      <div className="relative z-10 text-center mb-8">
+      <div className="relative z-10 text-center mb-16">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -466,15 +466,6 @@ export default function CourseCarousel() {
           </div>
         </div>
       )}
-
-      {/* Efectos de luz ambiental sutiles */}
-      <div
-        className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-96 h-32 rounded-full blur-xl opacity-30"
-        style={{
-          background:
-            "radial-gradient(ellipse at center, rgba(139, 92, 246, 0.2) 0%, rgba(237, 98, 60, 0.1) 50%, transparent 100%)",
-        }}
-      ></div>
     </div>
   );
 }

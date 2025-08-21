@@ -227,7 +227,7 @@ const PartnersSection: React.FC = () => {
   };
 
   return (
-    <section className="relative pt-20 pb-20 overflow-hidden overflow-x-hidden">
+    <section className="relative pb-20 overflow-hidden overflow-x-hidden">
       {/* Título */}
       <div className="mx-auto max-w-6xl px-4 md:px-6 relative z-10">
         <h2 className="text-white text-2xl text-center md:text-3xl font-semibold tracking-tight mb-20">

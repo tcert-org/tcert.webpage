@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 
 export default function Footer() {
   return (
-  <footer className="relative w-full bg-black pt-10 pb-8 px-4 md:px-8 overflow-hidden">
+  <footer className="relative w-full bg-black pt-10 pb-8 px-4 md:px-8 overflow-visible z-20">
       {/* Gradiente sutil */}
       <div className="absolute inset-0 bg-gradient-to-t from-purple-950/10 to-transparent"></div>
 
