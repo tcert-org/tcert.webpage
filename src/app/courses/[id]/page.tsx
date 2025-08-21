@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import { buildLogoPath } from "@/lib/logo";
 import { TestimonialsCarousel } from "@/components/testimonials-carousel";
 
 // ===== Tipos =====
@@ -65,24 +66,7 @@ const convertCertificationToCourse = (
   const currentPrice = Math.round(basePriceUSD * (1 - discountPercentNum / 100));
   const studentCount = ((cert.id * 73) % 400) + 100; // entre 100 y 500
 
-  // === Construir URL del logo desde blob storage con fallback ===
-  const buildLogoPath = () => {
-    const BLOB_BASE =
-      "https://e48bssyezdxaxnzg.public.blob.vercel-storage.com/logos_insignias/";
-
-    const raw = cert.logo_url?.trim();
-    if (raw && raw !== "") {
-      // Si ya viene una URL absoluta (http/https), usar tal cual
-      if (/^https?:\/\//i.test(raw)) return raw;
-      // Si es un nombre/relativo, concatenar al base del blob
-      return BLOB_BASE + raw;
-    }
-
-    // Fallback si no hay logo_url
-    return BLOB_BASE + "default.svg";
-  };
-
-  const logoPath = buildLogoPath();
+  const logoPath = buildLogoPath(cert.logo_url, cert.name);
 
   return {
     id: cert.id,

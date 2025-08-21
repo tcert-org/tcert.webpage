@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/carousel";
 import { useState, useEffect } from "react";
 import { CourseCard } from "./course-card";
+import { buildLogoPath } from "@/lib/logo";
 import { motion, AnimatePresence } from "framer-motion";
 
 export interface Course {
@@ -138,27 +139,12 @@ export default function CourseCarousel() {
     // Generar un número de estudiantes determinístico basado en el ID
     const studentCount = ((cert.id * 73) % 400) + 100; // Entre 100-500
 
-    // Manejar la URL del logo - asegurar que esté en la carpeta public
-    let logoPath = "/cert-images/scrum-foundation.svg"; // fallback
-    if (cert.logo_url) {
-      if (!cert.logo_url.startsWith("http") && !cert.logo_url.startsWith("/")) {
-        logoPath = `/cert-images/${cert.logo_url}`;
-      } else if (cert.logo_url.startsWith("/")) {
-        logoPath = cert.logo_url;
-      } else {
-        logoPath = "/cert-images/scrum-foundation.svg";
-      }
-    }
+    // Manejar la URL del logo: usar blob storage, aceptar URLs absolutas o rutas
+    const BLOB_BASE =
+      "https://e48bssyezdxaxnzg.public.blob.vercel-storage.com/logos_insignias/";
+    const DEFAULT_LOGO = BLOB_BASE + "scrum-foundation.svg";
 
-    // Fallback específico por tipo de certificación si el logo no existe
-    const lowerName = cert.name.toLowerCase();
-    if (logoPath === "/cert-images/scrum-foundation.svg") {
-      if (lowerName.includes("scrum master")) {
-        logoPath = "/cert-images/scrum-master.svg";
-      } else if (lowerName.includes("scrum developer")) {
-        logoPath = "/cert-images/scrum-developers.svg";
-      }
-    }
+  const logoPath = buildLogoPath(cert.logo_url, cert.name);
 
     return {
       id: cert.id,
