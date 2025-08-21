@@ -139,11 +139,7 @@ export default function CourseCarousel() {
     // Generar un número de estudiantes determinístico basado en el ID
     const studentCount = ((cert.id * 73) % 400) + 100; // Entre 100-500
 
-    // Manejar la URL del logo: usar blob storage, aceptar URLs absolutas o rutas
-    const BLOB_BASE =
-      "https://e48bssyezdxaxnzg.public.blob.vercel-storage.com/logos_insignias/";
-    const DEFAULT_LOGO = BLOB_BASE + "scrum-foundation.svg";
-
+  // Manejar la URL del logo usando el util compartido
   const logoPath = buildLogoPath(cert.logo_url, cert.name);
 
     return {
