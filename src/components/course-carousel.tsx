@@ -22,6 +22,7 @@ export interface Course {
   description: string;
   originalPrice: number;
   currentPrice: number;
+  audience?: string[];
 }
 
 // Interface para los datos de la API
@@ -31,6 +32,8 @@ interface Certification {
   description: string;
   logo_url: string;
   active: boolean;
+  audience?: string;
+  targetAudience?: string[];
 }
 
 interface CertificationParam {
@@ -142,6 +145,13 @@ export default function CourseCarousel() {
   // Manejar la URL del logo usando el util compartido
   const logoPath = buildLogoPath(cert.logo_url, cert.name);
 
+    // Normalize audience: prefer explicit targetAudience array, fall back to semicolon-separated audience string
+    const normalizedAudience = (cert.targetAudience && cert.targetAudience.length)
+      ? cert.targetAudience
+      : cert.audience
+      ? cert.audience.split(";").map((s) => s.trim()).filter(Boolean)
+      : [];
+
     return {
       id: cert.id,
       title: cert.name,
@@ -151,6 +161,8 @@ export default function CourseCarousel() {
       description: cert.description,
       originalPrice,
       currentPrice,
+  // attach normalized audience for potential use elsewhere
+  audience: normalizedAudience,
     };
   };
 
@@ -161,7 +173,7 @@ export default function CourseCarousel() {
     const fetchCertifications = async () => {
       try {
         setLoading(true);
-        const response = await fetch("/api/certifications");
+        const response = await fetch("/api/certification-params");
 
         if (!response.ok) {
           throw new Error(`Error ${response.status}: ${response.statusText}`);
