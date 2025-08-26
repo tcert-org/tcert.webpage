@@ -1,0 +1,19 @@
+{
+  "statusCode": 200,
+  "data": {
+    "params": [],
+    "certifications": [
+      {
+        "id": 3,
+        "name": "Scrum Master Professional TC-SMP (V-2021)",
+        "description": "Es una metodología ágil orientada a generar valor de manera\nfrecuente e incremental, entregando productos funcionales,\nque se van mejorando en la medida que se avanza en el\nproyecto.",
+        "logo_url": "logo_1755725334613_Escudo_de_Atlético_Junior.png",
+        "active": true,
+        "audience": "Bonito;joven;Millonario"
+      }
+    ],
+    "totalCertifications": 1,
+    "timestamp": "2025-08-21T00:00:00Z"
+  },
+  "message": "Mock data"
+}

@@ -5,7 +5,9 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-
+import { buildLogoPath } from "@/lib/logo";
+import formatWithLineBreaks from "@/lib/format";
+import { TestimonialsCarousel } from "@/components/testimonials-carousel";
 
 // ===== Tipos =====
 type Certification = {
@@ -14,6 +16,8 @@ type Certification = {
   description: string;
   logo_url: string;
   active: boolean;
+  audience?: string; // optional field when using mock or different API
+  targetAudience?: string[]; // some sources may provide this directly
 };
 
 type CertificationParam = {
@@ -48,11 +52,33 @@ type CourseDetailData = {
   targetAudience?: string[];
 };
 
-import { TestimonialsCarousel } from "@/components/testimonials-carousel";
+// Normaliza el campo targetAudience que puede venir como string completo
+// separado por `;` o como un arreglo de strings.
+const parseTargetAudience = (input?: string[] | string): string[] => {
+  if (!input) return [];
+  const parts: string[] = [];
 
+  if (Array.isArray(input)) {
+    input.forEach((item) => {
+      if (!item) return;
+      item
+        .split(";")
+        .map((s) => s.trim())
+        .filter(Boolean)
+        .forEach((s) => parts.push(s));
+    });
+  } else {
+    input
+      .split(";")
+      .map((s) => s.trim())
+      .filter(Boolean)
+      .forEach((s) => parts.push(s));
+  }
 
+  return parts;
+};
 
-// ===== Conversión igual que en el carrusel =====
+// ===== Conversión igual que en el carrusel (actualizada con blob storage) =====
 const convertCertificationToCourse = (
   cert: Certification,
   params: CertificationParam[]
@@ -67,23 +93,9 @@ const convertCertificationToCourse = (
 
   const originalPrice = basePriceUSD;
   const currentPrice = Math.round(basePriceUSD * (1 - discountPercentNum / 100));
-
   const studentCount = ((cert.id * 73) % 400) + 100; // entre 100 y 500
 
-  let logoPath = "/cert-images/scrum-foundation.svg";
-  if (cert.logo_url) {
-    if (!cert.logo_url.startsWith("http") && !cert.logo_url.startsWith("/")) {
-      logoPath = `/cert-images/${cert.logo_url}`;
-    } else if (cert.logo_url.startsWith("/")) {
-      logoPath = cert.logo_url;
-    }
-  }
-
-  const lower = cert.name.toLowerCase();
-  if (logoPath === "/cert-images/scrum-foundation.svg") {
-    if (lower.includes("scrum master")) logoPath = "/cert-images/scrum-master.svg";
-    else if (lower.includes("scrum developer")) logoPath = "/cert-images/scrum-developers.svg";
-  }
+  const logoPath = buildLogoPath(cert.logo_url, cert.name);
 
   return {
     id: cert.id,
@@ -95,8 +107,11 @@ const convertCertificationToCourse = (
     students: studentCount,
     originalPrice,
     currentPrice,
-    mainTopics: [], // No hay datos de mainTopics en la API
-    targetAudience: [], // No hay datos de targetAudience en la API
+    mainTopics: [],
+    // If the certification contains an 'audience' string or a 'targetAudience' array, normalize it
+  targetAudience: parseTargetAudience(
+    (cert.audience as string | undefined) ?? (cert.targetAudience as string[] | undefined) ?? []
+  ),
   };
 };
 
@@ -105,6 +120,7 @@ export default function CourseDetail() {
   const [course, setCourse] = useState<CourseDetailData | null>(null);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState<string | null>(null);
+
   // Cargar datos desde la API al montar o cuando cambie el ID
   useEffect(() => {
     const run = async () => {
@@ -123,26 +139,67 @@ export default function CourseDetail() {
           return;
         }
 
-        const res = await fetch("/api/certifications", { cache: "no-store" });
-        if (!res.ok) {
-          throw new Error(`Error ${res.status}: ${res.statusText}`);
+        // Intentamos llamar al endpoint real; si falla, usamos el JSON mock local
+        let apiData: ApiResponse | null = null;
+        try {
+          const res = await fetch("/api/certification-params", { cache: "no-store" });
+          if (res.ok) {
+            const json = await res.json();
+            // solo asignamos si parece válido
+            if (json?.statusCode === 200 && json?.data?.certifications) {
+              apiData = json as ApiResponse;
+            }
+          }
+        } catch {
+          // noop, fallback next
         }
 
-        const apiData: ApiResponse = await res.json();
-        if (apiData?.statusCode !== 200 || !apiData.data?.certifications) {
-          throw new Error(apiData?.message || "Respuesta de API no válida");
+        if (!apiData) {
+          // fallback al mock local en /public
+          const mockRes = await fetch("/mock-certifications.json", { cache: "no-store" });
+          if (!mockRes.ok) {
+            throw new Error(`Error cargando datos mock: ${mockRes.status}`);
+          }
+          const mockJson = await mockRes.json();
+          apiData = mockJson as ApiResponse;
         }
 
-        const found = apiData.data.certifications.find((c) => c.id === numericId);
+  const found = apiData!.data.certifications.find((c) => c.id === numericId);
         if (!found) {
           throw new Error("Certificación no encontrada");
         }
 
-        const courseData = convertCertificationToCourse(found, apiData.data.params || []);
+        const courseData = convertCertificationToCourse(
+          found,
+          apiData.data.params || []
+        );
+        // Si la API no provee descripción o público objetivo, intentar usar el JSON local como fallback
+        try {
+          // import dinámico para evitar inclusión innecesaria en bundles si no se usa
+          // (en build estático esto será resuelto en tiempo de compilación)
+          const localModule = await import("@/lib/courses-carousel.json");
+          const localCourses: Array<{id: number; description?: string; targetAudience?: string[]}> = localModule?.default || localModule;
+          const localMatch = localCourses.find((c) => c.id === numericId);
+          if (localMatch) {
+            if (!courseData.description && localMatch.description) {
+              courseData.description = localMatch.description;
+            }
+            if (
+              (!courseData.targetAudience || courseData.targetAudience.length === 0) &&
+              localMatch.targetAudience
+            ) {
+              courseData.targetAudience = localMatch.targetAudience;
+            }
+          }
+        } catch {
+          // noop: si falla el import, no hacemos fallback
+        }
         setCourse(courseData);
-
       } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : 'Error al cargar la certificación';
+        const errorMessage =
+          error instanceof Error
+            ? error.message
+            : "Error al cargar la certificación";
         console.error("Fallo al cargar desde API:", errorMessage);
         setErr(errorMessage);
         setCourse(null);
@@ -153,8 +210,6 @@ export default function CourseDetail() {
 
     run();
   }, [params?.id]);
-
-
 
   // Mostrar estados de carga o error
   if (loading) {
@@ -177,10 +232,12 @@ export default function CourseDetail() {
       transition={{ duration: 0.6, ease: "easeOut" }}
     >
       <div className="max-w-6xl mx-auto px-4 md:px-6">
-  <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Main Content */}
           <div className="md:col-span-2">
-            <h1 className="text-3xl lg:text-5xl font-bold mb-6 text-white">{course.title}</h1>
+            <h1 className="text-3xl lg:text-5xl font-bold mb-6 text-white">
+              {course.title}
+            </h1>
 
             <motion.div
               initial={{ opacity: 0, y: 10 }}
@@ -196,7 +253,7 @@ export default function CourseDetail() {
                   transition={{ duration: 0.6, delay: 0.3 }}
                   className="transform hover:scale-[1.01] transition-transform"
                 >
-                  <motion.h2 
+                  <motion.h2
                     className="text-xl font-semibold mb-3 text-white flex items-center"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -204,13 +261,15 @@ export default function CourseDetail() {
                   >
                     Descripción
                   </motion.h2>
-                  <motion.p 
+                  <motion.p
                     className="text-white/80 leading-relaxed text-justify pl-4 border-l-2 border-purple-500/30"
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.5 }}
                   >
-                    {course.description}
+                    {typeof course.description === "string"
+                      ? formatWithLineBreaks(course.description)
+                      : course.description}
                   </motion.p>
                 </motion.div>
               )}
@@ -223,7 +282,7 @@ export default function CourseDetail() {
                   transition={{ duration: 0.6, delay: 0.6 }}
                   className="transform hover:scale-[1.01] transition-transform"
                 >
-                  <motion.h2 
+                  <motion.h2
                     className="text-xl font-semibold mb-3 text-white flex items-center"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -233,8 +292,8 @@ export default function CourseDetail() {
                   </motion.h2>
                   <motion.ul className="space-y-3 text-justify pl-4 border-l-2 border-purple-500/30">
                     {course.mainTopics.map((t, i) => (
-                      <motion.li 
-                        key={i} 
+                      <motion.li
+                        key={i}
                         className="flex items-center space-x-2 transform hover:translate-x-1 transition-transform"
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
@@ -249,14 +308,14 @@ export default function CourseDetail() {
               )}
 
               {/* Público objetivo */}
-              {course.targetAudience && course.targetAudience.length > 0 && (
+              {parseTargetAudience(course.targetAudience).length > 0 && (
                 <motion.div
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.6, delay: 0.9 }}
                   className="transform hover:scale-[1.01] transition-transform"
                 >
-                  <motion.h2 
+                  <motion.h2
                     className="text-xl font-semibold mb-3 text-white flex items-center"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -265,18 +324,26 @@ export default function CourseDetail() {
                     ¿Para quién es esta certificación?
                   </motion.h2>
                   <motion.ul className="space-y-3 text-justify pl-4 border-l-2 border-purple-500/30">
-                    {course.targetAudience.map((a, i) => (
-                      <motion.li 
-                        key={i} 
-                        className="flex items-center space-x-2 transform hover:translate-x-1 transition-transform"
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.4, delay: 1.1 + i * 0.1 }}
-                      >
-                        <span className="text-orange-400 mt-1">📑</span>
-                        <span className="text-white/80">{a}</span>
-                      </motion.li>
-                    ))}
+                    {
+                      // Normalizar: cada segmento separado por ';' o '\n' debe ser su propio <li>
+                      parseTargetAudience(course.targetAudience)
+                        .flatMap((a) =>
+                          (Array.isArray(a) ? a : String(a)).split(/;|\n/).map((s) => s.trim())
+                        )
+                        .filter(Boolean)
+                        .map((segment, i) => (
+                          <motion.li
+                            key={i}
+                            className="flex items-center space-x-2 transform hover:translate-x-1 transition-transform"
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.4, delay: 1.1 + i * 0.1 }}
+                          >
+                            <span className="text-orange-400 mt-1">📑</span>
+                            <span className="text-white/80">{segment}</span>
+                          </motion.li>
+                        ))
+                    }
                   </motion.ul>
                 </motion.div>
               )}
@@ -298,22 +365,29 @@ export default function CourseDetail() {
                 transition={{ duration: 0.4, delay: 0.4 }}
               >
                 <Image
-                  src={course.certImage || course.image || "/cert-images/scrum-foundation.svg"}
+                  src={
+                    course.certImage ||
+                    course.image ||
+                    "https://e48bssyezdxaxnzg.public.blob.vercel-storage.com/logos_insignias/scrum-foundation.svg"
+                  }
                   alt={course.title}
                   width={200}
                   height={200}
-                  className="w-40 h-40 md:w-48 md:h-48 rounded-lg shadow-lg hover:scale-105 transition-transform"
+                  className="w-40 h-40 md:w-48 md:h-48 rounded-lg hover:scale-105 transition-transform duration-300"
                 />
               </motion.div>
 
-              {(course.originalPrice !== undefined || course.currentPrice !== undefined) && (
+              {(course.originalPrice !== undefined ||
+                course.currentPrice !== undefined) && (
                 <div className="text-center mb-6">
                   {course.originalPrice !== undefined && (
-                    <span className="text-gray-400 line-through text-lg">${course.originalPrice}</span>
+                    <span className="text-gray-400 line-through text-lg">
+                      ${course.originalPrice}
+                    </span>
                   )}
                   {course.currentPrice !== undefined && (
                     <motion.span
-                      className="text-3xl font-bold text-white ml-2 inline-block"
+                      className="text-3xl font-bold text-orange-400 ml-2 inline-block"
                       initial={{ scale: 0.8, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
                       transition={{ duration: 0.4, delay: 0.5 }}

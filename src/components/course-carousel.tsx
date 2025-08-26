@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/carousel";
 import { useState, useEffect } from "react";
 import { CourseCard } from "./course-card";
+import { buildLogoPath } from "@/lib/logo";
 import { motion, AnimatePresence } from "framer-motion";
 
 export interface Course {
@@ -21,6 +22,7 @@ export interface Course {
   description: string;
   originalPrice: number;
   currentPrice: number;
+  audience?: string[];
 }
 
 // Interface para los datos de la API
@@ -30,6 +32,8 @@ interface Certification {
   description: string;
   logo_url: string;
   active: boolean;
+  audience?: string;
+  targetAudience?: string[];
 }
 
 interface CertificationParam {
@@ -138,27 +142,15 @@ export default function CourseCarousel() {
     // Generar un número de estudiantes determinístico basado en el ID
     const studentCount = ((cert.id * 73) % 400) + 100; // Entre 100-500
 
-    // Manejar la URL del logo - asegurar que esté en la carpeta public
-    let logoPath = "/cert-images/scrum-foundation.svg"; // fallback
-    if (cert.logo_url) {
-      if (!cert.logo_url.startsWith("http") && !cert.logo_url.startsWith("/")) {
-        logoPath = `/cert-images/${cert.logo_url}`;
-      } else if (cert.logo_url.startsWith("/")) {
-        logoPath = cert.logo_url;
-      } else {
-        logoPath = "/cert-images/scrum-foundation.svg";
-      }
-    }
+  // Manejar la URL del logo usando el util compartido
+  const logoPath = buildLogoPath(cert.logo_url, cert.name);
 
-    // Fallback específico por tipo de certificación si el logo no existe
-    const lowerName = cert.name.toLowerCase();
-    if (logoPath === "/cert-images/scrum-foundation.svg") {
-      if (lowerName.includes("scrum master")) {
-        logoPath = "/cert-images/scrum-master.svg";
-      } else if (lowerName.includes("scrum developer")) {
-        logoPath = "/cert-images/scrum-developers.svg";
-      }
-    }
+    // Normalize audience: prefer explicit targetAudience array, fall back to semicolon-separated audience string
+    const normalizedAudience = (cert.targetAudience && cert.targetAudience.length)
+      ? cert.targetAudience
+      : cert.audience
+      ? cert.audience.split(";").map((s) => s.trim()).filter(Boolean)
+      : [];
 
     return {
       id: cert.id,
@@ -169,6 +161,8 @@ export default function CourseCarousel() {
       description: cert.description,
       originalPrice,
       currentPrice,
+  // attach normalized audience for potential use elsewhere
+  audience: normalizedAudience,
     };
   };
 
@@ -179,7 +173,7 @@ export default function CourseCarousel() {
     const fetchCertifications = async () => {
       try {
         setLoading(true);
-        const response = await fetch("/api/certifications");
+        const response = await fetch("/api/certification-params");
 
         if (!response.ok) {
           throw new Error(`Error ${response.status}: ${response.statusText}`);
