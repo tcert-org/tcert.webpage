@@ -7,14 +7,14 @@ import { motion } from "framer-motion";
 
 export default function Footer() {
   return (
-    <footer className="relative w-full bg-black pt-12 pb-8 px-4 md:px-8 overflow-hidden">
+  <footer className="relative w-full bg-black pt-10 pb-8 px-4 md:px-8 overflow-visible z-20">
       {/* Gradiente sutil */}
       <div className="absolute inset-0 bg-gradient-to-t from-purple-950/10 to-transparent"></div>
 
       {/* Efecto neón en el borde superior */}
       <div className="absolute top-0 left-0 right-0 h-0.5 bg-purple-500 shadow-[0_0_20px_rgba(139,92,246,0.8),0_0_40px_rgba(139,92,246,0.4)]"></div>
 
-      <div className="container mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-10 relative z-10">
+  <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center sm:justify-between gap-8 md:gap-10 relative z-10 px-4">
         <div className="flex justify-center md:justify-center">
           <Image
             src="/logo/complete/md-full-color.png"
