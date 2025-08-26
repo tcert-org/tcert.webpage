@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 
-
 // ===== Tipos =====
 type Certification = {
   id: number;
@@ -50,23 +49,25 @@ type CourseDetailData = {
 
 import { TestimonialsCarousel } from "@/components/testimonials-carousel";
 
-
-
 // ===== Conversión igual que en el carrusel =====
 const convertCertificationToCourse = (
   cert: Certification,
   params: CertificationParam[]
 ): CourseDetailData => {
   const basePrice =
-    params.find((p) => p.name.includes("Valor de certificación"))?.value || "30";
+    params.find((p) => p.name.includes("Valor de certificación"))?.value ||
+    "30";
   const discountPercent =
-    params.find((p) => p.name.includes("Porcentaje de Descuento"))?.value || "20";
+    params.find((p) => p.name.includes("Porcentaje de Descuento"))?.value ||
+    "20";
 
   const basePriceUSD = parseInt(basePrice);
   const discountPercentNum = parseInt(discountPercent);
 
   const originalPrice = basePriceUSD;
-  const currentPrice = Math.round(basePriceUSD * (1 - discountPercentNum / 100));
+  const currentPrice = Math.round(
+    basePriceUSD * (1 - discountPercentNum / 100)
+  );
 
   const studentCount = ((cert.id * 73) % 400) + 100; // entre 100 y 500
 
@@ -81,8 +82,10 @@ const convertCertificationToCourse = (
 
   const lower = cert.name.toLowerCase();
   if (logoPath === "/cert-images/scrum-foundation.svg") {
-    if (lower.includes("scrum master")) logoPath = "/cert-images/scrum-master.svg";
-    else if (lower.includes("scrum developer")) logoPath = "/cert-images/scrum-developers.svg";
+    if (lower.includes("scrum master"))
+      logoPath = "/cert-images/scrum-master.svg";
+    else if (lower.includes("scrum developer"))
+      logoPath = "/cert-images/scrum-developers.svg";
   }
 
   return {
@@ -133,16 +136,23 @@ export default function CourseDetail() {
           throw new Error(apiData?.message || "Respuesta de API no válida");
         }
 
-        const found = apiData.data.certifications.find((c) => c.id === numericId);
+        const found = apiData.data.certifications.find(
+          (c) => c.id === numericId
+        );
         if (!found) {
           throw new Error("Certificación no encontrada");
         }
 
-        const courseData = convertCertificationToCourse(found, apiData.data.params || []);
+        const courseData = convertCertificationToCourse(
+          found,
+          apiData.data.params || []
+        );
         setCourse(courseData);
-
       } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : 'Error al cargar la certificación';
+        const errorMessage =
+          error instanceof Error
+            ? error.message
+            : "Error al cargar la certificación";
         console.error("Fallo al cargar desde API:", errorMessage);
         setErr(errorMessage);
         setCourse(null);
@@ -154,11 +164,11 @@ export default function CourseDetail() {
     run();
   }, [params?.id]);
 
-
-
   // Mostrar estados de carga o error
   if (loading) {
-    return <p className="text-white text-center pt-32">Cargando certificación...</p>;
+    return (
+      <p className="text-white text-center pt-32">Cargando certificación...</p>
+    );
   }
 
   if (err) {
@@ -166,7 +176,11 @@ export default function CourseDetail() {
   }
 
   if (!course) {
-    return <p className="text-white text-center pt-32">Certificación no encontrada</p>;
+    return (
+      <p className="text-white text-center pt-32">
+        Certificación no encontrada
+      </p>
+    );
   }
 
   return (
@@ -177,10 +191,12 @@ export default function CourseDetail() {
       transition={{ duration: 0.6, ease: "easeOut" }}
     >
       <div className="max-w-6xl mx-auto px-4 md:px-6">
-  <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Main Content */}
           <div className="md:col-span-2">
-            <h1 className="text-3xl lg:text-5xl font-bold mb-6 text-white">{course.title}</h1>
+            <h1 className="text-3xl lg:text-5xl font-bold mb-6 text-white">
+              {course.title}
+            </h1>
 
             <motion.div
               initial={{ opacity: 0, y: 10 }}
@@ -196,7 +212,7 @@ export default function CourseDetail() {
                   transition={{ duration: 0.6, delay: 0.3 }}
                   className="transform hover:scale-[1.01] transition-transform"
                 >
-                  <motion.h2 
+                  <motion.h2
                     className="text-xl font-semibold mb-3 text-white flex items-center"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -204,7 +220,7 @@ export default function CourseDetail() {
                   >
                     Descripción
                   </motion.h2>
-                  <motion.p 
+                  <motion.p
                     className="text-white/80 leading-relaxed text-justify pl-4 border-l-2 border-purple-500/30"
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -223,7 +239,7 @@ export default function CourseDetail() {
                   transition={{ duration: 0.6, delay: 0.6 }}
                   className="transform hover:scale-[1.01] transition-transform"
                 >
-                  <motion.h2 
+                  <motion.h2
                     className="text-xl font-semibold mb-3 text-white flex items-center"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -233,8 +249,8 @@ export default function CourseDetail() {
                   </motion.h2>
                   <motion.ul className="space-y-3 text-justify pl-4 border-l-2 border-purple-500/30">
                     {course.mainTopics.map((t, i) => (
-                      <motion.li 
-                        key={i} 
+                      <motion.li
+                        key={i}
                         className="flex items-center space-x-2 transform hover:translate-x-1 transition-transform"
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
@@ -256,7 +272,7 @@ export default function CourseDetail() {
                   transition={{ duration: 0.6, delay: 0.9 }}
                   className="transform hover:scale-[1.01] transition-transform"
                 >
-                  <motion.h2 
+                  <motion.h2
                     className="text-xl font-semibold mb-3 text-white flex items-center"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -266,8 +282,8 @@ export default function CourseDetail() {
                   </motion.h2>
                   <motion.ul className="space-y-3 text-justify pl-4 border-l-2 border-purple-500/30">
                     {course.targetAudience.map((a, i) => (
-                      <motion.li 
-                        key={i} 
+                      <motion.li
+                        key={i}
                         className="flex items-center space-x-2 transform hover:translate-x-1 transition-transform"
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
@@ -298,7 +314,11 @@ export default function CourseDetail() {
                 transition={{ duration: 0.4, delay: 0.4 }}
               >
                 <Image
-                  src={course.certImage || course.image || "/cert-images/scrum-foundation.svg"}
+                  src={
+                    course.certImage ||
+                    course.image ||
+                    "/cert-images/scrum-foundation.svg"
+                  }
                   alt={course.title}
                   width={200}
                   height={200}
@@ -306,10 +326,13 @@ export default function CourseDetail() {
                 />
               </motion.div>
 
-              {(course.originalPrice !== undefined || course.currentPrice !== undefined) && (
+              {(course.originalPrice !== undefined ||
+                course.currentPrice !== undefined) && (
                 <div className="text-center mb-6">
                   {course.originalPrice !== undefined && (
-                    <span className="text-gray-400 line-through text-lg">${course.originalPrice}</span>
+                    <span className="text-gray-400 line-through text-lg">
+                      ${course.originalPrice}
+                    </span>
                   )}
                   {course.currentPrice !== undefined && (
                     <motion.span
@@ -324,7 +347,13 @@ export default function CourseDetail() {
                 </div>
               )}
 
-              <Button className="w-full rounded-full py-3 px-6 font-medium bg-gradient-to-r from-violet-500 via-fuchsia-500 to-orange-400 hover:from-violet-600 hover:via-fuchsia-600 hover:to-orange-500 transition-all shadow-md hover:shadow-lg hover:scale-105 bg-[length:200%_200%] animate-gradient">
+              <Button
+                className="w-full rounded-full py-3 px-6 font-medium bg-gradient-to-r from-violet-500 via-fuchsia-500 to-orange-400 hover:from-violet-600 hover:via-fuchsia-600 hover:to-orange-500 transition-all shadow-md hover:shadow-lg hover:scale-105 bg-[length:200%_200%] animate-gradient"
+                onClick={() => {
+                  const certName = encodeURIComponent(course.title);
+                  window.location.href = `/obtener-certificacion?cert=${certName}&certId=${course.id}&price=${course.currentPrice}`;
+                }}
+              >
                 OBTENER CERTIFICACIÓN
               </Button>
             </motion.div>
