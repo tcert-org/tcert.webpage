@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
 
     if (email && certification) {
       try {
-        const res = await fetch("http://localhost:3000/api/vouchers/public", {
+        const res = await fetch("https://app.t-cert.us/api/vouchers/public", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, certification: Number(certification) }),
