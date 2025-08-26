@@ -84,18 +84,38 @@ const convertCertificationToCourse = (
   params: CertificationParam[]
 ): CourseDetailData => {
   const basePrice =
-    params.find((p) => p.name.includes("Valor de certificación"))?.value || "30";
+    params.find((p) => p.name.includes("Valor de certificación"))?.value ||
+    "30";
   const discountPercent =
-    params.find((p) => p.name.includes("Porcentaje de Descuento"))?.value || "20";
+    params.find((p) => p.name.includes("Porcentaje de Descuento"))?.value ||
+    "20";
 
   const basePriceUSD = parseInt(basePrice);
   const discountPercentNum = parseInt(discountPercent);
 
   const originalPrice = basePriceUSD;
-  const currentPrice = Math.round(basePriceUSD * (1 - discountPercentNum / 100));
+  const currentPrice = Math.round(
+    basePriceUSD * (1 - discountPercentNum / 100)
+  );
+
   const studentCount = ((cert.id * 73) % 400) + 100; // entre 100 y 500
 
-  const logoPath = buildLogoPath(cert.logo_url, cert.name);
+  let logoPath = "/cert-images/scrum-foundation.svg";
+  if (cert.logo_url) {
+    if (!cert.logo_url.startsWith("http") && !cert.logo_url.startsWith("/")) {
+      logoPath = `/cert-images/${cert.logo_url}`;
+    } else if (cert.logo_url.startsWith("/")) {
+      logoPath = cert.logo_url;
+    }
+  }
+
+  const lower = cert.name.toLowerCase();
+  if (logoPath === "/cert-images/scrum-foundation.svg") {
+    if (lower.includes("scrum master"))
+      logoPath = "/cert-images/scrum-master.svg";
+    else if (lower.includes("scrum developer"))
+      logoPath = "/cert-images/scrum-developers.svg";
+  }
 
   return {
     id: cert.id,
@@ -109,9 +129,11 @@ const convertCertificationToCourse = (
     currentPrice,
     mainTopics: [],
     // If the certification contains an 'audience' string or a 'targetAudience' array, normalize it
-  targetAudience: parseTargetAudience(
-    (cert.audience as string | undefined) ?? (cert.targetAudience as string[] | undefined) ?? []
-  ),
+    targetAudience: parseTargetAudience(
+      (cert.audience as string | undefined) ??
+        (cert.targetAudience as string[] | undefined) ??
+        []
+    ),
   };
 };
 
@@ -142,7 +164,9 @@ export default function CourseDetail() {
         // Intentamos llamar al endpoint real; si falla, usamos el JSON mock local
         let apiData: ApiResponse | null = null;
         try {
-          const res = await fetch("/api/certification-params", { cache: "no-store" });
+          const res = await fetch("/api/certification-params", {
+            cache: "no-store",
+          });
           if (res.ok) {
             const json = await res.json();
             // solo asignamos si parece válido
@@ -156,7 +180,9 @@ export default function CourseDetail() {
 
         if (!apiData) {
           // fallback al mock local en /public
-          const mockRes = await fetch("/mock-certifications.json", { cache: "no-store" });
+          const mockRes = await fetch("/mock-certifications.json", {
+            cache: "no-store",
+          });
           if (!mockRes.ok) {
             throw new Error(`Error cargando datos mock: ${mockRes.status}`);
           }
@@ -164,7 +190,9 @@ export default function CourseDetail() {
           apiData = mockJson as ApiResponse;
         }
 
-  const found = apiData!.data.certifications.find((c) => c.id === numericId);
+        const found = apiData.data.certifications.find(
+          (c) => c.id === numericId
+        );
         if (!found) {
           throw new Error("Certificación no encontrada");
         }
@@ -178,14 +206,19 @@ export default function CourseDetail() {
           // import dinámico para evitar inclusión innecesaria en bundles si no se usa
           // (en build estático esto será resuelto en tiempo de compilación)
           const localModule = await import("@/lib/courses-carousel.json");
-          const localCourses: Array<{id: number; description?: string; targetAudience?: string[]}> = localModule?.default || localModule;
+          const localCourses: Array<{
+            id: number;
+            description?: string;
+            targetAudience?: string[];
+          }> = localModule?.default || localModule;
           const localMatch = localCourses.find((c) => c.id === numericId);
           if (localMatch) {
             if (!courseData.description && localMatch.description) {
               courseData.description = localMatch.description;
             }
             if (
-              (!courseData.targetAudience || courseData.targetAudience.length === 0) &&
+              (!courseData.targetAudience ||
+                courseData.targetAudience.length === 0) &&
               localMatch.targetAudience
             ) {
               courseData.targetAudience = localMatch.targetAudience;
@@ -213,7 +246,9 @@ export default function CourseDetail() {
 
   // Mostrar estados de carga o error
   if (loading) {
-    return <p className="text-white text-center pt-32">Cargando certificación...</p>;
+    return (
+      <p className="text-white text-center pt-32">Cargando certificación...</p>
+    );
   }
 
   if (err) {
@@ -221,7 +256,11 @@ export default function CourseDetail() {
   }
 
   if (!course) {
-    return <p className="text-white text-center pt-32">Certificación no encontrada</p>;
+    return (
+      <p className="text-white text-center pt-32">
+        Certificación no encontrada
+      </p>
+    );
   }
 
   return (
@@ -328,7 +367,9 @@ export default function CourseDetail() {
                       // Normalizar: cada segmento separado por ';' o '\n' debe ser su propio <li>
                       parseTargetAudience(course.targetAudience)
                         .flatMap((a) =>
-                          (Array.isArray(a) ? a : String(a)).split(/;|\n/).map((s) => s.trim())
+                          (Array.isArray(a) ? a : String(a))
+                            .split(/;|\n/)
+                            .map((s) => s.trim())
                         )
                         .filter(Boolean)
                         .map((segment, i) => (
@@ -398,7 +439,13 @@ export default function CourseDetail() {
                 </div>
               )}
 
-              <Button className="w-full rounded-full py-3 px-6 font-medium bg-gradient-to-r from-violet-500 via-fuchsia-500 to-orange-400 hover:from-violet-600 hover:via-fuchsia-600 hover:to-orange-500 transition-all shadow-md hover:shadow-lg hover:scale-105 bg-[length:200%_200%] animate-gradient">
+              <Button
+                className="w-full rounded-full py-3 px-6 font-medium bg-gradient-to-r from-violet-500 via-fuchsia-500 to-orange-400 hover:from-violet-600 hover:via-fuchsia-600 hover:to-orange-500 transition-all shadow-md hover:shadow-lg hover:scale-105 bg-[length:200%_200%] animate-gradient"
+                onClick={() => {
+                  const certName = encodeURIComponent(course.title);
+                  window.location.href = `/obtener-certificacion?cert=${certName}&certId=${course.id}&price=${course.currentPrice}`;
+                }}
+              >
                 OBTENER CERTIFICACIÓN
               </Button>
             </motion.div>
