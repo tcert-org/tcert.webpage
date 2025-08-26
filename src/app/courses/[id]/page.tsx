@@ -177,9 +177,8 @@ export default function CourseDetail() {
         try {
           // import dinámico para evitar inclusión innecesaria en bundles si no se usa
           // (en build estático esto será resuelto en tiempo de compilación)
-          // eslint-disable-next-line @typescript-eslint/no-var-requires
           const localModule = await import("@/lib/courses-carousel.json");
-          const localCourses: any[] = localModule?.default || localModule;
+          const localCourses: Array<{id: number; description?: string; targetAudience?: string[]}> = localModule?.default || localModule;
           const localMatch = localCourses.find((c) => c.id === numericId);
           if (localMatch) {
             if (!courseData.description && localMatch.description) {
@@ -192,7 +191,7 @@ export default function CourseDetail() {
               courseData.targetAudience = localMatch.targetAudience;
             }
           }
-        } catch (e) {
+        } catch {
           // noop: si falla el import, no hacemos fallback
         }
         setCourse(courseData);
