@@ -13,3 +13,4 @@ coverage
 .env.development
 .env.test
 .next
+.vscode
