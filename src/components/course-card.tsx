@@ -7,10 +7,11 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Course } from "./course-carousel";
+import type { Course } from "./course-carousel";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import formatWithLineBreaks from "@/lib/format";
 
 function formatCurrency(value: number) {
   if (value <= 0) return "Gratis";
@@ -95,7 +96,9 @@ export function CourseCard({ course }: { course: Course }) {
           </h3>
 
           <p className="text-gray-300 text-sm sm:text-sm leading-relaxed mb-4 line-clamp-3">
-            {course.description}
+            {typeof course.description === "string"
+              ? formatWithLineBreaks(course.description)
+              : course.description}
           </p>
 
           {/* Barra de progreso ficticia */}

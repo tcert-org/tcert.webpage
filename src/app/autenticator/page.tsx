@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
+import PDFTool from "@/modules/Generate-PDF/PDFTool";
 import { Input } from "@/components/ui/input";
 import {
   Card,
@@ -310,7 +311,6 @@ export default function AuthenticatorPage() {
                             </p>
                           </div>
                         </div>
-
                         {/* Estado de validez */}
                         <div className="mt-4 p-3 rounded-lg bg-green-900/30 border border-green-500/50">
                           <div className="flex items-center gap-2">
@@ -328,6 +328,54 @@ export default function AuthenticatorPage() {
                             correctamente.
                           </p>
                         </div>
+                      </div>
+
+                      {/* Botón para descargar PDF */}
+                      <div className="mt-6 flex justify-center">
+                        <Button
+                          className="bg-green-600 hover:bg-green-700 text-white"
+                          onClick={async () => {
+                            if (!apiResponse?.data) return;
+                            const { student, certification, diploma, voucher } =
+                              apiResponse.data;
+                            // Usar el campo de logo que entrega la API
+                            const logoUrl = `https://e48bssyezdxaxnzg.public.blob.vercel-storage.com/logos_insignias/${certification.logo_url}`;
+                            const result = await PDFTool.CreateCertificate(
+                              student.fullname,
+                              certification.name,
+                              diploma.expiration_date,
+                              voucher.code,
+                              logoUrl,
+                              student.document_number
+                            );
+                            if (result.status) {
+                              const arrayBuffer = result.pdfBytes.buffer.slice(
+                                result.pdfBytes.byteOffset,
+                                result.pdfBytes.byteOffset +
+                                  result.pdfBytes.byteLength
+                              );
+                              const blob = new Blob([arrayBuffer], {
+                                type: "application/pdf",
+                              });
+                              const url = URL.createObjectURL(blob);
+                              const a = document.createElement("a");
+                              a.href = url;
+                              a.download = `certificado-${student.fullname}.pdf`;
+                              document.body.appendChild(a);
+                              a.click();
+                              setTimeout(() => {
+                                document.body.removeChild(a);
+                                URL.revokeObjectURL(url);
+                              }, 100);
+                            } else {
+                              alert(
+                                "No se pudo generar el PDF. Intenta de nuevo."
+                              );
+                            }
+                          }}
+                        >
+                          Descargar Diploma en PDF
+                        </Button>
                       </div>
                     </div>
                   ) : (
