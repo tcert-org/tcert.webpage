@@ -37,6 +37,7 @@ interface ApiResponse {
     certification: {
       id: number;
       name: string;
+      logo_url: string;
     };
   };
   message?: string;
@@ -336,8 +337,7 @@ export default function AuthenticatorPage() {
                           className="bg-green-600 hover:bg-green-700 text-white"
                           onClick={async () => {
                             if (!apiResponse?.data) return;
-                            const { student, certification, diploma, voucher } =
-                              apiResponse.data;
+                            const { student, certification, diploma, voucher } = apiResponse.data;
                             // Usar el campo de logo que entrega la API
                             const logoUrl = `https://e48bssyezdxaxnzg.public.blob.vercel-storage.com/logos_insignias/${certification.logo_url}`;
                             const result = await PDFTool.CreateCertificate(
@@ -349,14 +349,19 @@ export default function AuthenticatorPage() {
                               student.document_number
                             );
                             if (result.status) {
-                              const arrayBuffer = result.pdfBytes.buffer.slice(
-                                result.pdfBytes.byteOffset,
-                                result.pdfBytes.byteOffset +
-                                  result.pdfBytes.byteLength
-                              );
-                              const blob = new Blob([arrayBuffer], {
-                                type: "application/pdf",
-                              });
+                              // Convert to ArrayBuffer for Blob compatibility
+                              let arrayBuffer: ArrayBuffer;
+                              if (result.pdfBytes.buffer instanceof ArrayBuffer) {
+                                arrayBuffer = result.pdfBytes.buffer.slice(
+                                  result.pdfBytes.byteOffset,
+                                  result.pdfBytes.byteOffset + result.pdfBytes.byteLength
+                                );
+                              } else {
+                                // If SharedArrayBuffer, copy to ArrayBuffer
+                                const temp = new Uint8Array(result.pdfBytes);
+                                arrayBuffer = temp.buffer;
+                              }
+                              const blob = new Blob([arrayBuffer], { type: "application/pdf" });
                               const url = URL.createObjectURL(blob);
                               const a = document.createElement("a");
                               a.href = url;
@@ -368,9 +373,7 @@ export default function AuthenticatorPage() {
                                 URL.revokeObjectURL(url);
                               }, 100);
                             } else {
-                              alert(
-                                "No se pudo generar el PDF. Intenta de nuevo."
-                              );
+                              alert("No se pudo generar el PDF. Intenta de nuevo.");
                             }
                           }}
                         >

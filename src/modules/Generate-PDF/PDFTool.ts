@@ -1,6 +1,6 @@
 // Utilidad para hacer wrap de texto en varias líneas según el ancho máximo
 function wrapText(
-  font: any,
+  font: { widthOfTextAtSize: (text: string, size: number) => number },
   text: string,
   fontSize: number,
   maxWidth: number
@@ -25,7 +25,7 @@ import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
 import { EMBEDDED_FONTS, getFontBuffer } from "@/lib/fonts/embedded-fonts";
 
 // Variable global para fontkit
-let fontkitInstance: any = null;
+let fontkitInstance: unknown = null;
 let fontkitInitialized = false;
 
 // Función para inicializar fontkit de manera segura
@@ -53,8 +53,18 @@ async function ensureFontkitRegistered() {
     }
 
     // Intentar diferentes métodos de registro
-    if (typeof (PDFDocument as any).registerFontkit === "function") {
-      (PDFDocument as any).registerFontkit(fontkitInstance);
+    if (
+      typeof (
+        PDFDocument as unknown as {
+          registerFontkit?: (fontkit: unknown) => void;
+        }
+      ).registerFontkit === "function"
+    ) {
+      (
+        PDFDocument as unknown as {
+          registerFontkit: (fontkit: unknown) => void;
+        }
+      ).registerFontkit(fontkitInstance);
       console.log("✅ Fontkit registrado globalmente");
     } else {
       console.log(
@@ -104,18 +114,22 @@ async function loadCustomFont(pdfDoc: PDFDocument, fontName: CustomFonts) {
     // Intentar registrar fontkit en la instancia del documento también
     if (
       fontkitInstance &&
-      typeof (pdfDoc as any).registerFontkit === "function"
+      typeof (
+        pdfDoc as unknown as { registerFontkit?: (fontkit: unknown) => void }
+      ).registerFontkit === "function"
     ) {
       try {
-        (pdfDoc as any).registerFontkit(fontkitInstance);
+        (
+          pdfDoc as unknown as { registerFontkit: (fontkit: unknown) => void }
+        ).registerFontkit(fontkitInstance);
         console.log("✅ Fontkit registrado en documento específico");
-      } catch (regError) {
+      } catch {
         console.log("⚠️ Ya estaba registrado en documento");
       }
     }
 
     // Para variantes de Bahnschrift, intentar especificar opciones de fuente
-    let embedOptions: any = {};
+    let embedOptions: Record<string, unknown> = {};
     if (fontName === CustomFonts.BAHNSCHRIFT_CONDENSED) {
       console.log("🔧 Aplicando configuración para Bahnschrift Condensed");
       // Intentar especificar subset o propiedades para la variante condensed
@@ -172,13 +186,11 @@ export default class PDFTool {
     codeVocher: string,
     URL_logo: string,
     documentNumber: string, // Nuevo parámetro para número de documento
-    titleDiploma: string = "Professional Certification",
-    primaryFont: CustomFonts = CustomFonts.BAHNSCHRIFT,
-    secondaryFont: CustomFonts = CustomFonts.BAHNSCHRIFT
+    titleDiploma: string = "Professional Certification"
   ): Promise<{ status: boolean; pdfBytes: Uint8Array }> {
     try {
-      const date = new Date().toISOString();
-      const nameCertificate = `${nameStudent}-${date}`; // Nombre del archivo PDF
+      // const date = new Date().toISOString();
+      // const nameCertificate = `${nameStudent}-${date}`; // Nombre del archivo PDF
 
       // Cargar el template PDF desde la carpeta public usando fetch
       const response = await fetch(
@@ -391,7 +403,7 @@ export default class PDFTool {
     } = {}
   ): Promise<{ status: boolean; pdfBytes: Uint8Array }> {
     try {
-      const date = new Date().toISOString();
+      // const date = new Date().toISOString();
       // Cargar el template PDF desde la carpeta public usando fetch
       const response = await fetch(
         "/assets/certificates/Modelo_definitivo-SIN_INSIGNIA.pdf"
