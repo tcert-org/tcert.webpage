@@ -15,9 +15,9 @@ export default function Home() {
         <SectionWithImage
           miniTitle="Impulsando tu crecimiento"
           title="SOBRE NOSOTROS"
-          subtitle="En T-CERT nos especializamos en potenciar tu crecimiento profesional, ofreciéndote herramientas de calidad diseñadas para prepararte con confianza y éxito ante los desafíos del mercado."
+          subtitle="En T-CERT nos especializamos en impulsar tu crecimiento profesional a través de certificaciones de alta calidad. Te brindamos las herramientas necesarias para afrontar conconfianza y éxito los desafíos del mercado actual."
           imageSrc={["/instructor_teaching.jpeg", "/bg-form-section.webp"]}
-          badges={["Compromiso", "Innovación", "Excelencia"]}
+          badges={["Agilidad", "Innovación", "Calidad"]}
           buttonText="VER MÁS"
           showButton={true}
           right={true}
