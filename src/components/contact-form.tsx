@@ -38,10 +38,15 @@ export default function ContactForm() {
     const data = Object.fromEntries(formData);
 
     try {
-      const response = await fetch("/api/send-emails", {
+      const emailBody = `Nombre: ${data.name}\nEmpresa: ${data.company || '-'}\nCorreo: ${data.email}\nTeléfono: ${data.country || ''} ${data.phone}\nDetalles: ${data.details || '-'}\n`;
+      const response = await fetch("/api/send-email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+          to: "info@t-cert.us",
+          subject: "Nuevo mensaje de contacto desde la web",
+          text: emailBody,
+        }),
       });
 
       if (response.ok) {
