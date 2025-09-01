@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_API_KEY!, {
-  apiVersion: "2025-07-30.basil",
-});
+const stripe = new Stripe(process.env.STRIPE_API_KEY!);
 
 // Opcional: pon tu secret de webhook en .env
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!;
@@ -16,7 +14,8 @@ export async function POST(req: NextRequest) {
   try {
     event = stripe.webhooks.constructEvent(rawBody, sig!, endpointSecret);
   } catch (err: unknown) {
-    const errorMessage = err instanceof Error ? err.message : 'Error desconocido';
+    const errorMessage =
+      err instanceof Error ? err.message : "Error desconocido";
     console.error("[stripe-webhook] Error construyendo evento:", errorMessage);
     return NextResponse.json(
       { error: `Webhook Error: ${errorMessage}` },
