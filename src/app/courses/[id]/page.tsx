@@ -5,7 +5,6 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { buildLogoPath } from "@/lib/logo";
 import formatWithLineBreaks from "@/lib/format";
 import { TestimonialsCarousel } from "@/components/testimonials-carousel";
 
