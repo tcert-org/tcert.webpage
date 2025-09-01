@@ -38,14 +38,17 @@ export default function ContactForm() {
     const data = Object.fromEntries(formData);
 
     try {
-      const emailBody = `Nombre: ${data.name}\nEmpresa: ${data.company || '-'}\nCorreo: ${data.email}\nTeléfono: ${data.country || ''} ${data.phone}\nDetalles: ${data.details || '-'}\n`;
       const response = await fetch("/api/send-email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           to: "info@t-cert.us",
           subject: "Nuevo mensaje de contacto desde la web",
-          text: emailBody,
+          name: data.name,
+          company: data.company,
+          email: data.email,
+          phone: `${data.country || ""} ${data.phone}`.trim(),
+          details: data.details,
         }),
       });
 
@@ -92,7 +95,7 @@ export default function ContactForm() {
           </motion.div>
         )}
       </AnimatePresence>{" "}
-  <div className="relative mx-auto w-full max-w-full sm:max-w-3xl lg:max-w-4xl px-4">
+      <div className="relative mx-auto w-full max-w-full sm:max-w-3xl lg:max-w-4xl px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -192,15 +195,17 @@ export default function ContactForm() {
                   <Label className="text-white font-medium">Teléfono*</Label>
                   <div className="grid grid-cols-5 gap-3">
                     <div className="col-span-1">
-                      <Select 
-                        value={selectedCountry} 
+                      <Select
+                        value={selectedCountry}
                         onValueChange={setSelectedCountry}
                         name="country"
                       >
                         <SelectTrigger className="bg-white/10 border-white/30 text-white focus:border-purple-400 backdrop-blur-sm h-10 rounded-xl">
                           <div className="flex items-center gap-2">
                             <span className="text-lg">
-                              {countries.find(c => c.dial_code === selectedCountry)?.flag || "🌍"}
+                              {countries.find(
+                                (c) => c.dial_code === selectedCountry
+                              )?.flag || "🌍"}
                             </span>
                             <span>{selectedCountry}</span>
                           </div>
@@ -214,8 +219,12 @@ export default function ContactForm() {
                             >
                               <div className="flex items-center gap-2">
                                 <span className="text-lg">{c.flag}</span>
-                                <span className="font-medium">{c.dial_code}</span>
-                                <span className="text-xs text-gray-400 truncate">{c.name}</span>
+                                <span className="font-medium">
+                                  {c.dial_code}
+                                </span>
+                                <span className="text-xs text-gray-400 truncate">
+                                  {c.name}
+                                </span>
                               </div>
                             </SelectItem>
                           ))}

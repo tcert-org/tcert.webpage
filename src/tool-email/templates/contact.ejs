@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Nuevo mensaje de contacto - T-CERT</title>
+    <style>
+      body {
+        background: #f4f6fa;
+        font-family: "Segoe UI", Arial, sans-serif;
+        color: #222;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 24px #0002;
+        max-width: 520px;
+        margin: 40px auto;
+        padding: 40px 32px 32px 32px;
+        border-top: 8px solid #7c3aed;
+        border-bottom: 2px solid #e5e7eb;
+      }
+      .header {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 24px;
+      }
+      .logo {
+        width: 48px;
+        height: 48px;
+        border-radius: 8px;
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .brand {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #7c3aed;
+        letter-spacing: 1px;
+      }
+      h2 {
+        color: #22223b;
+        font-size: 1.25rem;
+        margin-bottom: 18px;
+        font-weight: 600;
+      }
+      .info-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 24px;
+      }
+      .info-table th {
+        text-align: left;
+        color: #7c3aed;
+        font-size: 0.98rem;
+        font-weight: 600;
+        padding: 8px 0 2px 0;
+      }
+      .info-table td {
+        color: #22223b;
+        font-size: 1rem;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #f1f1f1;
+      }
+      .info-table tr:last-child td {
+        border-bottom: none;
+      }
+      .footer {
+        margin-top: 32px;
+        font-size: 0.93rem;
+        color: #888;
+        text-align: center;
+        border-top: 1px solid #ececec;
+        padding-top: 18px;
+      }
+      .footer strong {
+        color: #7c3aed;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <div class="logo">
+          <img
+            src="https://t-cert.us/logo/only-logo/md-full-color.png"
+            alt="T-CERT Logo"
+            width="36"
+            height="36"
+          />
+        </div>
+        <span class="brand">T-CERT</span>
+      </div>
+      <h2>Nuevo mensaje de contacto recibido</h2>
+      <table class="info-table" style="width: 100%; border-collapse: collapse">
+        <tr>
+          <th
+            style="
+              width: 120px;
+              text-align: right;
+              padding-right: 18px;
+              vertical-align: top;
+            "
+          >
+            Nombre
+          </th>
+          <td style="text-align: left; padding-bottom: 10px; color: #22223b">
+            <%= name %>
+          </td>
+        </tr>
+        <tr>
+          <th
+            style="
+              width: 120px;
+              text-align: right;
+              padding-right: 18px;
+              vertical-align: top;
+            "
+          >
+            Empresa
+          </th>
+          <td style="text-align: left; padding-bottom: 10px; color: #22223b">
+            <%= company %>
+          </td>
+        </tr>
+        <tr>
+          <th
+            style="
+              width: 120px;
+              text-align: right;
+              padding-right: 18px;
+              vertical-align: top;
+            "
+          >
+            Correo
+          </th>
+          <td style="text-align: left; padding-bottom: 10px; color: #22223b">
+            <%= email %>
+          </td>
+        </tr>
+        <tr>
+          <th
+            style="
+              width: 120px;
+              text-align: right;
+              padding-right: 18px;
+              vertical-align: top;
+            "
+          >
+            Teléfono
+          </th>
+          <td style="text-align: left; padding-bottom: 10px; color: #22223b">
+            <%= phone %>
+          </td>
+        </tr>
+        <tr>
+          <th
+            style="
+              width: 120px;
+              text-align: right;
+              padding-right: 18px;
+              vertical-align: top;
+            "
+          >
+            Detalles
+          </th>
+          <td style="text-align: left; padding-bottom: 10px; color: #22223b">
+            <%= details %>
+          </td>
+        </tr>
+      </table>
+      <div class="footer">
+        Este mensaje fue enviado desde el formulario de contacto de
+        <strong>T-CERT</strong>.<br />
+        Somos un ente certificador internacional.<br />
+        <a
+          href="https://t-cert.us"
+          style="color: #7c3aed; text-decoration: none"
+          >t-cert.us</a
+        >
+      </div>
+    </div>
+  </body>
+</html>

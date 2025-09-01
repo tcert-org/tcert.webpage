@@ -1,3 +1,6 @@
+import path from "path";
+import ejs from "ejs";
+import fs from "fs/promises";
 import nodemailer from "nodemailer";
 const transporter = nodemailer.createTransport({
   host: process.env.MAILER_HOST,
@@ -9,23 +12,39 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+type MailOptions = {
+  to: string;
+  subject: string;
+  text?: string;
+  html?: string;
+  template?: string;
+  context?: Record<string, unknown>;
+};
+
 export async function sendMail({
   to,
   subject,
   text,
   html,
-}: {
-  to: string;
-  subject: string;
-  text?: string;
-  html?: string;
-}) {
+  template,
+  context,
+}: MailOptions) {
+  let htmlContent = html;
+  if (template) {
+    const templatePath = path.join(
+      process.cwd(),
+      "src/tool-email/templates",
+      template
+    );
+    const templateStr = await fs.readFile(templatePath, "utf8");
+    htmlContent = ejs.render(templateStr, context || {});
+  }
   const mailOptions = {
     from: process.env.MAILER_EMAIL,
     to,
     subject,
     text,
-    html,
+    html: htmlContent,
   };
   return transporter.sendMail(mailOptions);
 }
