@@ -40,7 +40,7 @@ export default function ObtenerCertificacionForm() {
       } else {
         setError(data.error || "Error al crear la sesión de pago");
       }
-    } catch (err) {
+    } catch {
       setError("Error al enviar el formulario");
     } finally {
       setSubmitting(false);
