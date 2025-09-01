@@ -16,7 +16,8 @@ export async function POST(req: NextRequest) {
   try {
     event = stripe.webhooks.constructEvent(rawBody, sig!, endpointSecret);
   } catch (err: unknown) {
-    const errorMessage = err instanceof Error ? err.message : 'Error desconocido';
+    const errorMessage =
+      err instanceof Error ? err.message : "Error desconocido";
     console.error("[stripe-webhook] Error construyendo evento:", errorMessage);
     return NextResponse.json(
       { error: `Webhook Error: ${errorMessage}` },

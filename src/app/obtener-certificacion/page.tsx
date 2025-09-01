@@ -4,7 +4,6 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useState, Suspense } from "react";
 import { Button } from "@/components/ui/button";
 
-
 export default function ObtenerCertificacionForm() {
   return (
     <Suspense fallback={<div>Cargando...</div>}>
@@ -63,7 +62,7 @@ function ObtenerCertificacionFormContent() {
           ¡Solicitud enviada!
         </h2>
         <p className="text-white">Revisa tu correo para más instrucciones.</p>
-        <Button className="mt-6" onClick={() => router.push("/")}> 
+        <Button className="mt-6" onClick={() => router.push("/")}>
           Volver al inicio
         </Button>
       </div>
