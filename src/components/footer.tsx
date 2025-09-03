@@ -4,8 +4,33 @@ import Image from "next/image";
 import Link from "next/link";
 import { Facebook, Instagram, Linkedin } from "lucide-react";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 export default function Footer() {
+  const router = useRouter();
+
+  const handleHashClick = async (e: React.MouseEvent, href: string) => {
+    // If it's an anchor to a section on the home page
+    if (href.startsWith("/#")) {
+      e.preventDefault();
+      const hash = href.split("#")[1];
+      // Navigate to home first if not already there
+      if (typeof window !== "undefined") {
+        if (window.location.pathname !== "/") {
+          await router.push(`/${href}`);
+        } else {
+          // if already on home, update the hash without navigation
+          history.replaceState(null, "", href);
+        }
+
+        // Wait a tick for DOM to be ready
+        requestAnimationFrame(() => {
+          const el = document.getElementById(hash!);
+          if (el) el.scrollIntoView({ behavior: "smooth" });
+        });
+      }
+    }
+  };
   return (
   <footer className="relative w-full bg-black pt-10 pb-8 px-4 md:px-8 overflow-visible z-20">
       {/* Gradiente sutil */}
@@ -26,17 +51,22 @@ export default function Footer() {
         </div>
 
         <nav className="flex flex-col items-center gap-4 text-center">
-          {["Acerca de", "Certificaciones", "Contáctanos"].map((item, idx) => (
+          {[
+            { label: "Acerca de", href: "/#vision" },
+            { label: "Certificaciones", href: "/#courses" },
+            { label: "Contáctanos", href: "/#contact" },
+          ].map((item, idx) => (
             <motion.div
               key={idx}
               whileHover={{ scale: 1.05 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
               <Link
-                href="/under-construction"
+                href={item.href}
+                onClick={(e) => handleHashClick(e as unknown as React.MouseEvent, item.href)}
                 className="text-gray-300 hover:text-purple-400 transition-colors text-lg font-bold"
               >
-                {item}
+                {item.label}
               </Link>
             </motion.div>
           ))}
@@ -51,10 +81,10 @@ export default function Footer() {
               {
                 icon: Instagram,
                 color: "#E4405F",
-                url: "https://instagram.com",
+                url: "https://www.instagram.com/tcert_official?igsh=a2NrZTBsdHF1eDA3&utm_source=qr",
               },
               { icon: Facebook, color: "#1877F2", url: "https://facebook.com" },
-              { icon: Linkedin, color: "#0A66C2", url: "https://linkedin.com" },
+              { icon: Linkedin, color: "#0A66C2", url: "https://www.linkedin.com/in/t-cert-llc-a56a36381/" },
             ].map(({ icon: Icon, color, url }, idx) => (
               <motion.a
                 key={idx}

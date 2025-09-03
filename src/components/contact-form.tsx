@@ -23,6 +23,7 @@ export default function ContactForm() {
     type: "success" | "error";
     message: string;
   } | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState("+1");
 
@@ -33,6 +34,8 @@ export default function ContactForm() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+  if (isSubmitting) return; // prevent double submit
+  setIsSubmitting(true);
     const form = e.currentTarget;
     const formData = new FormData(form);
     const data = Object.fromEntries(formData);
@@ -55,11 +58,14 @@ export default function ContactForm() {
       if (response.ok) {
         showToast("success", "Formulario enviado exitosamente");
         form.reset();
+        setIsSubmitting(false);
       } else {
         showToast("error", "Hubo un error al enviar el formulario");
+        setIsSubmitting(false);
       }
     } catch {
       showToast("error", "No se pudo enviar. Verifica tu conexión.");
+      setIsSubmitting(false);
     }
   };
 
@@ -315,9 +321,9 @@ export default function ContactForm() {
                         ? "bg-gradient-to-r from-purple-500 to-orange-500 hover:from-purple-600 hover:to-orange-600 hover:scale-105 text-white shadow-lg hover:shadow-purple-500/30"
                         : "bg-white/20 cursor-not-allowed text-white/50 border border-white/30"
                     }`}
-                    disabled={!termsAccepted}
+                    disabled={!termsAccepted || isSubmitting}
                   >
-                    Enviar Formulario
+                    {isSubmitting ? "Enviando..." : "Enviar Formulario"}
                   </Button>
                 </motion.div>
               </form>

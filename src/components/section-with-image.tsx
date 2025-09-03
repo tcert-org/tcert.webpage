@@ -172,15 +172,17 @@ export default function SectionWithImage({
                   }}
                   className="pt-4"
                 >
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    className="bg-transparent border-2 mb-12 border-purple-500 text-purple-400 hover:bg-purple-500 hover:text-white transition-all duration-300"
-                    onClick={() => router.push("/about-us")}
-                  >
-                    {buttonText}
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
+                      <motion.div >
+                        <Button
+                          size="lg"
+                          className="relative overflow-hidden group bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 hover:scale-105 text-white font-semibold text-lg px-8 py-4 mb-12 rounded-lg shadow-xl transition-all duration-300 hover:shadow-purple-500/25"
+                          onClick={() => router.push("/about-us")}
+                        >
+                          <span className="relative z-10">{buttonText}</span>
+                          <ArrowRight className="ml-2 h-4 w-4 relative z-10" />
+                          <span className="absolute inset-0 bg-gradient-to-r from-purple-500 to-orange-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                        </Button>
+                      </motion.div>
                 </motion.div>
               )}
             </div>

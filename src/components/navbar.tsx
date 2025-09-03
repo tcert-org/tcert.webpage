@@ -23,18 +23,72 @@ import { motion } from "framer-motion";
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
+  // scrollOpacity: 0 (transparent) .. 1 (opaque)
+  const [scrollOpacity, setScrollOpacity] = useState(0);
   const pathname = usePathname();
   const router = useRouter();
 
+  // Detect and listen to the actual scroll container (window or a scrollable element)
   useEffect(() => {
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY;
-      setIsScrolled(scrollPosition > 300);
+    if (typeof window === "undefined") return;
+
+    const getScrollContainer = () => {
+      const docEl = document.scrollingElement || document.documentElement || document.body;
+      // If document element is scrollable, use it
+      if (docEl && docEl.scrollHeight > docEl.clientHeight) return docEl;
+
+      // Try some common containers that might hold the scroll (main, #__next, body, html)
+      const candidates = Array.from(document.querySelectorAll("main, #__next, body, html"));
+      for (const el of candidates) {
+        try {
+          if (el && (el as Element).scrollHeight > (el as Element).clientHeight) return el as Element;
+        } catch (e) {
+          // ignore
+        }
+      }
+
+      // Fallback to window
+      return window;
     };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const container = getScrollContainer();
+    console.log("Navbar scroll container:", container === window ? "window" : (container as Element).tagName);
+
+    const handleScrollEvent = () => {
+      const pos = container === window ? window.scrollY : ((container as Element).scrollTop || 0);
+      // Map scroll position to opacity:
+      // - <50px => 0
+      // - 50px => 0.1
+      // - 75px => 0.2
+      // - 100px => 0.3
+      // Linear slope: +0.1 per 25px => 0.004 per px
+      let opacity = 0;
+      if (pos >= 50) {
+        opacity = 0.1 + (pos - 50) * 0.004; // reaches 1 at pos ~= 275
+      }
+      if (opacity > 1) opacity = 1;
+      opacity = Math.max(0, Math.min(1, opacity));
+      setScrollOpacity(Number(opacity.toFixed(3)));
+      console.log("Detected scroll position:", pos, "scrollOpacity:", opacity);
+    };
+
+    // Attach
+    if (container === window) {
+      window.addEventListener("scroll", handleScrollEvent, { passive: true });
+    } else {
+      (container as Element).addEventListener("scroll", handleScrollEvent, { passive: true });
+    }
+
+    // initial check
+    handleScrollEvent();
+
+    return () => {
+      if (container === window) {
+        window.removeEventListener("scroll", handleScrollEvent);
+      } else {
+        (container as Element).removeEventListener("scroll", handleScrollEvent);
+      }
+    };
   }, []);
 
   const handleScroll = (sectionId: string) => {
@@ -53,9 +107,10 @@ export function Navbar() {
       initial={{ y: -50, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6 }}
-  className={`fixed top-0 left-0 right-0 w-full z-50 px-4 md:px-10 transition-all duration-300 ${
-        isScrolled
-          ? "bg-black/95 backdrop-blur-md border-b border-white/10 shadow-lg"
+      style={{ backgroundColor: `rgba(0,0,0,${scrollOpacity})` }}
+      className={`fixed top-0 left-0 right-0 w-full z-50 px-4 md:px-10 transition-all duration-200 ${
+        scrollOpacity > 0
+          ? "backdrop-blur-lg border-b border-white/20 shadow-xl"
           : "bg-transparent"
       }`}
     >
