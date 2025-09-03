@@ -18,13 +18,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { DialogTitle } from "@radix-ui/react-dialog";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
-  // scrollOpacity: 0 (transparent) .. 1 (opaque)
-  const [scrollOpacity, setScrollOpacity] = useState(0);
+  // We'll avoid updating React state on every scroll to prevent re-renders.
+  // Use a ref to the header element and update its style/classList via RAF.
+  const headerRef = useRef<HTMLElement | null>(null);
   const pathname = usePathname();
   const router = useRouter();
 
@@ -54,39 +55,59 @@ export function Navbar() {
     const container = getScrollContainer();
     console.log("Navbar scroll container:", container === window ? "window" : (container as Element).tagName);
 
-    const handleScrollEvent = () => {
-      const pos = container === window ? window.scrollY : ((container as Element).scrollTop || 0);
-      // Map scroll position to opacity:
-      // - <50px => 0
-      // - 50px => 0.1
-      // - 75px => 0.2
-      // - 100px => 0.3
-      // Linear slope: +0.1 per 25px => 0.004 per px
+    let latestPos = 0;
+    let ticking = false;
+
+    const applyOpacity = (pos: number) => {
       let opacity = 0;
       if (pos >= 50) {
         opacity = 0.1 + (pos - 50) * 0.004; // reaches 1 at pos ~= 275
       }
       if (opacity > 1) opacity = 1;
       opacity = Math.max(0, Math.min(1, opacity));
-      setScrollOpacity(Number(opacity.toFixed(3)));
-      console.log("Detected scroll position:", pos, "scrollOpacity:", opacity);
+
+      const headerEl = headerRef.current;
+      if (!headerEl) return;
+
+      // Update background color (cheap) and toggle expensive effects via classList
+      headerEl.style.backgroundColor = `rgba(0,0,0,${opacity})`;
+
+      const showEffects = opacity > 0.001;
+      if (showEffects) {
+        headerEl.classList.add("backdrop-blur-lg", "shadow-xl");
+      } else {
+        headerEl.classList.remove("backdrop-blur-lg", "shadow-xl");
+      }
+    };
+
+    const rafHandler = () => {
+      ticking = false;
+      applyOpacity(latestPos);
+    };
+
+    const onScroll = () => {
+      latestPos = container === window ? window.scrollY : ((container as Element).scrollTop || 0);
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(rafHandler);
+      }
     };
 
     // Attach
     if (container === window) {
-      window.addEventListener("scroll", handleScrollEvent, { passive: true });
+      window.addEventListener("scroll", onScroll, { passive: true });
     } else {
-      (container as Element).addEventListener("scroll", handleScrollEvent, { passive: true });
+      (container as Element).addEventListener("scroll", onScroll, { passive: true });
     }
 
     // initial check
-    handleScrollEvent();
+    onScroll();
 
     return () => {
       if (container === window) {
-        window.removeEventListener("scroll", handleScrollEvent);
+        window.removeEventListener("scroll", onScroll as EventListener);
       } else {
-        (container as Element).removeEventListener("scroll", handleScrollEvent);
+        (container as Element).removeEventListener("scroll", onScroll as EventListener);
       }
     };
   }, []);
@@ -104,15 +125,12 @@ export function Navbar() {
 
   return (
   <motion.header
+      ref={(el) => { headerRef.current = el as HTMLElement | null; }}
       initial={{ y: -50, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6 }}
-      style={{ backgroundColor: `rgba(0,0,0,${scrollOpacity})` }}
-      className={`fixed top-0 left-0 right-0 w-full z-50 px-4 md:px-10 transition-all duration-200 ${
-        scrollOpacity > 0
-          ? "backdrop-blur-lg border-b border-white/20 shadow-xl"
-          : "bg-transparent"
-      }`}
+      style={{ backgroundColor: `rgba(0,0,0,0)` }}
+      className={`fixed top-0 left-0 right-0 w-full z-50 px-4 md:px-10 transition-all duration-200 bg-transparent`}
     >
   <nav className="flex items-center justify-between h-14 md:h-16">
         <Link href="/" className="flex items-center">
