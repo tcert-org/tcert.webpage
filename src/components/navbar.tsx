@@ -43,7 +43,7 @@ export function Navbar() {
       for (const el of candidates) {
         try {
           if (el && (el as Element).scrollHeight > (el as Element).clientHeight) return el as Element;
-        } catch (e) {
+        } catch {
           // ignore
         }
       }
