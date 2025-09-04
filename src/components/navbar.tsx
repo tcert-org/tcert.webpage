@@ -130,7 +130,7 @@ export function Navbar() {
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6 }}
       style={{ backgroundColor: `rgba(0,0,0,0)` }}
-      className={`fixed top-0 left-0 right-0 w-full z-50 px-4 md:px-10 transition-all duration-200 bg-transparent`}
+      className={`fixed top-0 left-0 right-0 w-full z-50 px-4 justify-center md:px-10 transition-all duration-200 bg-transparent`}
     >
   <nav className="flex items-center justify-between h-14 md:h-16">
         <Link href="/" className="flex items-center">

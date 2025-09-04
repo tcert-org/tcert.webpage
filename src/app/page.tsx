@@ -4,10 +4,12 @@ import Hero from "@/components/hero";
 import PartnersSection from "@/components/partners-section";
 import SectionWithImage from "@/components/section-with-image";
 import { TestimonialsCarousel } from "@/components/testimonials-carousel";
+import SparklesBackground from "@/components/sparkles-background";
 
 export default function Home() {
   return (
     <div>
+      <SparklesBackground sparkleCount={180} glowCount={8} />
       <section id="hero" className="w-full">
         <Hero />
       </section>

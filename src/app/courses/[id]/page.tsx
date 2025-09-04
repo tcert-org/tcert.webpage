@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 import formatWithLineBreaks from "@/lib/format";
 import { TestimonialsCarousel } from "@/components/testimonials-carousel";
 import { buildLogoPath } from "@/lib/logo";
+import { IoPeople } from "react-icons/io5";
 
 // ===== Tipos =====
 type Certification = {
@@ -377,7 +378,9 @@ export default function CourseDetail() {
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.4, delay: 1.1 + i * 0.1 }}
                           >
-                            <span className="text-orange-400 mt-1">📑</span>
+                            <span className="text-orange-400 mt-1">
+                              <IoPeople />
+                            </span>
                             <span className="text-white/80">{segment}</span>
                           </motion.li>
                         ))

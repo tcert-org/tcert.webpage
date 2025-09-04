@@ -378,7 +378,7 @@ export default function CourseCarousel() {
                   { length: Math.ceil(courses.length / 3) },
                   (_, groupIndex) => (
                     <CarouselItem key={groupIndex} className="pl-2 md:pl-4">
-                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                      <div className="grid grid-cols-1 py-12 mx-12 sm:grid-cols-2 md:grid-cols-3 gap-6">
                         {courses
                           .slice(groupIndex * 3, (groupIndex + 1) * 3)
                           .map((course, index) => (

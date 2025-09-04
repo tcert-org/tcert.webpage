@@ -55,44 +55,45 @@ export default function AboutUs() {
         {/* Fondo base oscuro */}
         <div className="absolute inset-0 bg-gradient-to-b from-gray-900 via-black to-gray-900" />
         
-        {/* Destellos pequeños */}
-        {Array.from({ length: 15 }, (_, i) => (
+        {/* Destellos pequeños — más densos y visibles */}
+        {Array.from({ length: 300 }, (_, i) => (
           <Sparkle
             key={`sparkle-${i}`}
-            delay={i * 2 + Math.random() * 3}
+            delay={i * 0.5 + Math.random() * 1.5}
             x={`${Math.random() * 100}%`}
             y={`${Math.random() * 100}%`}
-            duration={2 + Math.random() * 2}
+            duration={1.2 + Math.random() * 1.2}
           />
         ))}
-        
-        {/* Luces sutiles más grandes */}
-        {Array.from({ length: 6 }, (_, i) => (
+
+        {/* Luces grandes más notorias */}
+        {Array.from({ length: 8 }, (_, i) => (
           <GlowOrb
             key={`glow-${i}`}
-            delay={i * 3 + Math.random() * 4}
+            delay={i * 1.5 + Math.random() * 2}
             x={`${Math.random() * 100}%`}
             y={`${Math.random() * 100}%`}
-            size={20 + Math.random() * 30}
-            color={i % 3 === 0 ? '#8B5CF6' : i % 3 === 1 ? '#F97316' : '#06B6D4'}
+            size={28 + Math.random() * 54}
+            color={i % 3 === 0 ? 'rgba(139,92,246,0.9)' : i % 3 === 1 ? 'rgba(249,115,22,0.85)' : 'rgba(6,182,212,0.85)'}
           />
         ))}
-        
-        {/* Partículas flotantes muy sutiles */}
+
+        {/* Partículas flotantes con mayor contraste */}
         <motion.div
           className="absolute inset-0"
           style={{
             background: `
-              radial-gradient(circle at 20% 50%, rgba(139, 92, 246, 0.03) 0%, transparent 50%),
-              radial-gradient(circle at 80% 20%, rgba(249, 115, 22, 0.02) 0%, transparent 50%),
-              radial-gradient(circle at 40% 70%, rgba(6, 182, 212, 0.02) 0%, transparent 50%)
+              radial-gradient(circle at 20% 50%, rgba(139, 92, 246, 0.12) 0%, transparent 40%),
+              radial-gradient(circle at 80% 20%, rgba(249, 115, 22, 0.08) 0%, transparent 45%),
+              radial-gradient(circle at 40% 70%, rgba(6, 182, 212, 0.08) 0%, transparent 45%)
             `
           }}
           animate={{
-            opacity: [0.5, 0.8, 0.5],
+            opacity: [0.6, 1, 0.6],
+            transform: ["scale(1)", "scale(1.03)", "scale(1)"]
           }}
           transition={{
-            duration: 8,
+            duration: 6,
             repeat: Infinity,
             repeatType: "loop",
             ease: "easeInOut",
