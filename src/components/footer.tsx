@@ -41,7 +41,7 @@ export default function Footer() {
 
   <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center sm:justify-between gap-8 md:gap-10 relative z-10 px-4">
         <div className="flex justify-center md:justify-center">
-          <a href="/" aria-label="T-Cert" className="group inline-block">
+          <Link href="/" aria-label="T-Cert" className="group inline-block">
             <Image
               src="/logo/complete/md-full-color.png"
               alt="T-Cert Logo"
@@ -49,7 +49,7 @@ export default function Footer() {
               height={50}
               className="h-16 w-auto transition duration-500 group-hover:drop-shadow-[0_0_10px_rgba(103,14,226,0.8)] group-hover:translate-y-[-2px]"
             />
-          </a>
+          </Link>
         </div>
 
         <nav className="flex flex-col items-center gap-4 text-center -mb-12">

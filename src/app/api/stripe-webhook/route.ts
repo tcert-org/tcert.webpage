@@ -1,11 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import Stripe from "stripe";
+import type Stripe from "stripe";
 import { sendMail } from "@/tool-email/mailer";
 
-const stripe = new Stripe(process.env.STRIPE_API_KEY!);
-
-// Opcional: pon tu secret de webhook en .env
-const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!;
+// Nota: deferimos la creación del cliente Stripe dentro del handler para evitar
+// errores en tiempo de build cuando las variables de entorno no están presentes.
 
 // Función auxiliar para obtener el nombre de la certificación
 async function getCertificationName(certificationId: number): Promise<string> {
@@ -48,6 +46,18 @@ export async function POST(req: NextRequest) {
   
   const rawBody = await req.text();
   console.log("[stripe-webhook] Body length:", rawBody.length);
+
+  const apiKey = process.env.STRIPE_API_KEY;
+  const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
+  if (!apiKey || !endpointSecret) {
+    console.error("[stripe-webhook] ❌ STRIPE_API_KEY o STRIPE_WEBHOOK_SECRET no configuradas");
+    return NextResponse.json({ error: "Stripe configuration missing" }, { status: 500 });
+  }
+
+  // Crear cliente Stripe en runtime usando dynamic import para evitar problemas de lint
+  const StripeModule = await import("stripe");
+  const StripeLib = StripeModule.default as typeof Stripe;
+  const stripe = new StripeLib(apiKey);
 
   let event: Stripe.Event;
   try {
