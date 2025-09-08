@@ -1,12 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_API_KEY!);
-
 export async function POST(req: NextRequest) {
   console.log("[obtener-certificacion] 🚀 Iniciando proceso de creación de sesión de pago");
   
   try {
+    const apiKey = process.env.STRIPE_API_KEY;
+    if (!apiKey) {
+      console.error("[obtener-certificacion] ❌ STRIPE_API_KEY no configurada en el entorno");
+      return NextResponse.json({ error: "Stripe API key not configured" }, { status: 500 });
+    }
+    const stripe = new Stripe(apiKey);
     const { email, cert, certId, price } = await req.json();
     console.log("[obtener-certificacion] 📋 Datos recibidos:", { email, cert, certId, price });
 
