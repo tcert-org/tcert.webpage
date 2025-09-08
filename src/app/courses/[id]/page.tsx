@@ -262,6 +262,14 @@ export default function CourseDetail() {
     );
   }
 
+  // Pricing helpers
+  const EPS = 0.0001;
+  const originalPriceVal = course.originalPrice ?? 0;
+  const currentPriceVal = course.currentPrice ?? 0;
+  const isFree = currentPriceVal <= EPS;
+  const hasDiscount =
+    originalPriceVal > 0 && currentPriceVal > 0 && currentPriceVal < originalPriceVal - EPS;
+
   return (
     <motion.div
       className="min-h-screen py-16 pt-32"
@@ -423,12 +431,11 @@ export default function CourseDetail() {
                 />
               </motion.div>
 
-              {(course.originalPrice !== undefined ||
-                course.currentPrice !== undefined) && (
+              {(course.originalPrice !== undefined || course.currentPrice !== undefined) && (
                 <div className="text-center mb-6">
-                  {course.originalPrice !== undefined && (
+                  {hasDiscount && course.originalPrice !== undefined && (
                     <span className="text-gray-400 line-through text-lg">
-                      ${course.originalPrice}
+                      ${originalPriceVal.toLocaleString("es-CO")}
                     </span>
                   )}
                   {course.currentPrice !== undefined && (
@@ -438,7 +445,7 @@ export default function CourseDetail() {
                       animate={{ scale: 1, opacity: 1 }}
                       transition={{ duration: 0.4, delay: 0.5 }}
                     >
-                      ${course.currentPrice}
+                      {isFree ? "Gratis" : `$${currentPriceVal.toLocaleString("es-CO")}`}
                     </motion.span>
                   )}
                 </div>
