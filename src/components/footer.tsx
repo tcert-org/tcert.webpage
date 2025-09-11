@@ -110,8 +110,6 @@ export default function Footer() {
               <Link href="/politica" className="hover:text-white/90 underline-offset-2 hover:underline">Políticas</Link>
               <Link href="/tratamiento-datos" className="hover:text-white/90 underline-offset-2 hover:underline">Tratamiento de datos</Link>
             </div>
-
-            <div className="text-gray-500">Desarrollado por <a className="text-purple-400 underline" href="https://ultradevelopments.com" target="_blank" rel="noopener noreferrer">Ultra Developments S.A.S.</a></div>
           </div>
         </div>
       {/* Línea decorativa inferior con efecto neón */}
