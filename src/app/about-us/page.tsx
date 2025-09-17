@@ -4,7 +4,17 @@ import SectionWithImage from "@/components/section-with-image";
 import { motion } from "framer-motion";
 
 // Componente de destello individual
-const Sparkle = ({ delay, x, y, duration }: { delay: number, x: string, y: string, duration: number }) => (
+const Sparkle = ({
+  delay,
+  x,
+  y,
+  duration,
+}: {
+  delay: number;
+  x: string;
+  y: string;
+  duration: number;
+}) => (
   <motion.div
     className="absolute w-1 h-1 bg-white rounded-full opacity-0"
     style={{ left: x, top: y }}
@@ -23,15 +33,27 @@ const Sparkle = ({ delay, x, y, duration }: { delay: number, x: string, y: strin
 );
 
 // Componente de luz pulsante más grande
-const GlowOrb = ({ delay, x, y, size, color }: { delay: number, x: string, y: string, size: number, color: string }) => (
+const GlowOrb = ({
+  delay,
+  x,
+  y,
+  size,
+  color,
+}: {
+  delay: number;
+  x: string;
+  y: string;
+  size: number;
+  color: string;
+}) => (
   <motion.div
     className={`absolute rounded-full opacity-0 blur-sm`}
-    style={{ 
-      left: x, 
-      top: y, 
-      width: `${size}px`, 
+    style={{
+      left: x,
+      top: y,
+      width: `${size}px`,
       height: `${size}px`,
-      background: `radial-gradient(circle, ${color}, transparent 70%)`
+      background: `radial-gradient(circle, ${color}, transparent 70%)`,
     }}
     animate={{
       opacity: [0, 0.3, 0],
@@ -54,7 +76,7 @@ export default function AboutUs() {
       <div className="fixed inset-0 z-0 pointer-events-none">
         {/* Fondo base oscuro */}
         <div className="absolute inset-0 bg-gradient-to-b from-gray-900 via-black to-gray-900" />
-        
+
         {/* Destellos pequeños — más densos y visibles */}
         {Array.from({ length: 300 }, (_, i) => (
           <Sparkle
@@ -74,7 +96,13 @@ export default function AboutUs() {
             x={`${Math.random() * 100}%`}
             y={`${Math.random() * 100}%`}
             size={28 + Math.random() * 54}
-            color={i % 3 === 0 ? 'rgba(139,92,246,0.9)' : i % 3 === 1 ? 'rgba(249,115,22,0.85)' : 'rgba(6,182,212,0.85)'}
+            color={
+              i % 3 === 0
+                ? "rgba(139,92,246,0.9)"
+                : i % 3 === 1
+                ? "rgba(249,115,22,0.85)"
+                : "rgba(6,182,212,0.85)"
+            }
           />
         ))}
 
@@ -86,11 +114,11 @@ export default function AboutUs() {
               radial-gradient(circle at 20% 50%, rgba(139, 92, 246, 0.12) 0%, transparent 40%),
               radial-gradient(circle at 80% 20%, rgba(249, 115, 22, 0.08) 0%, transparent 45%),
               radial-gradient(circle at 40% 70%, rgba(6, 182, 212, 0.08) 0%, transparent 45%)
-            `
+            `,
           }}
           animate={{
             opacity: [0.6, 1, 0.6],
-            transform: ["scale(1)", "scale(1.03)", "scale(1)"]
+            transform: ["scale(1)", "scale(1.03)", "scale(1)"],
           }}
           transition={{
             duration: 6,
