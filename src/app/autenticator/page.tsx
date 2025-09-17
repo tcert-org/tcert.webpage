@@ -288,13 +288,16 @@ export default function AuthenticatorPage() {
                               Fecha de Finalización:
                             </span>
                             <p className="text-green-400">
-                              {new Date(
-                                apiResponse.data.diploma.completion_date
-                              ).toLocaleDateString("es-ES", {
-                                year: "numeric",
-                                month: "long",
-                                day: "numeric",
-                              })}
+                              {(() => {
+                                const date = new Date(apiResponse.data.diploma.completion_date);
+                                // Ajustar para evitar problemas de zona horaria
+                                date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
+                                return date.toLocaleDateString("es-ES", {
+                                  year: "numeric",
+                                  month: "long",
+                                  day: "numeric",
+                                });
+                              })()}
                             </p>
                           </div>
                           <div>
@@ -302,13 +305,16 @@ export default function AuthenticatorPage() {
                               Fecha de Expiración:
                             </span>
                             <p className="text-orange-400">
-                              {new Date(
-                                apiResponse.data.diploma.expiration_date
-                              ).toLocaleDateString("es-ES", {
-                                year: "numeric",
-                                month: "long",
-                                day: "numeric",
-                              })}
+                              {(() => {
+                                const date = new Date(apiResponse.data.diploma.expiration_date);
+                                // Ajustar para evitar problemas de zona horaria
+                                date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
+                                return date.toLocaleDateString("es-ES", {
+                                  year: "numeric",
+                                  month: "long",
+                                  day: "numeric",
+                                });
+                              })()}
                             </p>
                           </div>
                         </div>
@@ -317,11 +323,14 @@ export default function AuthenticatorPage() {
                           <div className="flex items-center gap-2">
                             <CheckCircle className="h-5 w-5 text-green-400" />
                             <span className="text-green-400 font-semibold">
-                              {new Date(
-                                apiResponse.data.diploma.expiration_date
-                              ) > new Date()
-                                ? "Certificado Vigente"
-                                : "Certificado Expirado"}
+                              {(() => {
+                                const expirationDate = new Date(apiResponse.data.diploma.expiration_date);
+                                // Ajustar para evitar problemas de zona horaria
+                                expirationDate.setMinutes(expirationDate.getMinutes() + expirationDate.getTimezoneOffset());
+                                const today = new Date();
+                                today.setHours(0, 0, 0, 0); // Normalizar a medianoche
+                                return expirationDate >= today ? "Certificado Vigente" : "Certificado Expirado";
+                              })()}
                             </span>
                           </div>
                           <p className="text-green-300 text-sm mt-1">
