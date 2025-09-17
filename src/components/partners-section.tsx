@@ -179,6 +179,11 @@ const PartnersSection: React.FC = () => {
     };
   }, [ready]);
 
+  // If there are no items and no error, don't render the section at all
+  if (items.length === 0 && !error) {
+    return null;
+  }
+
   // Función para desacelerar suavemente la animación (solo para pointers secundarios)
   const desacelerarAnimacion = () => {
     // no desacelerar en dispositivos táctiles/pointer:coarse

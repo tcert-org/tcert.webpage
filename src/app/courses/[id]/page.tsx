@@ -5,9 +5,10 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { buildLogoPath } from "@/lib/logo";
 import formatWithLineBreaks from "@/lib/format";
 import { TestimonialsCarousel } from "@/components/testimonials-carousel";
+import { buildLogoPath } from "@/lib/logo";
+import { IoPeople } from "react-icons/io5";
 
 // ===== Tipos =====
 type Certification = {
@@ -100,22 +101,8 @@ const convertCertificationToCourse = (
 
   const studentCount = ((cert.id * 73) % 400) + 100; // entre 100 y 500
 
-  let logoPath = "/cert-images/scrum-foundation.svg";
-  if (cert.logo_url) {
-    if (!cert.logo_url.startsWith("http") && !cert.logo_url.startsWith("/")) {
-      logoPath = `/cert-images/${cert.logo_url}`;
-    } else if (cert.logo_url.startsWith("/")) {
-      logoPath = cert.logo_url;
-    }
-  }
-
-  const lower = cert.name.toLowerCase();
-  if (logoPath === "/cert-images/scrum-foundation.svg") {
-    if (lower.includes("scrum master"))
-      logoPath = "/cert-images/scrum-master.svg";
-    else if (lower.includes("scrum developer"))
-      logoPath = "/cert-images/scrum-developers.svg";
-  }
+  // ✅ Usar la misma lógica que en la página principal
+  const logoPath = buildLogoPath(cert.logo_url, cert.name);
 
   return {
     id: cert.id,
@@ -128,7 +115,7 @@ const convertCertificationToCourse = (
     originalPrice,
     currentPrice,
     mainTopics: [],
-    // If the certification contains an 'audience' string or a 'targetAudience' array, normalize it
+    // Normalizar público objetivo
     targetAudience: parseTargetAudience(
       (cert.audience as string | undefined) ??
         (cert.targetAudience as string[] | undefined) ??
@@ -201,15 +188,16 @@ export default function CourseDetail() {
           found,
           apiData.data.params || []
         );
-        // Si la API no provee descripción o público objetivo, intentar usar el JSON local como fallback
+
+        // Enriquecer con JSON local si falta descripción o targetAudience
         try {
-          // import dinámico para evitar inclusión innecesaria en bundles si no se usa
-          // (en build estático esto será resuelto en tiempo de compilación)
           const localModule = await import("@/lib/courses-carousel.json");
           const localCourses: Array<{
             id: number;
             description?: string;
             targetAudience?: string[];
+            image?: string;
+            certImage?: string;
           }> = localModule?.default || localModule;
           const localMatch = localCourses.find((c) => c.id === numericId);
           if (localMatch) {
@@ -223,10 +211,21 @@ export default function CourseDetail() {
             ) {
               courseData.targetAudience = localMatch.targetAudience;
             }
+            // Si falta la imagen o la certImage en los datos convertidos,
+            // usar la información del JSON local (que apunta a /imgs/* que sí
+            // existen en /public). Esto evita referencias a `/cert-images/*`
+            // inexistentes en `public`.
+            if ((!courseData.certImage || courseData.certImage === "/cert-images/scrum-foundation.svg") && localMatch.certImage) {
+              courseData.certImage = localMatch.certImage;
+            }
+            if ((!courseData.image || courseData.image === "/cert-images/scrum-foundation.svg") && localMatch.image) {
+              courseData.image = localMatch.image;
+            }
           }
         } catch {
-          // noop: si falla el import, no hacemos fallback
+          // noop
         }
+
         setCourse(courseData);
       } catch (error) {
         const errorMessage =
@@ -249,7 +248,7 @@ export default function CourseDetail() {
     return (
       <p className="text-white text-center pt-32">Cargando certificación...</p>
     );
-  }
+    }
 
   if (err) {
     return <p className="text-red-500 text-center pt-32">Error: {err}</p>;
@@ -262,6 +261,14 @@ export default function CourseDetail() {
       </p>
     );
   }
+
+  // Pricing helpers
+  const EPS = 0.0001;
+  const originalPriceVal = course.originalPrice ?? 0;
+  const currentPriceVal = course.currentPrice ?? 0;
+  const isFree = currentPriceVal <= EPS;
+  const hasDiscount =
+    originalPriceVal > 0 && currentPriceVal > 0 && currentPriceVal < originalPriceVal - EPS;
 
   return (
     <motion.div
@@ -364,7 +371,6 @@ export default function CourseDetail() {
                   </motion.h2>
                   <motion.ul className="space-y-3 text-justify pl-4 border-l-2 border-purple-500/30">
                     {
-                      // Normalizar: cada segmento separado por ';' o '\n' debe ser su propio <li>
                       parseTargetAudience(course.targetAudience)
                         .flatMap((a) =>
                           (Array.isArray(a) ? a : String(a))
@@ -380,7 +386,9 @@ export default function CourseDetail() {
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.4, delay: 1.1 + i * 0.1 }}
                           >
-                            <span className="text-orange-400 mt-1">📑</span>
+                            <span className="text-orange-400 mt-1">
+                              <IoPeople />
+                            </span>
                             <span className="text-white/80">{segment}</span>
                           </motion.li>
                         ))
@@ -414,16 +422,20 @@ export default function CourseDetail() {
                   alt={course.title}
                   width={200}
                   height={200}
+                  onError={(e) => {
+                    // fallback visual si la imagen remota/local falla
+                    const target = e.currentTarget as HTMLImageElement;
+                    target.src = "https://e48bssyezdxaxnzg.public.blob.vercel-storage.com/logos_insignias/scrum-foundation.svg";
+                  }}
                   className="w-40 h-40 md:w-48 md:h-48 rounded-lg hover:scale-105 transition-transform duration-300"
                 />
               </motion.div>
 
-              {(course.originalPrice !== undefined ||
-                course.currentPrice !== undefined) && (
+              {(course.originalPrice !== undefined || course.currentPrice !== undefined) && (
                 <div className="text-center mb-6">
-                  {course.originalPrice !== undefined && (
+                  {hasDiscount && course.originalPrice !== undefined && (
                     <span className="text-gray-400 line-through text-lg">
-                      ${course.originalPrice}
+                      ${originalPriceVal.toLocaleString("es-CO")}
                     </span>
                   )}
                   {course.currentPrice !== undefined && (
@@ -433,7 +445,7 @@ export default function CourseDetail() {
                       animate={{ scale: 1, opacity: 1 }}
                       transition={{ duration: 0.4, delay: 0.5 }}
                     >
-                      ${course.currentPrice}
+                      {isFree ? "Gratis" : `$${currentPriceVal.toLocaleString("es-CO")}`}
                     </motion.span>
                   )}
                 </div>

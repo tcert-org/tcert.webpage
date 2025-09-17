@@ -18,23 +18,98 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { DialogTitle } from "@radix-ui/react-dialog";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
+  // We'll avoid updating React state on every scroll to prevent re-renders.
+  // Use a ref to the header element and update its style/classList via RAF.
+  const headerRef = useRef<HTMLElement | null>(null);
   const pathname = usePathname();
   const router = useRouter();
 
+  // Detect and listen to the actual scroll container (window or a scrollable element)
   useEffect(() => {
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY;
-      setIsScrolled(scrollPosition > 300);
+    if (typeof window === "undefined") return;
+
+    const getScrollContainer = () => {
+      const docEl = document.scrollingElement || document.documentElement || document.body;
+      // If document element is scrollable, use it
+      if (docEl && docEl.scrollHeight > docEl.clientHeight) return docEl;
+
+      // Try some common containers that might hold the scroll (main, #__next, body, html)
+      const candidates = Array.from(document.querySelectorAll("main, #__next, body, html"));
+      for (const el of candidates) {
+        try {
+          if (el && (el as Element).scrollHeight > (el as Element).clientHeight) return el as Element;
+        } catch {
+          // ignore
+        }
+      }
+
+      // Fallback to window
+      return window;
     };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const container = getScrollContainer();
+    console.log("Navbar scroll container:", container === window ? "window" : (container as Element).tagName);
+
+    let latestPos = 0;
+    let ticking = false;
+
+    const applyOpacity = (pos: number) => {
+      let opacity = 0;
+      if (pos >= 50) {
+        opacity = 0.1 + (pos - 50) * 0.004; // reaches 1 at pos ~= 275
+      }
+      if (opacity > 1) opacity = 1;
+      opacity = Math.max(0, Math.min(1, opacity));
+
+      const headerEl = headerRef.current;
+      if (!headerEl) return;
+
+      // Update background color (cheap) and toggle expensive effects via classList
+      headerEl.style.backgroundColor = `rgba(0,0,0,${opacity})`;
+
+      const showEffects = opacity > 0.001;
+      if (showEffects) {
+        headerEl.classList.add("backdrop-blur-lg", "shadow-xl");
+      } else {
+        headerEl.classList.remove("backdrop-blur-lg", "shadow-xl");
+      }
+    };
+
+    const rafHandler = () => {
+      ticking = false;
+      applyOpacity(latestPos);
+    };
+
+    const onScroll = () => {
+      latestPos = container === window ? window.scrollY : ((container as Element).scrollTop || 0);
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(rafHandler);
+      }
+    };
+
+    // Attach
+    if (container === window) {
+      window.addEventListener("scroll", onScroll, { passive: true });
+    } else {
+      (container as Element).addEventListener("scroll", onScroll, { passive: true });
+    }
+
+    // initial check
+    onScroll();
+
+    return () => {
+      if (container === window) {
+        window.removeEventListener("scroll", onScroll as EventListener);
+      } else {
+        (container as Element).removeEventListener("scroll", onScroll as EventListener);
+      }
+    };
   }, []);
 
   const handleScroll = (sectionId: string) => {
@@ -50,14 +125,12 @@ export function Navbar() {
 
   return (
   <motion.header
+      ref={(el) => { headerRef.current = el as HTMLElement | null; }}
       initial={{ y: -50, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6 }}
-  className={`fixed top-0 left-0 right-0 w-full z-50 px-4 md:px-10 transition-all duration-300 ${
-        isScrolled
-          ? "bg-black/95 backdrop-blur-md border-b border-white/10 shadow-lg"
-          : "bg-transparent"
-      }`}
+      style={{ backgroundColor: `rgba(0,0,0,0)` }}
+      className={`fixed top-0 left-0 right-0 w-full z-50 px-4 justify-center md:px-10 transition-all duration-200 bg-transparent`}
     >
   <nav className="flex items-center justify-between h-14 md:h-16">
         <Link href="/" className="flex items-center">

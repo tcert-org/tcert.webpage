@@ -1,10 +1,18 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { Button } from "@/components/ui/button";
 
 export default function ObtenerCertificacionForm() {
+  return (
+    <Suspense fallback={<div>Cargando...</div>}>
+      <ObtenerCertificacionFormContent />
+    </Suspense>
+  );
+}
+
+function ObtenerCertificacionFormContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -40,7 +48,7 @@ export default function ObtenerCertificacionForm() {
       } else {
         setError(data.error || "Error al crear la sesión de pago");
       }
-    } catch (err) {
+    } catch {
       setError("Error al enviar el formulario");
     } finally {
       setSubmitting(false);

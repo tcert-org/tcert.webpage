@@ -23,6 +23,7 @@ export default function ContactForm() {
     type: "success" | "error";
     message: string;
   } | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState("+1");
 
@@ -33,25 +34,38 @@ export default function ContactForm() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+  if (isSubmitting) return; // prevent double submit
+  setIsSubmitting(true);
     const form = e.currentTarget;
     const formData = new FormData(form);
     const data = Object.fromEntries(formData);
 
     try {
-      const response = await fetch("/api/send-emails", {
+      const response = await fetch("/api/send-email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+          to: "info@t-cert.us",
+          subject: "Nuevo mensaje de contacto desde la web",
+          name: data.name,
+          company: data.company,
+          email: data.email,
+          phone: `${data.country || ""} ${data.phone}`.trim(),
+          details: data.details,
+        }),
       });
 
       if (response.ok) {
         showToast("success", "Formulario enviado exitosamente");
         form.reset();
+        setIsSubmitting(false);
       } else {
         showToast("error", "Hubo un error al enviar el formulario");
+        setIsSubmitting(false);
       }
     } catch {
       showToast("error", "No se pudo enviar. Verifica tu conexión.");
+      setIsSubmitting(false);
     }
   };
 
@@ -87,7 +101,7 @@ export default function ContactForm() {
           </motion.div>
         )}
       </AnimatePresence>{" "}
-  <div className="relative mx-auto w-full max-w-full sm:max-w-3xl lg:max-w-4xl px-4">
+      <div className="relative mx-auto w-full max-w-full sm:max-w-3xl lg:max-w-4xl px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -187,15 +201,17 @@ export default function ContactForm() {
                   <Label className="text-white font-medium">Teléfono*</Label>
                   <div className="grid grid-cols-5 gap-3">
                     <div className="col-span-1">
-                      <Select 
-                        value={selectedCountry} 
+                      <Select
+                        value={selectedCountry}
                         onValueChange={setSelectedCountry}
                         name="country"
                       >
                         <SelectTrigger className="bg-white/10 border-white/30 text-white focus:border-purple-400 backdrop-blur-sm h-10 rounded-xl">
                           <div className="flex items-center gap-2">
                             <span className="text-lg">
-                              {countries.find(c => c.dial_code === selectedCountry)?.flag || "🌍"}
+                              {countries.find(
+                                (c) => c.dial_code === selectedCountry
+                              )?.flag || "🌍"}
                             </span>
                             <span>{selectedCountry}</span>
                           </div>
@@ -209,8 +225,12 @@ export default function ContactForm() {
                             >
                               <div className="flex items-center gap-2">
                                 <span className="text-lg">{c.flag}</span>
-                                <span className="font-medium">{c.dial_code}</span>
-                                <span className="text-xs text-gray-400 truncate">{c.name}</span>
+                                <span className="font-medium">
+                                  {c.dial_code}
+                                </span>
+                                <span className="text-xs text-gray-400 truncate">
+                                  {c.name}
+                                </span>
                               </div>
                             </SelectItem>
                           ))}
@@ -301,9 +321,9 @@ export default function ContactForm() {
                         ? "bg-gradient-to-r from-purple-500 to-orange-500 hover:from-purple-600 hover:to-orange-600 hover:scale-105 text-white shadow-lg hover:shadow-purple-500/30"
                         : "bg-white/20 cursor-not-allowed text-white/50 border border-white/30"
                     }`}
-                    disabled={!termsAccepted}
+                    disabled={!termsAccepted || isSubmitting}
                   >
-                    Enviar Formulario
+                    {isSubmitting ? "Enviando..." : "Enviar Formulario"}
                   </Button>
                 </motion.div>
               </form>
