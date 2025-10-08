@@ -367,7 +367,7 @@ export default function CourseDetail() {
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.4, delay: 1.0 }}
                   >
-                    ¿Para quién es esta certificación?
+                    Habilidades a desarrollar
                   </motion.h2>
                   <motion.ul className="space-y-3 text-justify pl-4 border-l-2 border-purple-500/30">
                     {
