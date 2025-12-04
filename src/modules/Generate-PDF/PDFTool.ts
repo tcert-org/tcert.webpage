@@ -1,3 +1,12 @@
+// Utilidad para normalizar nombres eliminando tildes y ñ
+function normalizeStudentName(text: string): string {
+  return text
+    .normalize("NFD") // Descompone los caracteres acentuados
+    .replace(/[\u0300-\u036f]/g, "") // Remueve las marcas diacríticas (tildes)
+    .replace(/ñ/g, "n") // Reemplaza ñ con n
+    .replace(/Ñ/g, "N"); // Reemplaza Ñ con N
+}
+
 // Utilidad para hacer wrap de texto en varias líneas según el ancho máximo
 function wrapText(
   font: { widthOfTextAtSize: (text: string, size: number) => number },
@@ -255,10 +264,11 @@ export default class PDFTool {
       });
 
       // Insertar el nombre del estudiante con ajuste de salto de línea automático
+      const normalizedStudentName = normalizeStudentName(nameStudent);
       const maxStudentNameWidth = width - 120; // Margen horizontal de 60px a cada lado
       const studentNameLines = wrapText(
         mainFont,
-        nameStudent,
+        normalizedStudentName,
         fontSize,
         maxStudentNameWidth
       );
@@ -477,11 +487,12 @@ export default class PDFTool {
       });
 
       // Nombre del estudiante
+      const normalizedStudentName = normalizeStudentName(nameStudent);
       const studentNameWidth = studentNameFont.widthOfTextAtSize(
-        nameStudent,
+        normalizedStudentName,
         20
       );
-      firstPage.drawText(nameStudent, {
+      firstPage.drawText(normalizedStudentName, {
         x: (width - studentNameWidth) / 2,
         y: height - 315,
         size: 20,
