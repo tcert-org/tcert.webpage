@@ -23,7 +23,7 @@
     "embla-carousel-react": "^8.5.2",
     "framer-motion": "^12.23.12",
     "lucide-react": "^0.473.0",
-    "next": "15.1.5",
+    "next": "15.1.11",
     "nodemailer": "^6.10.0",
     "notiflix": "^3.2.8",
     "pdf-lib": "^1.17.1",
