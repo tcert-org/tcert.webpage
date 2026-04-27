@@ -38,11 +38,7 @@ export function CourseCard({ course }: { course: Course }) {
     : 0;
 
   // Precio principal que se muestra en naranja
-  const mainPrice = isFree
-    ? 0
-    : hasDiscount
-    ? currentPrice
-    : originalPrice;
+  const mainPrice = isFree ? 0 : hasDiscount ? currentPrice : originalPrice;
 
   return (
     <motion.div
@@ -50,24 +46,38 @@ export function CourseCard({ course }: { course: Course }) {
       transition={{ type: "spring", stiffness: 400, damping: 30 }}
       className="h-full"
     >
-      <Card className="h-full overflow-hidden relative bg-gradient-to-br from-slate-900 via-slate-800 to-gray-900 border border-slate-700/50 hover:border-purple-500/40 transition-all duration-300 shadow-xl hover:shadow-2xl hover:shadow-purple-500/10" data-content="true">
+      <Card
+        className="h-full overflow-hidden relative bg-gradient-to-br from-slate-950 via-[#111027] to-gray-950 border border-slate-700/50 hover:border-purple-500/40 transition-all duration-300 shadow-xl hover:shadow-2xl hover:shadow-purple-500/10"
+        data-content="true"
+      >
         {/* Efectos de luz suaves */}
-        <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/5 via-transparent to-orange-500/5"></div>
-        <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-purple-400/50 to-transparent"></div>
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-purple-500/5 via-transparent to-orange-500/5"></div>
+        <div className="pointer-events-none absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-purple-400/50 to-transparent"></div>
 
         <CardHeader className="p-0 relative z-10" data-content="true">
-          <div className="relative w-full h-44 sm:h-56 overflow-hidden image-container" data-image="true">
+          <div
+            className="relative w-full h-52 sm:h-64 overflow-hidden image-container flex items-center justify-center"
+            style={{
+              background:
+                "radial-gradient(ellipse at 60% 20%, #1b1238 0%, #200c66 55%, #070914 100%)",
+            }}
+          >
+            <div className="absolute left-1/2 top-[31%] h-[13px] w-[130px] -translate-x-1/2 rounded-[2px] bg-black" />
+
             <Image
               src={course.image}
               alt={`Imagen del curso ${course.title}`}
               fill
-              className="object-cover transition-transform duration-500 hover:scale-110"
+              className="object-contain p-1 scale-125 brightness-125 contrast-125 drop-shadow-[0_0_18px_rgba(168,85,247,0.25)] transition-transform duration-500 hover:scale-130"
               placeholder="blur"
               blurDataURL="/tocaPonerUnPlaceholder.svg"
               data-content="true"
             />
+
             {/* Overlay gradiente */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(255,255,255,0.08)_0%,transparent_65%)]" />
+
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-900/5 via-transparent to-transparent" />
 
             {/* Badge de estudiantes */}
             <div className="absolute top-4 right-4">
