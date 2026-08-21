@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import PDFTool from "@/modules/Generate-PDF/PDFTool";
 import { Input } from "@/components/ui/input";
@@ -12,7 +13,20 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, CheckCircle, XCircle, Loader2, Shield, X } from "lucide-react";
+import {
+  Search,
+  CheckCircle,
+  XCircle,
+  Loader2,
+  Shield,
+  X,
+  Linkedin,
+} from "lucide-react";
+
+// TODO: reemplazar organizationName por organizationId numérico
+// una vez exista la página de empresa de T-Cert en LinkedIn.
+const LINKEDIN_ORGANIZATION_NAME = "T-CERT";
+const SITE_URL = "https://t-cert.us";
 
 interface ApiResponse {
   statusCode: number;
@@ -45,14 +59,24 @@ interface ApiResponse {
 }
 
 export default function AuthenticatorPage() {
+  return (
+    <Suspense fallback={null}>
+      <AuthenticatorPageContent />
+    </Suspense>
+  );
+}
+
+function AuthenticatorPageContent() {
+  const searchParams = useSearchParams();
   const [voucherCode, setVoucherCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [apiResponse, setApiResponse] = useState<ApiResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
 
-  const validateCertificate = async () => {
-    if (!voucherCode.trim()) {
+  const validateCertificate = async (codeOverride?: string) => {
+    const code = (codeOverride ?? voucherCode).trim();
+    if (!code) {
       setError("Por favor ingresa un código de voucher");
       return;
     }
@@ -63,9 +87,7 @@ export default function AuthenticatorPage() {
 
     try {
       const response = await fetch(
-        `/api/validate-certificate?voucher_code=${encodeURIComponent(
-          voucherCode.trim()
-        )}`
+        `/api/validate-certificate?voucher_code=${encodeURIComponent(code)}`
       );
 
       const data = await response.json();
@@ -80,9 +102,48 @@ export default function AuthenticatorPage() {
     }
   };
 
+  useEffect(() => {
+    const code = searchParams.get("voucher_code");
+    if (code) {
+      setVoucherCode(code);
+      validateCertificate(code);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     validateCertificate();
+  };
+
+  const handleAddToLinkedIn = () => {
+    if (!apiResponse?.data) return;
+    const { certification, diploma, voucher } = apiResponse.data;
+
+    const toYearMonth = (dateString: string) => {
+      const [year, month] = dateString.split("T")[0].split("-");
+      return { year, month: String(Number(month)) };
+    };
+    const issue = toYearMonth(diploma.completion_date);
+    const expiration = toYearMonth(diploma.expiration_date);
+
+    const params = new URLSearchParams({
+      startTask: "CERTIFICATION_NAME",
+      name: certification.name,
+      organizationName: LINKEDIN_ORGANIZATION_NAME,
+      issueYear: issue.year,
+      issueMonth: issue.month,
+      expirationYear: expiration.year,
+      expirationMonth: expiration.month,
+      certUrl: `${SITE_URL}/autenticator?voucher_code=${voucher.code}`,
+      certId: voucher.code,
+    });
+
+    window.open(
+      `https://www.linkedin.com/profile/add?${params.toString()}`,
+      "_blank",
+      "noopener,noreferrer"
+    );
   };
 
   return (
@@ -340,8 +401,15 @@ export default function AuthenticatorPage() {
                         </div>
                       </div>
 
-                      {/* Botón para descargar PDF */}
-                      <div className="mt-6 flex justify-center">
+                      {/* Botones de acción */}
+                      <div className="mt-6 flex flex-col sm:flex-row justify-center gap-3">
+                        <Button
+                          className="bg-[#0A66C2] hover:bg-[#0954a5] text-white"
+                          onClick={handleAddToLinkedIn}
+                        >
+                          <Linkedin className="h-4 w-4 mr-2" />
+                          Agregar a LinkedIn
+                        </Button>
                         <Button
                           className="bg-green-600 hover:bg-green-700 text-white"
                           onClick={async () => {
